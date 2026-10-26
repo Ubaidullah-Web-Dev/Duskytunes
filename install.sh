@@ -133,8 +133,6 @@ fi
 
 # Launcher script and diagnostics
 sudo install -Dm755 "$SRC_ROOT/packaging/linux/duskytunes-qml" "/usr/bin/duskytunes-qml"
-sudo ln -sf duskytunes-qml "/usr/bin/ryotunes-qml"
-sudo ln -sf duskytunes "/usr/bin/ryotunes"
 sudo install -Dm755 "$SRC_ROOT/scripts/diagnostics.sh" "/usr/bin/duskytunes-diagnostics"
 log_ok "Binaries installed to /usr/bin."
 
@@ -185,12 +183,11 @@ systemctl --user disable ryotunesd.socket ryotunesd.service 2>/dev/null || true
 systemctl --user stop duskytunesd.socket duskytunesd.service 2>/dev/null || true
 systemctl --user enable --now duskytunesd.socket 2>/dev/null || true
 
-# Compatibility socket symlink so both paths resolve
+# Runtime socket directory
 USER_RUNTIME="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 if [[ -d "$USER_RUNTIME" ]]; then
   mkdir -p "$USER_RUNTIME/duskytunes"
-  mkdir -p "$USER_RUNTIME/ryotunes"
-  ln -sf "$USER_RUNTIME/duskytunes/duskytunesd.sock" "$USER_RUNTIME/ryotunes/ryotunesd.sock" 2>/dev/null || true
+  rm -rf "$USER_RUNTIME/ryotunes"
 fi
 log_ok "Background daemon socket active."
 

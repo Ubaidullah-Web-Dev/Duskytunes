@@ -38,9 +38,17 @@ Item {
         }
     }
 
-    function makeInvite(server, code) { return "RYO~" + Qt.btoa(server + "|" + code); }
+    function makeInvite(server, code) { return "DUSKY~" + Qt.btoa(server + "|" + code); }
     function parseInvite(raw) {
         var s = raw.trim();
+        if (s.indexOf("DUSKY~") === 0) {
+            try {
+                var parts = Qt.atob(s.slice(6)).split("|");
+                return { server: parts[0] || "", code: (parts[1] || "").toUpperCase() };
+            } catch (e) {
+                return null;
+            }
+        }
         if (s.indexOf("RYO~") === 0) {
             try {
                 var parts = Qt.atob(s.slice(4)).split("|");
@@ -208,7 +216,7 @@ Item {
                                     text: root.inviteInput
                                     onTextChanged: root.inviteInput = text
                                     onAccepted: root.join()
-                                    Text { anchors.verticalCenter: parent.verticalCenter; visible: inviteField.text.length === 0; text: "RYO~…"; color: Tokens.inkFaint; font: inviteField.font }
+                                    Text { anchors.verticalCenter: parent.verticalCenter; visible: inviteField.text.length === 0; text: "DUSKY~…"; color: Tokens.inkFaint; font: inviteField.font }
                                 }
                             }
                         }

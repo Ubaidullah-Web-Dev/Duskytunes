@@ -3,11 +3,15 @@ name = "duskytunes-cli"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Duskytunes daemon command-line client: run a method or follow events over the socket."
+description = "Duskytunes daemon command-line client and launcher."
 
 [[bin]]
 name = "duskytunes-cli"
 path = "src/main.rs"
+
+[[bin]]
+name = "duskytunes"
+path = "src/launcher.rs"
 
 [dependencies]
 serde = { workspace = true }
