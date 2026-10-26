@@ -3,8 +3,16 @@ name = "ryotunes"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Ryotunes — Ryoku desktop music client"
+description = "Duskytunes — Dusky desktop music client"
 rust-version = "1.80"
+
+[[bin]]
+name = "duskytunes"
+path = "src/main.rs"
+
+[[bin]]
+name = "ryotunes"
+path = "src/main.rs"
 
 [lib]
 name = "app_lib"

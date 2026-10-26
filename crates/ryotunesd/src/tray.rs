@@ -104,8 +104,10 @@ pub fn show(sink: &Arc<SocketSink>) {
         sink.emit("show", Value::Null);
         return;
     }
-    if let Err(e) = std::process::Command::new("ryotunes-qml").spawn() {
-        tracing::warn!(error = %e, "`show` could not launch ryotunes-qml");
+    if std::process::Command::new("duskytunes-qml").spawn().is_err() {
+        if let Err(e) = std::process::Command::new("ryotunes-qml").spawn() {
+            tracing::warn!(error = %e, "`show` could not launch duskytunes-qml or ryotunes-qml");
+        }
     }
 }
 

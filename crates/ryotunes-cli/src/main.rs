@@ -18,7 +18,7 @@ fn parse(args: &[String]) -> Result<(Option<std::path::PathBuf>, Request, bool),
     }
     let method = rest
         .first()
-        .ok_or("usage: ryotunes-cli [--socket PATH] <method> [json] | events [name...]")?
+        .ok_or("usage: duskytunes-cli [--socket PATH] <method> [json] | events [name...]")?
         .clone();
     if method == "events" {
         let names: Vec<String> = rest[1..].to_vec();
@@ -53,7 +53,7 @@ fn main() {
     let mut stream = match UnixStream::connect(&path) {
         Ok(s) => s,
         Err(e) => {
-            eprintln!("ryotunesd not reachable at {}: {e}", path.display());
+            eprintln!("duskytunesd not reachable at {}: {e}", path.display());
             std::process::exit(3);
         }
     };

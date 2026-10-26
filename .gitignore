@@ -27,6 +27,7 @@ rustypipe_reports/
 /src-tauri/lastfm.keys
 
 # Release/package output
+/dist/
 /ryotunes-v*-source.tar.gz
 /ryotunes-v*-full.tar.gz
 /*.pkg.tar.*

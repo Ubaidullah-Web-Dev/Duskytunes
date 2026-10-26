@@ -10,7 +10,9 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    readonly property string socketPath: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/ryotunes/ryotunesd.sock"
+    readonly property string runtimeDir: Quickshell.env("XDG_RUNTIME_DIR") || "/tmp"
+    property string socketPath: runtimeDir + "/duskytunes/duskytunesd.sock"
+    property int retryCount: 0
     readonly property bool connected: !!root.sock && root.sock.connected
     property int protocol: 0
     property string daemonVersion: ""
@@ -33,9 +35,10 @@ Singleton {
 
     function reconnect() {
         if (root.connected) return;
-        // Quickshell retains the native socket after an initial connection error; assigning
-        // connected=true again does not reconnect it. A fresh Socket also clears stale framing.
         if (root.sock) root.sock.destroy();
+        var duskyPath = root.runtimeDir + "/duskytunes/duskytunesd.sock";
+        var ryoPath = root.runtimeDir + "/ryotunes/ryotunesd.sock";
+        root.socketPath = (root.retryCount++ % 2 === 0) ? duskyPath : ryoPath;
         root.sock = socketComponent.createObject(root);
         root.sock.connected = true;
     }

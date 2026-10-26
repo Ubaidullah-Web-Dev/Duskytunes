@@ -1,0 +1,9 @@
+[Unit]
+Description=Duskytunes playback daemon socket
+
+[Socket]
+ListenStream=%t/duskytunes/duskytunesd.sock
+SocketMode=0600
+
+[Install]
+WantedBy=sockets.target

@@ -6,6 +6,10 @@ license.workspace = true
 description = "Ryotunes playback daemon"
 
 [[bin]]
+name = "duskytunesd"
+path = "src/main.rs"
+
+[[bin]]
 name = "ryotunesd"
 path = "src/main.rs"
 

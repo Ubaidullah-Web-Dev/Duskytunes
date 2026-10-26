@@ -1,0 +1,8 @@
+#!/bin/sh
+# Duskytunes native (QML) client launcher.
+if [ -d "/usr/share/duskytunes/client" ]; then
+    CLIENT_DIR="/usr/share/duskytunes/client"
+else
+    CLIENT_DIR="/usr/share/ryotunes/client"
+fi
+exec qs -p "$CLIENT_DIR" "$@"

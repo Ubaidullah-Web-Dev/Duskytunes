@@ -6,6 +6,10 @@ license.workspace = true
 description = "Ryotunes daemon command-line client: run a method or follow events over the socket."
 
 [[bin]]
+name = "duskytunes-cli"
+path = "src/main.rs"
+
+[[bin]]
 name = "ryotunes-cli"
 path = "src/main.rs"
 

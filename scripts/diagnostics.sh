@@ -4,14 +4,14 @@ set -u
 # Intentionally excludes usernames, home paths, hostnames, account data, cookies, URLs and app logs.
 line() { printf '%-22s %s\n' "$1" "$2"; }
 
-printf '%s\n' 'Ryotunes diagnostics (sanitized)'
-printf '%s\n' '--------------------------------'
+printf '%s\n' 'Duskytunes diagnostics (sanitized)'
+printf '%s\n' '----------------------------------'
 if command -v xbps-query >/dev/null 2>&1; then
-  pkg_version="$(xbps-query -p pkgver ryotunes 2>/dev/null || printf 'source/unpackaged')"
+  pkg_version="$(xbps-query -p pkgver duskytunes 2>/dev/null || xbps-query -p pkgver ryotunes 2>/dev/null || printf 'source/unpackaged')"
 else
-  pkg_version="$(pacman -Q ryotunes-v2.4 2>/dev/null | awk '{print $2}' || pacman -Q ryotunes 2>/dev/null | awk '{print $2}' || printf 'source/unpackaged')"
+  pkg_version="$(pacman -Q duskytunes 2>/dev/null | awk '{print $2}' || pacman -Q ryotunes 2>/dev/null | awk '{print $2}' || printf 'source/unpackaged')"
 fi
-line 'Ryotunes package:' "$pkg_version"
+line 'Duskytunes package:' "$pkg_version"
 line 'Kernel:' "$(uname -sr 2>/dev/null || printf 'unknown')"
 line 'Architecture:' "$(uname -m 2>/dev/null || printf 'unknown')"
 line 'Session:' "${XDG_SESSION_TYPE:-unknown}"

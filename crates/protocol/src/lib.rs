@@ -5,13 +5,20 @@ pub use wire::{ErrorBody, Event, Incoming, Outgoing, Request, Response, PROTOCOL
 
 use std::path::PathBuf;
 
-/// `$XDG_RUNTIME_DIR/ryotunes/ryotunesd.sock`, or `/tmp/ryotunes-<uid>/ryotunesd.sock` without a
-/// runtime dir (a bare TTY login). The directory is created by the daemon with mode 0700.
+/// `$XDG_RUNTIME_DIR/duskytunes/duskytunesd.sock`, with fallback to `ryotunesd.sock`.
 pub fn socket_path() -> PathBuf {
     let dir = std::env::var_os("XDG_RUNTIME_DIR").map(PathBuf::from).unwrap_or_else(|| {
-        std::env::temp_dir().join(format!("ryotunes-{}", unsafe { libc_uid() }))
+        std::env::temp_dir().join(format!("duskytunes-{}", unsafe { libc_uid() }))
     });
-    dir.join("ryotunes").join("ryotunesd.sock")
+    let dusky = dir.join("duskytunes").join("duskytunesd.sock");
+    if dusky.exists() {
+        return dusky;
+    }
+    let ryo = dir.join("ryotunes").join("ryotunesd.sock");
+    if ryo.exists() {
+        return ryo;
+    }
+    dusky
 }
 
 // No libc dependency for one call: read the uid from the kernel.

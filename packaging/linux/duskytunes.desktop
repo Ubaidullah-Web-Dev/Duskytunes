@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Duskytunes
+Comment=Dusky desktop music player
+Exec=duskytunes
+Icon=duskytunes
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;Player;
+StartupWMClass=org.quickshell

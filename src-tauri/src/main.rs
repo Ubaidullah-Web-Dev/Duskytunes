@@ -101,10 +101,21 @@ mod native {
         spawn_daemon()
     }
 
-    /// `systemctl --user start ryotunesd.socket`: true when systemd accepted it, so the socket is now
+    /// `systemctl --user start duskytunesd.socket`: true when systemd accepted it, so the socket is now
     /// listening and the next connect activates the service. False when there is no working user
     /// systemd or the unit is absent — the caller then spawns the daemon directly.
     fn start_socket_unit() -> bool {
+        let dusky_ok = Command::new("systemctl")
+            .args(["--user", "--no-block", "start", "duskytunesd.socket"])
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .status()
+            .map(|s| s.success())
+            .unwrap_or(false);
+        if dusky_ok {
+            return true;
+        }
         Command::new("systemctl")
             .args(["--user", "--no-block", "start", "ryotunesd.socket"])
             .stdin(Stdio::null())
@@ -115,9 +126,17 @@ mod native {
             .unwrap_or(false)
     }
 
-    /// Spawn `ryotunesd` detached. Its single-instance handshake either becomes the daemon (binding
-    /// the socket after clearing a stale file) or forwards `show` to a live one and exits.
+    /// Spawn `duskytunesd` (or `ryotunesd`) detached.
     fn spawn_daemon() -> std::io::Result<()> {
+        if Command::new("duskytunesd")
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .is_ok()
+        {
+            return Ok(());
+        }
         Command::new("ryotunesd")
             .stdin(Stdio::null())
             .stdout(Stdio::null())

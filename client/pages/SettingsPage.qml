@@ -36,7 +36,7 @@ Item {
 
     // Editable-field mirrors, seeded on load so typing never fights the settings binding.
     property string proxyInput: ""
-    property string discordNameInput: "Ryotunes"
+    property string discordNameInput: "Duskytunes"
     property bool forkOpen: false
     property string forkName: ""
 
@@ -85,7 +85,7 @@ Item {
             page.settings = res[0] || ({});
             page.clients = res[1] || [];
             page.proxyInput = page.settings.proxy || "";
-            page.discordNameInput = (page.settings.discord_presence_name || "").trim() || "Ryotunes";
+            page.discordNameInput = (page.settings.discord_presence_name || "").trim() || "Duskytunes";
             page.loaded = true;
             page.loadDiscord();
         }).catch((e) => { page.loaded = true; Playback.toast((e && e.message) ? e.message : String(e), "error"); });
@@ -147,7 +147,7 @@ Item {
         page.setSetting("discord_rpc", on ? "true" : "false").then(() => page.loadDiscord());
     }
     function saveDiscordName() {
-        var value = page.discordNameInput.trim() || "Ryotunes";
+        var value = page.discordNameInput.trim() || "Duskytunes";
         var n = value.length;
         if (n < 2 || n > 128) {
             Playback.toast("Discord presence title must be between 2 and 128 characters", "error");
@@ -241,15 +241,15 @@ Item {
     }
     function updateMessage() {
         if (page.updateStatus === "checking") return "Checking for a new version…";
-        if (page.updateStatus === "installing") return "Downloading and verifying the update, then asking for administrator approval. Keep Ryotunes open until it finishes.";
-        if (page.updateStatus === "installed") return "Ryotunes " + page.installedVersion + " installed — restarting Ryotunes to finish. If the window is still here, quit it and open it again; the background service reloads only on a full restart.";
+        if (page.updateStatus === "installing") return "Downloading and verifying the update, then asking for administrator approval. Keep Duskytunes open until it finishes.";
+        if (page.updateStatus === "installed") return "Duskytunes " + page.installedVersion + " installed — restarting Duskytunes to finish. If the window is still here, quit it and open it again; the background service reloads only on a full restart.";
         if (page.updateStatus === "error") return "Update failed: " + page.updateError;
         var info = page.updateInfo;
         if (!info) return "";
         if (info.latestVersion === null || info.latestVersion === undefined) return "No release has been published yet.";
         if (info.available) {
             if (info.restartPending)
-                return "Ryotunes " + info.latestVersion + " is already installed. Restart Ryotunes to start using it.";
+                return "Duskytunes " + info.latestVersion + " is already installed. Restart Duskytunes to start using it.";
             var msg = "Version " + info.latestVersion + " is available.";
             if (!info.canInstall && info.unsupportedReason) msg += " " + info.unsupportedReason;
             return msg;
@@ -330,7 +330,7 @@ Item {
     function doExport(path) {
         var items = (Playback.queue && Playback.queue.items) ? Playback.queue.items : [];
         if (!items.length) return;
-        var title = (Playback.queue && Playback.queue.sourceName) ? Playback.queue.sourceName : "Ryotunes Queue";
+        var title = (Playback.queue && Playback.queue.sourceName) ? Playback.queue.sourceName : "Duskytunes Queue";
         page.exporting = true;
         Daemon.call("export_playlist_file", { title: title, items: items, path: path })
             .then(() => { page.exporting = false; Playback.toast("Queue exported", "success"); })
@@ -578,7 +578,7 @@ Item {
                         Text { Layout.fillWidth: true; text: "Skin"; color: Tokens.ink; font.family: Style.fontUi; font.pixelSize: Style.fs.md; font.weight: Font.Medium; wrapMode: Text.WordWrap }
                         Text {
                             Layout.fillWidth: true
-                            text: "The palette, type, motion and decor Ryotunes wears. System follows your Ryoku desktop; install more from RyoStore, or drop a folder in ~/.config/ryotunes/skins to add your own."
+                            text: "The palette, type, motion and decor Duskytunes wears. System follows your Dusky desktop; install more skins or drop a folder in ~/.config/duskytunes/skins to add your own."
                             color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                         }
 
@@ -687,7 +687,7 @@ Item {
                             Text { Layout.fillWidth: true; text: "Theme"; color: Tokens.ink; font.family: Style.fontUi; font.pixelSize: Style.fs.md; font.weight: Font.Medium; wrapMode: Text.WordWrap }
                             Text {
                                 Layout.fillWidth: true
-                                text: "Follow the desktop automatically, or pin Ryotunes to the skin's light or dark mode."
+                                text: "Follow the desktop automatically, or pin Duskytunes to the skin's light or dark mode."
                                 color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                             }
                         }
@@ -758,7 +758,7 @@ Item {
                     }
                     ToggleRow {
                         title: "Start on login"
-                        desc: "Launch Ryotunes automatically when you log in."
+                        desc: "Launch Duskytunes automatically when you log in."
                         value: page.settings.autostart === "true"
                         onFlipped: (on) => page.setAutostart(on)
                     }
@@ -770,7 +770,7 @@ Item {
                         Text { text: "Interface scale"; color: Tokens.ink; font.family: Style.fontUi; font.pixelSize: Style.fs.md; font.weight: Font.Medium }
                         Text {
                             Layout.fillWidth: true
-                            text: "Preferred renderer scale, persisted for every Ryotunes client on this account."
+                            text: "Preferred renderer scale, persisted for every Duskytunes client on this account."
                             color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                         }
                         Flow {
@@ -838,17 +838,17 @@ Item {
                                     Text {
                                         anchors.verticalCenter: parent.verticalCenter
                                         visible: discordField.text.length === 0
-                                        text: "Ryotunes"
+                                        text: "Duskytunes"
                                         color: Tokens.inkFaint
                                         font: discordField.font
                                     }
                                 }
                             }
                             Pill { label: "Save"; enabled: page.discordNameInput.trim().length > 0; onClicked: page.saveDiscordName() }
-                            Pill { label: "Reset"; enabled: page.discordNameInput !== "Ryotunes"; onClicked: { page.discordNameInput = "Ryotunes"; page.saveDiscordName(); } }
+                            Pill { label: "Reset"; enabled: page.discordNameInput !== "Duskytunes"; onClicked: { page.discordNameInput = "Duskytunes"; page.saveDiscordName(); } }
                         }
                         Text {
-                            text: "Preview: Listening to " + (page.discordNameInput.trim() || "Ryotunes")
+                            text: "Preview: Listening to " + (page.discordNameInput.trim() || "Duskytunes")
                             color: Tokens.inkFaint; font.family: Style.fontUi; font.pixelSize: Style.fs.xs
                         }
                     }
@@ -1298,7 +1298,7 @@ Item {
                     SectionHeading { Layout.fillWidth: true; title: "Watched folders"; mark: "音源" }
                     Text {
                         Layout.fillWidth: true
-                        text: "Folders Ryotunes watches for files on disk. The daemon rescans them on demand."
+                        text: "Folders Duskytunes watches for files on disk. The daemon rescans them on demand."
                         color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                     }
 
@@ -1372,7 +1372,7 @@ Item {
                         spacing: Style.sp(1)
                         Text {
                             Layout.fillWidth: true
-                            text: "Choose a Ryotunes playlist file; its tracks land in a new library playlist. Sign in first."
+                            text: "Choose a Duskytunes playlist file; its tracks land in a new library playlist. Sign in first."
                             color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                         }
                         Pill {
@@ -1424,7 +1424,7 @@ Item {
                     SectionHeading { Layout.fillWidth: true; title: "About"; mark: "力" }
                     Text {
                         Layout.fillWidth: true
-                        text: "A focused Ryoku desktop music instrument: your YouTube Music library, local media, queue, lyrics and playback engine in one paper-and-ink surface."
+                        text: "A focused Dusky desktop music player: your YouTube Music library, local media, queue, lyrics and playback engine in one paper-and-ink surface."
                         color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.md; wrapMode: Text.WordWrap
                     }
                     GridLayout {
@@ -1446,7 +1446,7 @@ Item {
                     SectionHeading { Layout.fillWidth: true; Layout.topMargin: Style.sp(3); title: "Software updates"; mark: "新" }
                     Text {
                         Layout.fillWidth: true
-                        text: "You're on " + (page.appVersion || Daemon.daemonVersion || "this build") + ". Ryotunes checks GitHub only when you ask — nothing runs in the background."
+                        text: "You're on " + (page.appVersion || Daemon.daemonVersion || "this build") + ". Duskytunes checks GitHub only when you ask — nothing runs in the background."
                         color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                     }
                     RowLayout {
@@ -1461,7 +1461,7 @@ Item {
                         Btn {
                             text: "View changelog"
                             icon: "link"
-                            onClicked: page.openUrl((page.updateInfo && page.updateInfo.releaseUrl) ? page.updateInfo.releaseUrl : "https://github.com/ryoku-dev/ryotunes/releases")
+                            onClicked: page.openUrl((page.updateInfo && page.updateInfo.releaseUrl) ? page.updateInfo.releaseUrl : "https://github.com/Ubaidullah-Web-Dev/Duskytunes/releases")
                         }
                         Btn {
                             visible: !!(page.updateInfo && page.updateInfo.available && page.updateInfo.latestVersion && page.updateInfo.canInstall) && page.updateStatus !== "installed"
@@ -1521,28 +1521,29 @@ Item {
                     SectionHeading { Layout.fillWidth: true; Layout.topMargin: Style.sp(3); title: "Made by"; mark: "人" }
                     Text {
                         Layout.fillWidth: true
-                        text: "Ryotunes is built by two developers. Open their GitHub profiles:"
+                        text: "Duskytunes is created & maintained by Ubaid. Open the GitHub profile:"
                         color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                     }
                     RowLayout {
                         Layout.topMargin: Style.sp(1)
                         spacing: Style.sp(2)
-                        Btn { text: "ashmitvoid"; icon: "link"; onClicked: page.openUrl("https://github.com/ashmitvoid") }
-                        Btn { text: "neur0map"; icon: "link"; onClicked: page.openUrl("https://github.com/neur0map") }
+                        Btn { text: "Ubaidullah"; icon: "link"; onClicked: page.openUrl("https://github.com/Ubaidullah-Web-Dev") }
+                        Btn { text: "Duskytunes Repository"; icon: "link"; onClicked: page.openUrl("https://github.com/Ubaidullah-Web-Dev/Duskytunes") }
                     }
 
                     // --- open source ---
                     SectionHeading { Layout.fillWidth: true; Layout.topMargin: Style.sp(3); title: "Open source"; mark: "源" }
                     Text {
                         Layout.fillWidth: true
-                        text: "Ryotunes is a fork of LiMusic, released under the GNU General Public License v3.0 or later."
+                        text: "Duskytunes is an open-source desktop music player for Dusky and Linux, based on Ryotunes/LiMusic, released under the GNU General Public License v3.0 or later."
                         color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                     }
                     RowLayout {
                         Layout.topMargin: Style.sp(1)
                         spacing: Style.sp(2)
-                        Btn { text: "LiMusic upstream"; icon: "link"; onClicked: page.openUrl("https://github.com/SimoHypers/limusic") }
+                        Btn { text: "GitHub"; icon: "link"; onClicked: page.openUrl("https://github.com/Ubaidullah-Web-Dev/Duskytunes") }
                         Btn { text: "GPL-3.0-or-later"; icon: "link"; onClicked: page.openUrl("https://www.gnu.org/licenses/gpl-3.0.html") }
+                    }
                     }
                 }
             }

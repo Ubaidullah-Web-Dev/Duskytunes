@@ -1,0 +1,29 @@
+post_install() {
+  for uid in $(loginctl list-users --no-legend 2>/dev/null | awk '{print $1}'); do
+    systemctl --user -M "$uid@" daemon-reload 2>/dev/null || true
+    systemctl --user -M "$uid@" stop duskytunesd.socket duskytunesd.service ryotunesd.socket ryotunesd.service 2>/dev/null || true
+  done
+  post_upgrade
+}
+post_upgrade() {
+  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor 2>/dev/null || true
+  update-desktop-database -q 2>/dev/null || true
+  systemctl --global enable duskytunesd.socket 2>/dev/null || true
+  for uid in $(loginctl list-users --no-legend 2>/dev/null | awk '{print $1}'); do
+    systemctl --user -M "$uid@" daemon-reload 2>/dev/null || true
+    systemctl --user -M "$uid@" enable --now duskytunesd.socket 2>/dev/null || true
+  done
+}
+pre_remove() {
+  for uid in $(loginctl list-users --no-legend 2>/dev/null | awk '{print $1}'); do
+    systemctl --user -M "$uid@" stop duskytunesd.socket duskytunesd.service 2>/dev/null || true
+  done
+}
+post_remove() {
+  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor 2>/dev/null || true
+  update-desktop-database -q 2>/dev/null || true
+  systemctl --global disable duskytunesd.socket 2>/dev/null || true
+  for uid in $(loginctl list-users --no-legend 2>/dev/null | awk '{print $1}'); do
+    systemctl --user -M "$uid@" daemon-reload 2>/dev/null || true
+  done
+}
