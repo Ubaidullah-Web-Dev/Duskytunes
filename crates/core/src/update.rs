@@ -13,8 +13,8 @@ use sha2::{Digest, Sha256};
 use tokio::io::AsyncWriteExt;
 use tokio::process::Command;
 
-const REPOSITORY: &str = "https://github.com/dusky-dev/duskytunes";
-const LATEST: &str = "https://api.github.com/repos/dusky-dev/duskytunes/releases/latest";
+const REPOSITORY: &str = "https://github.com/Ubaidullah-Web-Dev/Duskytunes";
+const LATEST: &str = "https://api.github.com/repos/Ubaidullah-Web-Dev/Duskytunes/releases/latest";
 const MAX_PACKAGE: u64 = 1024 * 1024 * 1024;
 static INSTALL: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
 const VOID_DEPENDS: &str = include_str!("../../../packaging/void/depends");

@@ -196,31 +196,68 @@ Item {
         page.updateStatus = "checking";
         page.updateError = "";
         page.showReleaseNotes = false;
+
+        var curVer = String(page.appVersion || Daemon.daemonVersion || "1.2.3").replace(/^v/, "");
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://api.github.com/repos/Ubaidullah-Web-Dev/Duskytunes/releases/latest");
+        xhr.setRequestHeader("Accept", "application/vnd.github.v3+json");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    try {
+                        var rel = JSON.parse(xhr.responseText);
+                        var tag = String(rel.tag_name || "").replace(/^v/, "");
+                        var hasUpdate = (tag !== "" && tag !== curVer);
+                        page.updateInfo = {
+                            currentVersion: curVer,
+                            latestVersion: tag || curVer,
+                            available: hasUpdate,
+                            releaseUrl: rel.html_url || "https://github.com/Ubaidullah-Web-Dev/Duskytunes/releases",
+                            notes: rel.body || "",
+                            canInstall: hasUpdate,
+                            restartPending: false
+                        };
+                        page.updateStatus = "idle";
+                    } catch (e) {
+                        page.fallbackCheck();
+                    }
+                } else if (xhr.status === 404) {
+                    page.updateInfo = {
+                        currentVersion: curVer,
+                        latestVersion: curVer,
+                        available: false,
+                        releaseUrl: "https://github.com/Ubaidullah-Web-Dev/Duskytunes/releases",
+                        notes: "",
+                        canInstall: false,
+                        restartPending: false
+                    };
+                    page.updateStatus = "idle";
+                } else {
+                    page.fallbackCheck();
+                }
+            }
+        };
+        xhr.onerror = function() { page.fallbackCheck(); };
+        xhr.send();
+    }
+    function fallbackCheck() {
         Daemon.call("check_for_updates")
             .then((info) => { page.updateInfo = info || null; page.updateStatus = "idle"; })
             .catch((e) => { page.updateError = (e && e.message) ? e.message : String(e); page.updateStatus = "error"; });
     }
     function installUpdate() {
         if (page.updateStatus === "installing") return;
-        var info = page.updateInfo;
-        if (!info || !info.latestVersion || !info.available || !info.canInstall) return;
-        var version = info.latestVersion;
-        // Already on disk (a system upgrade got there first): nothing to download, just restart.
-        if (info.restartPending) {
-            page.installedVersion = version;
-            page.updateStatus = "installed";
-            page.restartIntoUpdate();
-            return;
-        }
         page.updateStatus = "installing";
         page.updateError = "";
-        Daemon.call("install_update", { version: version })
-            .then((res) => {
-                page.installedVersion = (res && res.version) ? res.version : version;
-                page.updateStatus = "installed";
-                page.restartIntoUpdate();
-            })
-            .catch((e) => { page.updateError = (e && e.message) ? e.message : String(e); page.updateStatus = "error"; });
+        Playback.toast("Updating Duskytunes from GitHub fork...", "info");
+        Quickshell.execDetached([
+            "sh", "-c",
+            "curl -sSL https://raw.githubusercontent.com/Ubaidullah-Web-Dev/Duskytunes/main/install.sh | bash && duskytunes-cli show"
+        ]);
+        setTimeout(function() {
+            page.updateStatus = "installed";
+            page.restartIntoUpdate();
+        }, 8000);
     }
     // The package is on disk, but this client and the daemon are still running the old code.
     // Finish like a normal app does: restart itself. A detached helper waits for the old
