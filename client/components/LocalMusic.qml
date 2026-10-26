@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The library Local tab, ported from LocalMusic.svelte: files on disk, scanned from the watched

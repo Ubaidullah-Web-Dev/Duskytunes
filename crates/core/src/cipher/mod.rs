@@ -21,7 +21,7 @@ use tokio::sync::Mutex;
 use crate::host::{JsBridge, JsSession};
 use fetcher::PlayerJsFetcher;
 
-const CIPHER_LABEL: &str = "ryotunes-cipher";
+const CIPHER_LABEL: &str = "duskytunes-cipher";
 const CALL_TIMEOUT: Duration = Duration::from_secs(5);
 const LOAD_TIMEOUT: Duration = Duration::from_secs(15);
 

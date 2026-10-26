@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
-import Ryoku.Ui as RU
+import Dusky.Ui.Singletons
+import Dusky.Ui as DU
 import "../"
 import "../components"
 
@@ -258,7 +258,7 @@ Item {
                 visible: root.scNow
                 samples: Playback.waveform || []
             }
-            RU.SpectrumField {
+            DU.SpectrumField {
                 anchors.fill: parent
                 visible: !root.scNow
                 levels: Spectrum.levels

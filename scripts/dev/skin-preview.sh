@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Render one skin in the ryotest rig and write an 800x500 preview.png.
 #   scripts/dev/skin-preview.sh <id>            an installed skin id
-#   scripts/dev/skin-preview.sh <dir>           a skin folder (its parent becomes RYOTUNES_SKIN_DIRS)
+#   scripts/dev/skin-preview.sh <dir>           a skin folder (its parent becomes DUSKYTUNES_SKIN_DIRS)
 #   scripts/dev/skin-preview.sh <id-or-dir> out.png   write somewhere else
 # Default output is skins/<id>/preview.png. Brings the rig up, launches one client pinned to the
 # skin, navigates home, screenshots the 1920x1080 compositor, crops to the floating window (its box
 # against weston's flat background) and fits it, padded with the window's own paper, to exactly
-# 800x500. Reads the rig through scripts/dev/ryotest.sh; that passes RYOTUNES_* through.
+# 800x500. Reads the rig through scripts/dev/ryotest.sh; that passes DUSKYTUNES_* through.
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -18,11 +18,11 @@ skinjson=""
 if [ -d "$arg" ] && [ -f "$arg/skin.json" ]; then
   dir="$(cd "$arg" && pwd)"
   id="$(basename "$dir")"
-  export RYOTUNES_SKIN_DIRS="$(dirname "$dir")"
+  export DUSKYTUNES_SKIN_DIRS="$(dirname "$dir")"
   skinjson="$dir/skin.json"
 elif [ -d "$root/skins/$arg" ] && [ -f "$root/skins/$arg/skin.json" ]; then
   id="$arg"
-  export RYOTUNES_SKIN_DIRS="$root/skins"
+  export DUSKYTUNES_SKIN_DIRS="$root/skins"
   skinjson="$root/skins/$id/skin.json"
 else
   id="$arg"
@@ -37,7 +37,7 @@ mypid=""
 cleanup() { [ -n "$mypid" ] && kill "$mypid" 2>/dev/null || true; rm -f "$raw"; }
 trap cleanup EXIT
 
-export RYOTUNES_SKIN="$id" RYOTUNES_SKIN_MODE=system   # the skin renders in its own default mode
+export DUSKYTUNES_SKIN="$id" DUSKYTUNES_SKIN_MODE=system   # the skin renders in its own default mode
 "$ryotest" up >/dev/null
 # Start one client and identify exactly the qs process we spawned, so we leave any sibling rig
 # clients (another agent's) untouched and never shoot two windows into one frame.

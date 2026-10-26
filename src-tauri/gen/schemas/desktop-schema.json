@@ -603,10 +603,10 @@
           "markdownDescription": "Enables the remove_local_folder command without any pre-configured scope."
         },
         {
-          "description": "Enables the ryoku_theme_tokens command without any pre-configured scope.",
+          "description": "Enables the dusky_theme_tokens command without any pre-configured scope.",
           "type": "string",
-          "const": "allow-ryoku-theme-tokens",
-          "markdownDescription": "Enables the ryoku_theme_tokens command without any pre-configured scope."
+          "const": "allow-dusky-theme-tokens",
+          "markdownDescription": "Enables the dusky_theme_tokens command without any pre-configured scope."
         },
         {
           "description": "Enables the search command without any pre-configured scope.",
@@ -759,10 +759,10 @@
           "markdownDescription": "Enables the toggle_shuffle command without any pre-configured scope."
         },
         {
-          "description": "Allows the bundled main and mini Ryotunes surfaces to invoke application commands.",
+          "description": "Allows the bundled main and mini Duskytunes surfaces to invoke application commands.",
           "type": "string",
           "const": "allow-ui-commands",
-          "markdownDescription": "Allows the bundled main and mini Ryotunes surfaces to invoke application commands."
+          "markdownDescription": "Allows the bundled main and mini Duskytunes surfaces to invoke application commands."
         },
         {
           "description": "Denies the add_local_folder command without any pre-configured scope.",
@@ -1191,10 +1191,10 @@
           "markdownDescription": "Denies the remove_local_folder command without any pre-configured scope."
         },
         {
-          "description": "Denies the ryoku_theme_tokens command without any pre-configured scope.",
+          "description": "Denies the dusky_theme_tokens command without any pre-configured scope.",
           "type": "string",
-          "const": "deny-ryoku-theme-tokens",
-          "markdownDescription": "Denies the ryoku_theme_tokens command without any pre-configured scope."
+          "const": "deny-dusky-theme-tokens",
+          "markdownDescription": "Denies the dusky_theme_tokens command without any pre-configured scope."
         },
         {
           "description": "Denies the search command without any pre-configured scope.",

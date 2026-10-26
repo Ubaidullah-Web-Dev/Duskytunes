@@ -21,7 +21,7 @@ def release_notes(tag):
     # entire upstream history. Subsequent releases compare only against v1.
     legacy = [t for t in tags if re.fullmatch(r'v2\.[0-9]+\.[0-9]+', t)]
     previous = max(earlier or legacy, key=lambda t: tuple(map(int, t[1:].split('.'))), default=None)
-    repo = os.environ.get('GITHUB_REPOSITORY', 'ryoku-dev/ryotunes')
+    repo = os.environ.get('GITHUB_REPOSITORY', 'Ubaidullah-Web-Dev/Duskytunes')
     command = ['gh', 'api', f'repos/{repo}/releases/generate-notes',
                '-f', f'tag_name={tag}', '--jq', '.body']
     if previous:
@@ -32,11 +32,11 @@ def release_notes(tag):
     authored = section.group(1).strip() if section else ''
     changes = git('log', '--no-merges', '--format=%s (%h)', f'{previous}..{tag}' if previous else tag)
     commits = [f'- {line}' for line in changes.splitlines() if not line.startswith('release: v')]
-    package = f'ryotunes-{tag[1:]}-1-x86_64.pkg.tar.zst'
-    sections = [f'# Ryotunes {tag}', authored, generated]
+    package = f'duskytunes-{tag[1:]}-1-x86_64.pkg.tar.zst'
+    sections = [f'# Duskytunes {tag}', authored, generated]
     if commits:
         sections.append('## Changes in this push\n\n' + '\n'.join(commits))
-    sections.append(f'''## Install or update (Arch / CachyOS / Ryoku)
+    sections.append(f'''## Install or update (Arch / CachyOS / Dusky)
 
 Download `{package}` and `{package}.sha256`, then:
 
@@ -45,12 +45,12 @@ sha256sum -c {package}.sha256
 sudo pacman -U ./{package}
 ```
 
-The package includes Ryotunes, ryotunesd, the CLI and native QML client. Its permanent
+The package includes Duskytunes, duskytunesd, the CLI and native QML client. Its permanent
 pacman epoch makes the new v1 series an upgrade from legacy v2 installations.
-`ryoku update` can consume the same package. Independently, use **About → Check for
+`dusky update` can consume the same package. Independently, use **About → Check for
 new version → Update** (administrator approval required).
 
-After installing, **Quit Ryotunes and reopen it**, rather than only closing the
+After installing, **Quit Duskytunes and reopen it**, rather than only closing the
 window, to reload the client and background daemon. Source archives and SHA-256
 sidecars are attached alongside the binary package.''')
     return '\n\n'.join(s for s in sections if s) + '\n'

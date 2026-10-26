@@ -4740,7 +4740,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ryotunes"
+name = "duskytunes"
 version = "1.2.3"
 dependencies = [
  "anyhow",
@@ -4750,8 +4750,8 @@ dependencies = [
  "libc",
  "player",
  "rand 0.8.7",
- "ryotunes-core",
- "ryotunes-protocol",
+ "duskytunes-core",
+ "duskytunes-protocol",
  "serde",
  "serde_json",
  "souvlaki",
@@ -4770,16 +4770,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "ryotunes-cli"
+name = "duskytunes-cli"
 version = "1.2.3"
 dependencies = [
- "ryotunes-protocol",
+ "duskytunes-protocol",
  "serde",
  "serde_json",
 ]
 
 [[package]]
-name = "ryotunes-core"
+name = "duskytunes-core"
 version = "1.2.3"
 dependencies = [
  "anyhow",
@@ -4800,9 +4800,9 @@ dependencies = [
  "rusqlite",
  "rustls 0.23.43",
  "ruzstd",
- "ryotunes-soundcloud",
- "ryotunes-spotify",
- "ryotunes-tidal",
+ "duskytunes-soundcloud",
+ "duskytunes-spotify",
+ "duskytunes-tidal",
  "serde",
  "serde_json",
  "sha2",
@@ -4818,7 +4818,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ryotunes-protocol"
+name = "duskytunes-protocol"
 version = "1.2.3"
 dependencies = [
  "serde",
@@ -4826,7 +4826,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ryotunes-soundcloud"
+name = "duskytunes-soundcloud"
 version = "1.2.3"
 dependencies = [
  "base64 0.22.1",
@@ -4841,7 +4841,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ryotunes-spotify"
+name = "duskytunes-spotify"
 version = "1.2.3"
 dependencies = [
  "anyhow",
@@ -4865,7 +4865,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ryotunes-tidal"
+name = "duskytunes-tidal"
 version = "1.2.3"
 dependencies = [
  "base64 0.22.1",
@@ -4881,7 +4881,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ryotunesd"
+name = "duskytunesd"
 version = "1.2.3"
 dependencies = [
  "aes",
@@ -4901,10 +4901,10 @@ dependencies = [
  "pbkdf2",
  "player",
  "rusqlite",
- "ryotunes-core",
- "ryotunes-protocol",
- "ryotunes-soundcloud",
- "ryotunes-tidal",
+ "duskytunes-core",
+ "duskytunes-protocol",
+ "duskytunes-soundcloud",
+ "duskytunes-tidal",
  "serde",
  "serde_json",
  "sha1",

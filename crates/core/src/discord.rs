@@ -47,8 +47,8 @@ use innertube::SongItem;
 
 /// Discord application id (a snowflake — digits only). This id is inherited from upstream LiMusic:
 /// Discord's `oauth2/applications/<id>/rpc` still returns the name "Limusic" and its lemon icon.
-/// That portal identity is **not** Ryotunes-owned and can only be changed by whoever holds the app
-/// in Discord's developer portal, so a Ryotunes-owned Application ID is pending; until one exists
+/// That portal identity is **not** Duskytunes-owned and can only be changed by whoever holds the app
+/// in Discord's developer portal, so a Duskytunes-owned Application ID is pending; until one exists
 /// this stays put rather than repointing at an unrelated app. The card no longer leans on it — it
 /// sets its own activity `name` ([`DEFAULT_PRESENCE_NAME`]) and artwork ([`BRAND_IMAGE`]). No bot
 /// user, OAuth redirect or client secret is needed.
@@ -56,12 +56,12 @@ const APP_ID: &str = "1525891596804161727";
 
 const SONG_URL: &str = "https://music.youtube.com/watch?v=";
 
-/// Ryotunes' brand mark (public repo PNG). The card's large-image fallback when a track has no
+/// Duskytunes' brand mark (public repo PNG). The card's large-image fallback when a track has no
 /// fetchable artwork, and the small badge on every art card — so the card never falls back to the
 /// application's portal icon (the upstream lemon). Verified reachable, `200 image/png` (512×512).
 const BRAND_IMAGE: &str =
-    "https://raw.githubusercontent.com/ryoku-dev/ryotunes/main/src-tauri/icons/icon.png";
-const BRAND_BADGE_TEXT: &str = "Ryotunes";
+    "https://raw.githubusercontent.com/dusky-dev/duskytunes/main/src-tauri/icons/icon.png";
+const BRAND_BADGE_TEXT: &str = "Duskytunes";
 
 /// Reconnect backoff while enabled but unconnected (Discord not running, or it quit). Starts short
 /// — Discord may simply be slower to start than we are — and eases off so a permanently-absent
@@ -83,7 +83,7 @@ const DURATION_GRACE: Duration = Duration::from_millis(800);
 const MIN_WAIT: Duration = Duration::from_millis(10);
 /// Discord rejects `details`/`state`/`large_text` outside 2–128 characters.
 const MAX_FIELD: usize = 128;
-pub const DEFAULT_PRESENCE_NAME: &str = "Ryotunes";
+pub const DEFAULT_PRESENCE_NAME: &str = "Duskytunes";
 
 /// Vanity text used by Discord's "Listening to …" activity label. Empty resets to the default;
 /// every non-empty value must satisfy Discord's 2–128 character field contract.
@@ -358,7 +358,7 @@ impl Presence {
                     self.pos_at = Instant::now();
                     self.playing = on;
                     // A real playback action is a useful reconnect signal. If Discord was started
-                    // after Ryotunes, try once now instead of waiting out a long unavailable backoff.
+                    // after Duskytunes, try once now instead of waiting out a long unavailable backoff.
                     if on && self.enabled && self.client.is_none() {
                         self.last_connect_try = None;
                         self.connect_backoff = CONNECT_RETRY_MIN;
@@ -514,10 +514,10 @@ impl Presence {
             act = act.state(field(&track.artists));
         }
         // Artwork is a plain https URL the IPC client proxies. The hero is the track's art; with
-        // none to show, the Ryotunes mark stands in — never the application's lemon icon.
+        // none to show, the Duskytunes mark stands in — never the application's lemon icon.
         let mut assets = activity::Assets::new();
         match track.thumbnail.clone() {
-            // Real art up top: the small badge is the Ryotunes mark.
+            // Real art up top: the small badge is the Duskytunes mark.
             Some(url) => {
                 assets =
                     assets.large_image(url).small_image(BRAND_IMAGE).small_text(BRAND_BADGE_TEXT);

@@ -4,7 +4,7 @@ import Quickshell
 import Quickshell.Io
 
 // Client-local preferences: what the daemon has no UI_SETTINGS key for and no other client needs.
-// One JSON file, written atomically on every change through the adapter (the Ryoku shell's
+// One JSON file, written atomically on every change through the adapter (the Dusky shell's
 // shell.json pattern). Absent or malformed reads as the defaults below.
 Singleton {
     id: root
@@ -20,7 +20,7 @@ Singleton {
 
     FileView {
         id: file
-        path: (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/ryotunes/client.json"
+        path: (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/duskytunes/client.json"
         blockLoading: true
         watchChanges: true
         printErrors: false

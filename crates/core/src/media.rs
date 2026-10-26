@@ -107,7 +107,7 @@ fn run(commands: UnboundedSender<MediaControlEvent>, rx: std::sync::mpsc::Receiv
     // ignores it.
     let hwnd = None;
 
-    let config = PlatformConfig { dbus_name: "ryotunes", display_name: "Ryotunes", hwnd };
+    let config = PlatformConfig { dbus_name: "duskytunes", display_name: "Duskytunes", hwnd };
     let mut controls = match MediaControls::new(config) {
         Ok(c) => c,
         Err(e) => {

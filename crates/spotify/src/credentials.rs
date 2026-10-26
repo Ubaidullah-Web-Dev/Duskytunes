@@ -24,7 +24,7 @@ pub(crate) fn set_root(dir: PathBuf) {
 /// The provider's data directory. Falls back to a temp dir when no provider was constructed
 /// (only the offline unit tests hit that path).
 pub(crate) fn root() -> PathBuf {
-    ROOT.get().cloned().unwrap_or_else(|| std::env::temp_dir().join("ryotunes-spotify"))
+    ROOT.get().cloned().unwrap_or_else(|| std::env::temp_dir().join("duskytunes-spotify"))
 }
 
 /// Restricts an existing credential file to its owner. A missing file is left alone.

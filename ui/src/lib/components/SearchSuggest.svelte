@@ -17,7 +17,7 @@
 	import { openAddToPlaylist } from '$lib/player.svelte';
 	import TrackMenu from './TrackMenu.svelte';
 	import { createSearchPager, nextSearchPage, searchPagerDone, type SearchPagerState } from '$lib/search-pager';
-	import { ownNestedVerticalScroll } from '$lib/ryoku-scroll';
+	import { ownNestedVerticalScroll } from '$lib/dusky-scroll';
 	import { t } from '$lib/i18n.svelte';
 
 	let {

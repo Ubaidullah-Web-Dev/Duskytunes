@@ -42,7 +42,7 @@
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	// The mood chips + which one is active. Kept out of `home` so the row survives a filter switch's
-	// loading state (every home response carries the same chips anyway). Ryotunes is music-only.
+	// loading state (every home response carries the same chips anyway). Duskytunes is music-only.
 	let chips = $state<HomeChip[]>([]);
 	let selected = $state<string | null>(null);
 	let loadingMore = $state(false);

@@ -589,7 +589,7 @@ mod tests {
         use super::{AudioFx, Error, Player, NO_RUBBERBAND};
         use std::sync::atomic::Ordering;
 
-        let dir = std::env::temp_dir().join("ryotunes-af-test");
+        let dir = std::env::temp_dir().join("duskytunes-af-test");
         std::fs::create_dir_all(&dir).unwrap();
         let p = Player::new(dir.to_str().unwrap()).expect("libmpv");
         let af = || p.mpv.get_property::<String>("af").unwrap();

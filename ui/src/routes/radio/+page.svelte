@@ -4,7 +4,7 @@
 	import { MusicNote01Icon, PlayIcon, Search01Icon } from '@hugeicons/core-free-icons';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
-	import RyokuPageHeader from '$lib/components/RyokuPageHeader.svelte';
+	import DuskyPageHeader from '$lib/components/DuskyPageHeader.svelte';
 	import * as api from '$lib/api';
 	import type { RadioStation } from '$lib/api';
 	import { toast } from '$lib/player.svelte';
@@ -113,10 +113,10 @@
 </script>
 
 <div class="ryo-route-page">
-	<RyokuPageHeader
+	<DuskyPageHeader
 		eyebrow="MUSIC / AIRWAVES"
 		title={t('Radio')}
-		blurb={t("Live stations from around the world, played through Ryotunes' native audio engine.")}
+		blurb={t("Live stations from around the world, played through Duskytunes' native audio engine.")}
 		code="RADIO · DIRECTORY"
 		artTitle="電波"
 		artSub="LIVE RADIO"
@@ -129,7 +129,7 @@
 		<div class="radio-console-copy">
 			<span>{t('// RADIO BROWSER / LIVE DIRECTORY')}</span>
 			<strong>{query ? `Results for “${query}”` : t('Popular stations')}</strong>
-			<p>{t('Station discovery is demand-driven: Ryotunes only contacts the directory when this page is opened, searched or extended.')}</p>
+			<p>{t('Station discovery is demand-driven: Duskytunes only contacts the directory when this page is opened, searched or extended.')}</p>
 		</div>
 		<form
 			class="radio-search"

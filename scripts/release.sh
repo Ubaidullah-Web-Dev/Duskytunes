@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Ryotunes releases are automatic. Pushing to the default branch runs
+# Duskytunes releases are automatic. Pushing to the default branch runs
 # .github/workflows/release.yml, which computes the next v1 version from the
 # tags, syncs every manifest, verifies the tree, then commits + tags + publishes
 # the GitHub release (package + source tarball + notes). You do not cut releases

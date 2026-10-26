@@ -2,11 +2,11 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../components"
 
-// The Sound dialog (spec section 7): a Ryotunes feature ordinary players do not have. A centred
+// The Sound dialog (spec section 7): a Duskytunes feature ordinary players do not have. A centred
 // modal over a snapshot-blurred freeze of the frame behind it (spec 9 — the page is captured once
 // with our own visuals hidden, blurred, then a scrim, so no live subtree is ever blurred). Five
 // sliders drive the daemon's audio-fx chain (tempo, pitch, reverb, bass, width) with a row of

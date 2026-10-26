@@ -2,7 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    // Linux ships `ryotunes` as a thin launcher for the native Quickshell client; it never runs the
+    // Linux ships `duskytunes` as a thin launcher for the native Quickshell client; it never runs the
     // Tauri app. macOS and Windows still run the bundled Tauri player.
     #[cfg(target_os = "linux")]
     {
@@ -14,11 +14,11 @@ fn main() {
     }
 }
 
-/// On Linux the installed `/usr/bin/ryotunes` (the desktop's keybind, dock and launcher) hands
-/// `ryotunesd` a `show`, which raises the connected client or opens the native `ryotunes-qml`
+/// On Linux the installed `/usr/bin/duskytunes` (the desktop's keybind, dock and launcher) hands
+/// `duskytunesd` a `show`, which raises the connected client or opens the native `duskytunes-qml`
 /// client. Connecting to the socket is what starts the daemon — systemd socket activation, or a
 /// direct spawn on a box without systemd — so a cold boot lands in the native client too. There is
-/// deliberately no Tauri route on Linux: `--tauri`/`RYOTUNES_TAURI` are gone, and a machine that
+/// deliberately no Tauri route on Linux: `--tauri`/`DUSKYTUNES_TAURI` are gone, and a machine that
 /// cannot reach the daemon gets a real error rather than a second player on the same audio device.
 #[cfg(target_os = "linux")]
 mod native {
@@ -29,24 +29,24 @@ mod native {
     use std::time::{Duration, Instant};
 
     pub fn launch() {
-        let sock = ryotunes_protocol::socket_path();
+        let sock = duskytunes_protocol::socket_path();
         // Fast path: a live daemon (its client already up) or an idle systemd-activated socket
         // answers the first `show` straight away.
         if show(&sock).is_ok() {
-            log("asked ryotunesd to show the native client");
+            log("asked duskytunesd to show the native client");
             return;
         }
         // Nothing is listening: bring the daemon up ourselves, then raise the client. Never Tauri.
         if let Err(e) = ensure_daemon() {
-            log(&format!("could not start ryotunesd: {e}"));
+            log(&format!("could not start duskytunesd: {e}"));
             std::process::exit(1);
         }
         match show_until_ready(&sock) {
-            Ok(()) => log("asked ryotunesd to show the native client"),
+            Ok(()) => log("asked duskytunesd to show the native client"),
             Err(e) => {
                 eprintln!(
-                    "ryotunes: could not reach the Ryotunes daemon (ryotunesd): {e}\n\
-                     Start it with `systemctl --user start ryotunesd.socket`, or run `ryotunesd`."
+                    "duskytunes: could not reach the Duskytunes daemon (duskytunesd): {e}\n\
+                     Start it with `systemctl --user start duskytunesd.socket`, or run `duskytunesd`."
                 );
                 std::process::exit(1);
             }
@@ -60,7 +60,7 @@ mod native {
         stream.write_all(b"{\"id\":1,\"method\":\"show\"}\n")?;
         let mut line = String::new();
         BufReader::new(stream).read_line(&mut line)?;
-        let response: ryotunes_protocol::Response = serde_json::from_str(&line)
+        let response: duskytunes_protocol::Response = serde_json::from_str(&line)
             .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
         if response.id != 1 {
             return Err(std::io::Error::new(
@@ -92,7 +92,7 @@ mod native {
 
     /// Bring the daemon up without ever touching the Tauri app. Prefer systemd socket activation so
     /// the daemon lands under the user manager (tray, MPRIS, idle-exit); fall back to spawning
-    /// `ryotunesd` directly on a box without a working systemd `--user` instance, where the daemon's
+    /// `duskytunesd` directly on a box without a working systemd `--user` instance, where the daemon's
     /// own bind clears any stale socket first.
     fn ensure_daemon() -> std::io::Result<()> {
         if start_socket_unit() {
@@ -117,7 +117,7 @@ mod native {
             return true;
         }
         Command::new("systemctl")
-            .args(["--user", "--no-block", "start", "ryotunesd.socket"])
+            .args(["--user", "--no-block", "start", "duskytunesd.socket"])
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
@@ -126,7 +126,7 @@ mod native {
             .unwrap_or(false)
     }
 
-    /// Spawn `duskytunesd` (or `ryotunesd`) detached.
+    /// Spawn `duskytunesd` (or `duskytunesd`) detached.
     fn spawn_daemon() -> std::io::Result<()> {
         if Command::new("duskytunesd")
             .stdin(Stdio::null())
@@ -137,7 +137,7 @@ mod native {
         {
             return Ok(());
         }
-        Command::new("ryotunesd")
+        Command::new("duskytunesd")
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
@@ -147,6 +147,6 @@ mod native {
 
     // The tracing subscriber lives in the daemon; this launcher only prints to stderr.
     fn log(msg: &str) {
-        eprintln!("ryotunes: {msg}");
+        eprintln!("duskytunes: {msg}");
     }
 }

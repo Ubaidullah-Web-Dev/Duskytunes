@@ -1,7 +1,7 @@
 //! Spotify provider state, held for the daemon.
 //!
-//! A thin wrapper around [`ryotunes_spotify::SpotifyProvider`] plus the currently signed-in
-//! [`ryotunes_spotify::Client`], behind a [`tokio::sync::RwLock`] so many readers (playback,
+//! A thin wrapper around [`duskytunes_spotify::SpotifyProvider`] plus the currently signed-in
+//! [`duskytunes_spotify::Client`], behind a [`tokio::sync::RwLock`] so many readers (playback,
 //! browsing) share one client. The daemon adds the actual command methods on top of this (see the
 //! `## Daemon wiring` section of `crates/spotify/README.md`); this file deliberately wires none.
 
@@ -9,7 +9,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use anyhow::Result;
-use ryotunes_spotify::{Client, SpotifyProvider};
+use duskytunes_spotify::{Client, SpotifyProvider};
 use tokio::sync::RwLock;
 
 /// Which catalogue the browsing commands (search, home, library, album, artist, playlist) read
@@ -295,7 +295,7 @@ impl SpotifyState {
 
 /// Whether a failed restore is about the account itself rather than the connection.
 fn retry_cannot_fix(e: &anyhow::Error) -> bool {
-    use ryotunes_spotify::{SignInFailure, SignInProblem};
+    use duskytunes_spotify::{SignInFailure, SignInProblem};
     matches!(
         e.downcast_ref::<SignInFailure>(),
         Some(SignInFailure(
@@ -326,7 +326,7 @@ mod tests {
 
     #[test]
     fn only_account_refusals_stop_recovery() {
-        use ryotunes_spotify::{SignInFailure, SignInProblem};
+        use duskytunes_spotify::{SignInFailure, SignInProblem};
         let refused = |p| retry_cannot_fix(&anyhow::Error::new(SignInFailure(p)));
 
         assert!(refused(SignInProblem::Premium));

@@ -3,7 +3,7 @@ import "../"
 import "../lib/ids.js" as Ids
 
 // The source tag a card's artwork wears: the catalogue's glyph in its own colour on a dark chip,
-// so YouTube Music, Spotify and SoundCloud items tell apart on any cover. Hidden for Ryotunes' own
+// so YouTube Music, Spotify and SoundCloud items tell apart on any cover. Hidden for Duskytunes' own
 // collections, which come from no catalogue.
 Rectangle {
     id: root

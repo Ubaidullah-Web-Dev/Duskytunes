@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../lib/personal.js" as P
 import "../lib/playlist-links.js" as Links

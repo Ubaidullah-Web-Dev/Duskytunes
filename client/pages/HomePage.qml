@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Shapes
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../components"
 import "../chrome"

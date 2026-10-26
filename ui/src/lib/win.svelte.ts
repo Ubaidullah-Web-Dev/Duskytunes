@@ -12,7 +12,7 @@ export function initWin(): () => void {
 	const w = getCurrentWindow();
 	// Native v2.1 owns visibility. This module only removes the in-WebView boot surface and tracks
 	// maximize state; the root layout sends `frontend_ready` after its mounted tree has painted.
-	document.getElementById('ryotunes-boot')?.remove();
+	document.getElementById('duskytunes-boot')?.remove();
 	const sync = () =>
 		w
 			.isMaximized()

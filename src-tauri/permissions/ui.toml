@@ -1,4 +1,4 @@
-# Application-command ACL for the bundled Ryotunes UI.
+# Application-command ACL for the bundled Duskytunes UI.
 #
 # AppManifest::commands in build.rs opts these commands into Tauri's runtime authority. Only
 # windows/webviews carrying this permission can invoke them. The login, cipher and PoToken WebViews
@@ -6,7 +6,7 @@
 
 [[permission]]
 identifier = "allow-ui-commands"
-description = "Allows the bundled main and mini Ryotunes surfaces to invoke application commands."
+description = "Allows the bundled main and mini Duskytunes surfaces to invoke application commands."
 commands.allow = [
   "search",
   "search_page",
@@ -40,7 +40,7 @@ commands.allow = [
   "check_for_updates",
   "install_update",
   "discord_status",
-  "ryoku_theme_tokens",
+  "dusky_theme_tokens",
   "set_setting",
   "get_personal",
   "set_personal",

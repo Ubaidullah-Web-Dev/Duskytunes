@@ -1,4 +1,4 @@
-//! Pure mapping from the TIDAL provider's models ([`ryotunes_tidal`]) to the YouTube-shaped browse
+//! Pure mapping from the TIDAL provider's models ([`duskytunes_tidal`]) to the YouTube-shaped browse
 //! JSON the client already renders, the TIDAL twin of [`crate::soundcloud_bridge`]. The daemon
 //! calls these when the selected provider is TIDAL (browsing) or an id carries a `tidal:` prefix.
 //!
@@ -15,7 +15,7 @@
 use innertube::models::browse::ArtistCarousel;
 use innertube::models::metadata::ArtistRun;
 use innertube::{AlbumPage, BrowseItem, PlaylistPage, SearchResults, Section, SongItem};
-use ryotunes_tidal::{Album, Artist, Playlist, SearchResults as TdResults, Track};
+use duskytunes_tidal::{Album, Artist, Playlist, SearchResults as TdResults, Track};
 
 const TRACK: &str = "tidal:track:";
 const ARTIST: &str = "tidal:artist:";
@@ -82,7 +82,7 @@ pub fn artist_to_card(artist: &Artist) -> BrowseItem {
         id: format!("{ARTIST}{}", artist.id),
         title: artist.name.clone(),
         subtitle: None,
-        thumbnail: artist.picture.as_deref().and_then(|p| ryotunes_tidal::cover_url(p, CARD_ART)),
+        thumbnail: artist.picture.as_deref().and_then(|p| duskytunes_tidal::cover_url(p, CARD_ART)),
         duration: None,
         artist_runs: Vec::new(),
         play_count: None,
@@ -98,7 +98,7 @@ pub fn album_to_card(album: &Album) -> BrowseItem {
         id: format!("{ALBUM}{}", album.id),
         title: album.title.clone(),
         subtitle: Some(album_line(album)),
-        thumbnail: album.cover.as_deref().and_then(|c| ryotunes_tidal::cover_url(c, CARD_ART)),
+        thumbnail: album.cover.as_deref().and_then(|c| duskytunes_tidal::cover_url(c, CARD_ART)),
         duration: None,
         artist_runs: artist_runs(&album.artists),
         play_count: None,
@@ -138,11 +138,11 @@ pub fn album_page(album: &Album, tracks: &[Track]) -> AlbumPage {
             .artists
             .first()
             .and_then(|a| a.picture.as_deref())
-            .and_then(|p| ryotunes_tidal::cover_url(p, CARD_ART)),
+            .and_then(|p| duskytunes_tidal::cover_url(p, CARD_ART)),
         subtitle: Some(album_line(album)),
         second_subtitle: Some(track_count_line(count)),
         description: None,
-        thumbnail: album.cover.as_deref().and_then(|c| ryotunes_tidal::cover_url(c, PAGE_ART)),
+        thumbnail: album.cover.as_deref().and_then(|c| duskytunes_tidal::cover_url(c, PAGE_ART)),
         items: tracks.iter().map(track_to_song).collect(),
         continuation: None,
         explicit: false,
@@ -183,7 +183,7 @@ pub fn artist_page(artist: &Artist, top: &[Track], albums: &[Album]) -> innertub
     };
     innertube::ArtistPage {
         name: Some(artist.name.clone()),
-        thumbnail: artist.picture.as_deref().and_then(|p| ryotunes_tidal::cover_url(p, PAGE_ART)),
+        thumbnail: artist.picture.as_deref().and_then(|p| duskytunes_tidal::cover_url(p, PAGE_ART)),
         description: None,
         subscribers: None,
         monthly_listeners: None,

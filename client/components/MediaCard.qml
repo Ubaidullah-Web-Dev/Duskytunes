@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../lib/ids.js" as Ids
 import "../lib/browse.js" as Browse

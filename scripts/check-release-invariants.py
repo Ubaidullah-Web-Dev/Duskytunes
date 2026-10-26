@@ -37,12 +37,12 @@ for member in cargo['workspace']['members']:
 
 config = json.loads(read('src-tauri/tauri.conf.json'))
 req(config.get('version') == version, 'Tauri version does not match workspace')
-req(config.get('identifier') == 'dev.ryoku.ryotunes', 'Tauri application identity changed')
+req(config.get('identifier') == 'dev.dusky.duskytunes', 'Tauri application identity changed')
 req(json.loads(read('ui/package.json')).get('version') == version,
     'UI version does not match workspace')
 req(read('client/version').strip() == version,
     'native QML client version file does not match workspace')
-appstream = ET.fromstring(read('packaging/linux/dev.ryoku.ryotunes.metainfo.xml'))
+appstream = ET.fromstring(read('packaging/linux/dev.dusky.duskytunes.metainfo.xml'))
 req(appstream.find('releases/release').get('version') == version,
     'AppStream release version does not match workspace')
 arch = read('packaging/arch/PKGBUILD')

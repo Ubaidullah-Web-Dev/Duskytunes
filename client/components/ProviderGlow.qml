@@ -1,5 +1,5 @@
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The provider's light: a red (YouTube Music) or green (Spotify) radial glow at `focusX/Y`, the one

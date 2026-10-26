@@ -1,6 +1,6 @@
 pragma ComponentBehavior: Bound
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // Track/album/artist/playlist artwork with the neutral placeholder every absent or failed thumbnail
@@ -14,7 +14,7 @@ import "../"
 //
 // One thumbnail string draws two ways. An ordinary URL — a real cover, a custom override, a
 // provider image — is the single Image above. The internal collage contract is the literal marker
-// "ryotunes-collage:" followed by a JSON array of exactly four nonempty URL strings; it renders as a
+// "duskytunes-collage:" followed by a JSON array of exactly four nonempty URL strings; it renders as a
 // 2x2 mosaic. The marker is produced only inside the app (a local playlist with four distinct song
 // covers) and never leaves it. Anything that fails to parse — a truncated marker, the wrong shape —
 // falls back to the placeholder rather than the broken source.
@@ -35,14 +35,14 @@ Item {
     // A marker URL is one the daemon addressed to this component; only a well-formed one becomes a
     // collage. Splitting the two lets a malformed marker skip the single Image (which would try, and
     // fail, to load the marker text as a source) and land on the placeholder instead.
-    readonly property bool markerUrl: root.url.lastIndexOf("ryotunes-collage:", 0) === 0
+    readonly property bool markerUrl: root.url.lastIndexOf("duskytunes-collage:", 0) === 0
     readonly property var collageUrls: root.parseCollage(root.url)
     readonly property bool isCollage: root.collageUrls !== null
 
     // Parse once per url change (a plain binding, so no image status feeds back into it): the array
     // of four covers, or null when this is an ordinary URL or a malformed marker.
     function parseCollage(u) {
-        if (u.lastIndexOf("ryotunes-collage:", 0) !== 0)
+        if (u.lastIndexOf("duskytunes-collage:", 0) !== 0)
             return null;
         try {
             var arr = JSON.parse(u.substring(17));

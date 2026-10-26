@@ -1,9 +1,9 @@
 [package]
-name = "ryotunes-spotify"
+name = "duskytunes-spotify"
 version.workspace = true
 edition = "2024"
 license.workspace = true
-description = "Ryotunes Spotify provider: librespot metadata + pipe-to-mpv streaming. Lifted from nolight132/sonora."
+description = "Duskytunes Spotify provider: librespot metadata + pipe-to-mpv streaming. Lifted from nolight132/sonora."
 
 [dependencies]
 anyhow = { workspace = true }

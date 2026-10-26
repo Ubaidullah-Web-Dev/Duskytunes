@@ -1,6 +1,6 @@
-//! Spotify audio, routed into Ryotunes' single libmpv engine.
+//! Spotify audio, routed into Duskytunes' single libmpv engine.
 //!
-//! Ryotunes plays everything through one libmpv instance (tempo/pitch/fx live on its filter chain),
+//! Duskytunes plays everything through one libmpv instance (tempo/pitch/fx live on its filter chain),
 //! so Spotify audio must land in mpv rather than cpal/rodio. This replaces Sonora's
 //! `playback.rs`/`sink.rs`/`audio.rs` (a cpal+rodio sink) with librespot-playback's built-in `pipe`
 //! backend: one librespot [`Player`] per [`crate::Client`] decodes and writes **raw S16LE / 44100 Hz
@@ -12,7 +12,7 @@
 //!   demuxer-rawaudio-rate=44100,demuxer-rawaudio-channels=2
 //! ```
 //!
-//! Note (S16 endianness): librespot emits native-endian S16, which is little-endian on Ryotunes'
+//! Note (S16 endianness): librespot emits native-endian S16, which is little-endian on Duskytunes'
 //! Linux x86-64 target — matching `s16le`. See `README.md` for the pause/EOF caveat.
 
 use std::path::{Path, PathBuf};
@@ -171,14 +171,14 @@ fn translate(event: PlayerEvent) -> Option<StreamEvent> {
     }
 }
 
-/// A named pipe under `$XDG_RUNTIME_DIR/ryotunes/`, removed on drop.
+/// A named pipe under `$XDG_RUNTIME_DIR/duskytunes/`, removed on drop.
 struct Fifo {
     path: PathBuf,
 }
 
 impl Fifo {
     fn create() -> Result<Self> {
-        let dir = runtime_dir().join("ryotunes");
+        let dir = runtime_dir().join("duskytunes");
         std::fs::create_dir_all(&dir)
             .with_context(|| format!("cannot create the FIFO directory {}", dir.display()))?;
         static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);

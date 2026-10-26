@@ -1,5 +1,5 @@
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // A square icon button: hover and pressed tints from Tokens, a disabled dim, and an `active` state

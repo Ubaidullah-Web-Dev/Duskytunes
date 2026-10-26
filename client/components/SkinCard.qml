@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // One entry in the Settings skin picker: a 200 px card carrying the skin's five-swatch strip

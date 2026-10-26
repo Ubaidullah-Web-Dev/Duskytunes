@@ -97,7 +97,7 @@
 	--sidebar-ring: oklch(0.542 0.034 var(--hue));
 }
 
-/* Ryoku owns the application palette; the retired in-app preset theme tables were removed from the current interface. */
+/* Dusky owns the application palette; the retired in-app preset theme tables were removed from the current interface. */
 
 @theme inline {
 	--font-sans: var(--font-sans);
@@ -156,7 +156,7 @@
 		@apply border-border outline-ring/50;
 	}
 	body {
-		/* The main Ryoku window is intentionally opaque on Linux. A full-size alpha surface forces
+		/* The main Dusky window is intentionally opaque on Linux. A full-size alpha surface forces
 		   the compositor to blend every frame and can keep NVIDIA laptop GPUs in P0 even when the
 		   music UI is static. Hyprland supplies the outer corner treatment; the mini player remains
 		   a separate transparent window. */

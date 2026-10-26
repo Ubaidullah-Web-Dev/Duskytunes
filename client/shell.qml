@@ -3,7 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "mini"
 import "components"
 
@@ -24,14 +24,14 @@ ShellRoot {
         Style.applyPrefs();
     }
 
-    // Dev hooks (all optional, unset in normal use): RYOTUNES_WINDOW_TITLE renames the toplevel so
-    // a test instance can be told apart from the daily one; RYOTUNES_SCREEN pins the layer
-    // surfaces to an output (a headless test output, for instance); RYOTUNES_CTL opens a control
+    // Dev hooks (all optional, unset in normal use): DUSKYTUNES_WINDOW_TITLE renames the toplevel so
+    // a test instance can be told apart from the daily one; DUSKYTUNES_SCREEN pins the layer
+    // surfaces to an output (a headless test output, for instance); DUSKYTUNES_CTL opens a control
     // socket that takes one command per line: `nav <page> [json]`, `show`, `mini on|off`,
     // `np <queue|lyrics|off>`, `panel on|off`, `decor rich|calm`, `theme system|light|dark`.
-    readonly property string devTitle: Quickshell.env("RYOTUNES_WINDOW_TITLE") || ""
-    readonly property string devScreen: Quickshell.env("RYOTUNES_SCREEN") || ""
-    readonly property string devCtl: Quickshell.env("RYOTUNES_CTL") || ""
+    readonly property string devTitle: Quickshell.env("DUSKYTUNES_WINDOW_TITLE") || ""
+    readonly property string devScreen: Quickshell.env("DUSKYTUNES_SCREEN") || ""
+    readonly property string devCtl: Quickshell.env("DUSKYTUNES_CTL") || ""
     readonly property var devScreenObj: {
         if (!shellRoot.devScreen) return null;
         var list = Quickshell.screens;
@@ -74,7 +74,7 @@ ShellRoot {
         color: Tokens.paper
         minimumSize: Qt.size(900, 620)
         // Open at the Tauri app's daily-driver geometry (about 86% x 82% of the monitor, capped at
-        // 1600 x 1000) rather than the minimum; the Ryoku rule floats and centres it.
+        // 1600 x 1000) rather than the minimum; the Dusky rule floats and centres it.
         implicitWidth: Math.max(900, Math.min(1600, Math.round((win.screen ? win.screen.width : 1600) * 0.86)))
         implicitHeight: Math.max(620, Math.min(1000, Math.round((win.screen ? win.screen.height : 1000) * 0.82)))
 
@@ -103,7 +103,7 @@ ShellRoot {
         anchors { top: true; bottom: true; left: true; right: true }
         exclusiveZone: 0
         WlrLayershell.layer: WlrLayer.Top
-        WlrLayershell.namespace: "ryotunes-mini"
+        WlrLayershell.namespace: "duskytunes-mini"
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
         mask: Region { x: miniBox.x; y: miniBox.y; width: miniBox.width; height: miniBox.height }
 
@@ -138,7 +138,7 @@ ShellRoot {
 
     // Pause-to-quit: a minute into a pause with no window on screen (closed to tray, or the
     // mini alone), this client exits; the daemon's own idle grace then takes it out too, so a
-    // paused Ryotunes leaves nothing running. A visible main window keeps it alive - that is the
+    // paused Duskytunes leaves nothing running. A visible main window keeps it alive - that is the
     // user's attention, not idleness - and play, or presenting the window, cancels the timer.
     readonly property bool parked: !!Playback.now && Playback.paused && !win.visible
     Timer {
@@ -156,8 +156,8 @@ ShellRoot {
         }
     }
 
-    // "Come back" from two directions: the daemon's `show` event (tray Show, a second `ryotunes` /
-    // `ryotunesd` launch, the desktop keybind) and `qs -p ... ipc call window show`. A closed
+    // "Come back" from two directions: the daemon's `show` event (tray Show, a second `duskytunes` /
+    // `duskytunesd` launch, the desktop keybind) and `qs -p ... ipc call window show`. A closed
     // FloatingWindow is hidden, not destroyed, so this process stays subscribed and the daemon's
     // show reaches it here rather than spawning a second client.
     function present(): void {

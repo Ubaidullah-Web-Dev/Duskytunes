@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>dev.dusky.duskytunes</id>
+  <name>Duskytunes</name>
+  <summary>Dusky desktop music player</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <description>
+    <p>Discover, stream, and enjoy your music collection with Duskytunes, Dusky OS desktop music app. Browse YouTube Music, play local tracks, build playlists, and pick up where you left off with personal recommendations and listening history.</p>
+    <p>A native interface brings together lyrics, downloads, queue management, desktop media controls, and Dusky colours in one place.</p>
+  </description>
+  <launchable type="desktop-id">duskytunes.desktop</launchable>
+  <provides><binary>duskytunes</binary></provides>
+  <categories><category>AudioVideo</category><category>Audio</category></categories>
+  <releases><release version="1.2.3" date="2026-10-26"/></releases>
+</component>

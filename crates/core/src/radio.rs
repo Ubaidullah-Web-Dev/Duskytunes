@@ -14,14 +14,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::orchestrator::PlaybackData;
 
-pub const RADIO_ID_PREFIX: &str = "RYOTUNES_RADIO:";
+pub const RADIO_ID_PREFIX: &str = "DUSKYTUNES_RADIO:";
 const DISCOVERY_URL: &str = "https://all.api.radio-browser.info/json/servers";
 const FALLBACK_SERVERS: [&str; 3] = [
     "https://de1.api.radio-browser.info",
     "https://nl1.api.radio-browser.info",
     "https://at1.api.radio-browser.info",
 ];
-const USER_AGENT: &str = "Ryotunes/2.4 (+https://github.com/ashmitvoid/ryotunes)";
+const USER_AGENT: &str = "Duskytunes/2.4 (+https://github.com/ashmitvoid/duskytunes)";
 const STATION_CACHE_MAX: usize = 256;
 const MAX_QUERY_CHARS: usize = 128;
 const MAX_RADIO_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
@@ -466,7 +466,7 @@ mod tests {
             clickcount: 0,
         };
         let song = song_item(&station);
-        assert_eq!(song.video_id, "RYOTUNES_RADIO:id");
+        assert_eq!(song.video_id, "DUSKYTUNES_RADIO:id");
         assert_eq!(song.artists, "Live Radio · US");
     }
 }

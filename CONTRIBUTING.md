@@ -1,6 +1,6 @@
-# Contributing to Ryotunes
+# Contributing to Duskytunes
 
-Ryotunes is a Ryoku-first desktop application, so changes are reviewed for behaviour, integration and steady-state cost — not only whether they compile.
+Duskytunes is a Dusky-first desktop application, so changes are reviewed for behaviour, integration and steady-state cost — not only whether they compile.
 
 ## Start here
 
@@ -40,18 +40,18 @@ Changes must not regress these release-critical behaviours:
 - explicit Quit fully stopping playback and unregistering media state;
 - event-driven playback without a permanent high-frequency frontend transport timer;
 - stable Home DOM without physical section virtualization;
-- independent `Ryotunes Mini` geometry;
-- replacement packaging that never removes `ryoku-desktop`.
+- independent `Duskytunes Mini` geometry;
+- replacement packaging that never removes `dusky-desktop`.
 
 ## UI conventions
 
-- Treat Ryoku live semantic tokens as the Follow System source of truth.
-- Do not create an independent palette layer that only partly follows Ryoku.
+- Treat Dusky live semantic tokens as the Follow System source of truth.
+- Do not create an independent palette layer that only partly follows Dusky.
 - Artwork may be colourful; functional chrome stays restrained.
 - Prefer one-pixel structure, compact geometry and existing UI primitives.
 - Use existing iconography before introducing another library.
 - Motion should communicate state, not run as ambient decoration.
-- Honour reduced-motion and Ryoku motion settings.
+- Honour reduced-motion and Dusky motion settings.
 - Do not add custom wheel physics.
 - Keep network/provider logic behind the Rust command boundary.
 

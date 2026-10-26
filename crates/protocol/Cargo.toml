@@ -1,9 +1,9 @@
 [package]
-name = "ryotunes-protocol"
+name = "duskytunes-protocol"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Ryotunes daemon wire protocol: newline-delimited JSON requests, responses and events."
+description = "Duskytunes daemon wire protocol: newline-delimited JSON requests, responses and events."
 
 [dependencies]
 serde = { workspace = true }

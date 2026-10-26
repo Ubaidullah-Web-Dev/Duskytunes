@@ -5,7 +5,7 @@
 //! romanizes (Sonora pulled in kakasi/deunicode for that); the `romanized` fields remain in the
 //! shapes so serialization matches, they are simply never populated here.
 //!
-//! See `README.md` for how these map onto `ryotunes_core::innertube` (`SongItem`-like) shapes.
+//! See `README.md` for how these map onto `duskytunes_core::innertube` (`SongItem`-like) shapes.
 
 use std::sync::Arc;
 use std::time::Duration;
@@ -216,7 +216,7 @@ pub enum Lyrics {
 }
 
 impl Lyrics {
-    /// Unsynced lyrics. Ryotunes does not romanize (Sonora did, via kakasi); `romanized` stays
+    /// Unsynced lyrics. Duskytunes does not romanize (Sonora did, via kakasi); `romanized` stays
     /// `None` so daemon-side serialization keeps the same shape.
     pub fn plain(text: impl Into<String>) -> Self {
         Self::Plain { text: text.into(), romanized: None }

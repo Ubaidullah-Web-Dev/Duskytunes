@@ -12,7 +12,7 @@ ver="$(sed -n 's/^version = "\([0-9.]*\)"/\1/p' Cargo.toml | head -1)"
 [[ -n "$ver" ]] || { say FAIL 'workspace version missing from Cargo.toml'; fail=1; }
 grep -q "\"version\": \"$ver\"" src-tauri/tauri.conf.json || { say FAIL "Tauri version is not $ver"; fail=1; }
 grep -q "\"version\": \"$ver\"" ui/package.json || { say FAIL "UI version is not $ver"; fail=1; }
-grep -q '"identifier": "dev.ryoku.ryotunes"' src-tauri/tauri.conf.json || { say FAIL 'unexpected application identifier'; fail=1; }
+grep -q '"identifier": "dev.dusky.duskytunes"' src-tauri/tauri.conf.json || { say FAIL 'unexpected application identifier'; fail=1; }
 
 say check 'private keys and private endpoints'
 # Scan versioned/unignored source, not makepkg trees or generated frontend output.
@@ -54,12 +54,12 @@ for p in root.rglob('*.toml'):
 print('JSON/TOML: OK')
 PY
 
-say check 'every shipped skin passes ryotunes-cli skin check'
+say check 'every shipped skin passes duskytunes-cli skin check'
 if command -v cargo >/dev/null 2>&1; then
-  cargo build -q -p ryotunes-cli
+  cargo build -q -p duskytunes-cli
   for d in skins/*/; do
     [ -f "${d}skin.json" ] || continue
-    ./target/debug/ryotunes-cli skin check "$d" >/dev/null \
+    ./target/debug/duskytunes-cli skin check "$d" >/dev/null \
       || { say FAIL "skin ${d} fails validation"; fail=1; }
   done
 else
@@ -75,7 +75,7 @@ if command -v node >/dev/null 2>&1; then
   done
 fi
 
-if [[ "${RYOTUNES_STATIC_ONLY:-0}" == "1" ]]; then
+if [[ "${DUSKYTUNES_STATIC_ONLY:-0}" == "1" ]]; then
   # Package builders run the semantic frontend check and the real Rust/Tauri compile exactly once
   # afterwards.  Keeping this pass structural avoids three duplicate frontend builds and an
   # unnecessary full cargo-test compile on an end-user machine.

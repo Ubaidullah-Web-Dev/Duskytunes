@@ -1,5 +1,5 @@
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // A mood/filter pill from the Home chip rail: a 32 px fully-rounded pill, outlined at rest and

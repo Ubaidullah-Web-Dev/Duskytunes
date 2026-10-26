@@ -21,7 +21,7 @@
 	import { Search01Icon, PlayIcon, ArrowRight01Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
 	import { Button } from '$lib/components/ui/button';
 	import SearchSuggest from '$lib/components/SearchSuggest.svelte';
-	import RyokuPageHeader from '$lib/components/RyokuPageHeader.svelte';
+	import DuskyPageHeader from '$lib/components/DuskyPageHeader.svelte';
 	import TrackRow from '$lib/components/TrackRow.svelte';
 	import TrackMenu from '$lib/components/TrackMenu.svelte';
 	import PlaylistMenu from '$lib/components/PlaylistMenu.svelte';
@@ -35,7 +35,7 @@
 	import { thumb } from '$lib/thumb';
 	import { recentItems, freshen } from '$lib/personal';
 	import { cloneSearchPager, createSearchPager, nextSearchPage, searchPagerDone, type SearchPagerState } from '$lib/search-pager';
-	import { ownNestedVerticalScroll } from '$lib/ryoku-scroll';
+	import { ownNestedVerticalScroll } from '$lib/dusky-scroll';
 	import { t } from '$lib/i18n.svelte';
 
 	type Cached = { res: SearchResults; songs: SongItem[]; songContinuation?: string };
@@ -71,12 +71,12 @@
 		const value = q.trim();
 		if (!value) return;
 		searchHistory = [value, ...searchHistory.filter((x) => x.toLowerCase() !== value.toLowerCase())].slice(0, 6);
-		try { localStorage.setItem('ryotunes_search_history', JSON.stringify(searchHistory)); } catch {}
+		try { localStorage.setItem('duskytunes_search_history', JSON.stringify(searchHistory)); } catch {}
 	}
 
 	function clearHistory() {
 		searchHistory = [];
-		try { localStorage.removeItem('ryotunes_search_history'); } catch {}
+		try { localStorage.removeItem('duskytunes_search_history'); } catch {}
 	}
 
 	function searchAgain(value: string) {
@@ -168,7 +168,7 @@
 	onMount(() => {
 		mounted = true;
 		try {
-			const saved = JSON.parse(localStorage.getItem('ryotunes_search_history') ?? '[]');
+			const saved = JSON.parse(localStorage.getItem('duskytunes_search_history') ?? '[]');
 			if (Array.isArray(saved)) searchHistory = saved.filter((x): x is string => typeof x === 'string').slice(0, 6);
 		} catch {}
 		if (!urlQuery && query) runSearch();
@@ -332,7 +332,7 @@
 <svelte:window onkeydown={searchKeys} />
 
 <div class="ryo-route-page flex h-full flex-col">
-	<RyokuPageHeader
+	<DuskyPageHeader
 		eyebrow="MUSIC / DISCOVERY"
 		title={t('Search')}
 		blurb={t('Tune into a track, artist, album or playlist — one discovery index, built for keyboard flow.')}

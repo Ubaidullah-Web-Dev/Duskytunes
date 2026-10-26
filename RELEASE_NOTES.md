@@ -1,4 +1,4 @@
-# Ryotunes v2.4.1 — Security hardening for the v2.4 release
+# Duskytunes v2.4.1 — Security hardening for the v2.4 release
 
 v2.4.1 keeps the Radio, signed-out device-playlist and custom Discord-presence features introduced
 in v2.4, while tightening the native/WebKit trust boundary and the release supply chain. The native
@@ -7,11 +7,11 @@ architecture remain unchanged.
 
 ## WebView and IPC hardening
 
-- All Ryotunes application commands are registered with Tauri's runtime authority through an
+- All Duskytunes application commands are registered with Tauri's runtime authority through an
   explicit `AppManifest`.
 - One application permission, `allow-ui-commands`, is granted only to the bundled `main` and
   `mini` surfaces. The remote Google login page and hidden cipher/PoToken JavaScript runtimes
-  cannot invoke Ryotunes application commands.
+  cannot invoke Duskytunes application commands.
 - The bundled surfaces no longer use broad `core:default`. They receive only the app/event APIs
   and explicit window/WebView operations the UI actually uses; renderer-side core image/path, tray,
   menu and resource defaults are not exposed.
@@ -27,10 +27,10 @@ architecture remain unchanged.
 
 ## Local files and portable playlists
 
-- A forged `LOCAL:` media id is rejected unless its exact path is present in Ryotunes' native
+- A forged `LOCAL:` media id is rejected unless its exact path is present in Duskytunes' native
   scanned `local_tracks` database.
 - Watched music folders are not recursively exposed through Tauri's asset protocol. Cover images are
-  copied into Ryotunes-owned storage and only approved cover files are renderer-visible.
+  copied into Duskytunes-owned storage and only approved cover files are renderer-visible.
 - Portable playlist import/export accepts YouTube Music tracks only, so local filesystem paths and
   live-radio records cannot leak into shareable JSON.
 
@@ -78,25 +78,25 @@ architecture remain unchanged.
 - Device playlists support add/remove/reorder/rename/delete and local custom artwork.
 
 ### Discord Rich Presence
-- The default activity title is **Ryotunes**.
+- The default activity title is **Duskytunes**.
 - Users can set a local 2–128 character vanity title in Settings.
-- Ryotunes' fixed Discord application/client identity does not change.
+- Duskytunes' fixed Discord application/client identity does not change.
 
 ## Performance and lifecycle preserved
 
 - Audio playback remains native through libmpv.
 - Main WebKit hibernation during background playback remains intact.
-- MPRIS, hardware media keys, Ryoku shell controls and tray playback remain native.
+- MPRIS, hardware media keys, Dusky shell controls and tray playback remain native.
 - Five-minute tray-only idle exit remains unchanged when nothing is playing.
 - Explicit Quit still tears down playback, MPRIS and integrations immediately.
 - No permanent high-frequency frontend timer was added.
 - Home retains its stable non-virtualized section architecture and bounded artwork pipeline.
-- Live Ryoku theme updates remain event-driven.
+- Live Dusky theme updates remain event-driven.
 
 ## Packaging
 
-The v2.4 replacement package identity is **`ryotunes-v2.4 2.4.1-1`**.
+The v2.4 replacement package identity is **`duskytunes-v2.4 2.4.1-1`**.
 
-It keeps `ryoku-desktop` installed, preserves the genuine stock Ryotunes entry points for rollback,
-installs the custom binary under `/usr/lib/ryotunes-v2.4/ryotunes`, exposes one normal
-`/usr/bin/ryotunes` route and desktop launcher, and installs the managed Ryoku window rule.
+It keeps `dusky-desktop` installed, preserves the genuine stock Duskytunes entry points for rollback,
+installs the custom binary under `/usr/lib/duskytunes-v2.4/duskytunes`, exposes one normal
+`/usr/bin/duskytunes` route and desktop launcher, and installs the managed Dusky window rule.

@@ -3,10 +3,10 @@
   "format": 1,
   "id": "mist",
   "name": "Mist",
-  "author": "Ryoku",
+  "author": "Dusky",
   "version": "1.0.0",
   "license": "CC0-1.0",
-  "homepage": "https://github.com/ryoku-dev/ryotunes",
+  "homepage": "https://github.com/Ubaidullah-Web-Dev/Duskytunes",
   "description": "Light-first: fog paper, slate-navy ink, a quiet teal sun. Calm and flat, with a matching dark mode.",
   "default": "light",
   "modes": {

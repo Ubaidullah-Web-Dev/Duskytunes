@@ -1,11 +1,11 @@
 //! Live SoundCloud smoke test (network test policy). NOT in the default run — it hits the real
 //! guest api-v2, discovers a client_id, and exercises the whole path end to end:
-//!   cargo test -p ryotunes-soundcloud -- --ignored --nocapture
+//!   cargo test -p duskytunes-soundcloud -- --ignored --nocapture
 //!
 //! It searches "klingande messiah", then fetches the track, its stream URL, its waveform, the
 //! artist, the artist's albums, the Discover feed, and a system playlist — one line of evidence each.
 
-use ryotunes_soundcloud::{DiscoverItem, SoundCloud};
+use duskytunes_soundcloud::{DiscoverItem, SoundCloud};
 
 /// Host portion of a URL, for terse evidence output.
 fn host_of(url: &str) -> &str {
@@ -15,7 +15,7 @@ fn host_of(url: &str) -> &str {
 #[tokio::test]
 #[ignore = "hits the live SoundCloud api-v2; run with --ignored"]
 async fn live_smoke() {
-    let cache = std::env::temp_dir().join("ryotunes-soundcloud-smoke");
+    let cache = std::env::temp_dir().join("duskytunes-soundcloud-smoke");
     let sc = SoundCloud::new(cache);
 
     // 1. Search.

@@ -115,8 +115,8 @@
 				<div class="ryo-rail-brand-row">
 					<span class="ryo-rail-brand-mark">力</span>
 					<div class="min-w-0 flex-1">
-						<div class="ryo-rail-brand-name">RYOTUNES</div>
-						<div class="ryo-rail-brand-sub">RYOKU // MUSIC</div>
+						<div class="ryo-rail-brand-name">DUSKYTUNES</div>
+						<div class="ryo-rail-brand-sub">DUSKY // MUSIC</div>
 					</div>
 					<Button variant="ghost" size="icon-sm" onclick={toggleSidebar} aria-label={t('Collapse sidebar')} class="ryo-rail-collapse">
 						<HugeiconsIcon icon={SquareArrowLeft01Icon} class="h-4 w-4" />
@@ -273,9 +273,9 @@
 
 	<div class="ryo-rail-foot hidden {wide('lg:block')}">
 		<div class="ryo-rail-foot-rule"></div>
-		<div class="ryo-rail-edition"><span>RYOKU</span><b>// MUSIC</b><em>LIVE</em></div>
+		<div class="ryo-rail-edition"><span>DUSKY</span><b>// MUSIC</b><em>LIVE</em></div>
 		<div class="ryo-rail-barcode"></div>
-		<div class="ryo-rail-barcode-label">RYOTUNES · DESKTOP</div>
+		<div class="ryo-rail-barcode-label">DUSKYTUNES · DESKTOP</div>
 	</div>
 
 </aside>

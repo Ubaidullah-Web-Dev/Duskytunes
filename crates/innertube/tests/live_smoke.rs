@@ -60,15 +60,15 @@ async fn direct_clients_resolve_and_stream() {
 
 /// Live regression for the "load more duplicates tracks" bug: an owned playlist's continuation
 /// embeds a nested duplicate renderer per row. Self-skips unless a real session is supplied:
-///   RYOTUNES_COOKIE=… RYOTUNES_VISITOR=… cargo test -p innertube --features integration-tests owned_continuation_not_doubled -- --ignored --nocapture
+///   DUSKYTUNES_COOKIE=… DUSKYTUNES_VISITOR=… cargo test -p innertube --features integration-tests owned_continuation_not_doubled -- --ignored --nocapture
 #[tokio::test]
 #[ignore]
 async fn owned_continuation_not_doubled() {
-    let Some(cookie) = std::env::var("RYOTUNES_COOKIE").ok().filter(|s| !s.is_empty()) else {
-        eprintln!("skipped: set RYOTUNES_COOKIE (+RYOTUNES_VISITOR) to run");
+    let Some(cookie) = std::env::var("DUSKYTUNES_COOKIE").ok().filter(|s| !s.is_empty()) else {
+        eprintln!("skipped: set DUSKYTUNES_COOKIE (+DUSKYTUNES_VISITOR) to run");
         return;
     };
-    let visitor = std::env::var("RYOTUNES_VISITOR").ok().filter(|s| !s.is_empty());
+    let visitor = std::env::var("DUSKYTUNES_VISITOR").ok().filter(|s| !s.is_empty());
     let it = InnerTube::new(
         Session { cookie: Some(cookie), visitor_data: visitor, ..Session::default() },
         None,
@@ -104,15 +104,15 @@ async fn owned_continuation_not_doubled() {
 
 /// Issue #72: the library grids come back ~25 at a time, so a single browse truncated any bigger
 /// library. Asserts the grids page past one response, on an account that has more than one page.
-///   RYOTUNES_COOKIE=… RYOTUNES_VISITOR=… cargo test -p innertube --features integration-tests library_grids_page -- --ignored --nocapture
+///   DUSKYTUNES_COOKIE=… DUSKYTUNES_VISITOR=… cargo test -p innertube --features integration-tests library_grids_page -- --ignored --nocapture
 #[tokio::test]
 #[ignore]
 async fn library_grids_page_past_the_first_response() {
-    let Some(cookie) = std::env::var("RYOTUNES_COOKIE").ok().filter(|s| !s.is_empty()) else {
-        eprintln!("skipped: set RYOTUNES_COOKIE (+RYOTUNES_VISITOR) to run");
+    let Some(cookie) = std::env::var("DUSKYTUNES_COOKIE").ok().filter(|s| !s.is_empty()) else {
+        eprintln!("skipped: set DUSKYTUNES_COOKIE (+DUSKYTUNES_VISITOR) to run");
         return;
     };
-    let visitor = std::env::var("RYOTUNES_VISITOR").ok().filter(|s| !s.is_empty());
+    let visitor = std::env::var("DUSKYTUNES_VISITOR").ok().filter(|s| !s.is_empty());
     let it = InnerTube::new(
         Session { cookie: Some(cookie), visitor_data: visitor, ..Session::default() },
         None,
@@ -146,15 +146,15 @@ async fn library_grids_page_past_the_first_response() {
 ///
 /// Read-only on purpose. The write side (`playlist_set_sort`) changes a real playlist for every
 /// client on the account, so it is not something a test suite should do behind your back.
-///   RYOTUNES_COOKIE=… RYOTUNES_VISITOR=… cargo test -p innertube --features integration-tests playlist_sort -- --ignored --nocapture
+///   DUSKYTUNES_COOKIE=… DUSKYTUNES_VISITOR=… cargo test -p innertube --features integration-tests playlist_sort -- --ignored --nocapture
 #[tokio::test]
 #[ignore]
 async fn playlist_sort_params_still_order_the_server_side_list() {
-    let Some(cookie) = std::env::var("RYOTUNES_COOKIE").ok().filter(|s| !s.is_empty()) else {
-        eprintln!("skipped: set RYOTUNES_COOKIE (+RYOTUNES_VISITOR) to run");
+    let Some(cookie) = std::env::var("DUSKYTUNES_COOKIE").ok().filter(|s| !s.is_empty()) else {
+        eprintln!("skipped: set DUSKYTUNES_COOKIE (+DUSKYTUNES_VISITOR) to run");
         return;
     };
-    let visitor = std::env::var("RYOTUNES_VISITOR").ok().filter(|s| !s.is_empty());
+    let visitor = std::env::var("DUSKYTUNES_VISITOR").ok().filter(|s| !s.is_empty());
     let it = InnerTube::new(
         Session { cookie: Some(cookie), visitor_data: visitor, ..Session::default() },
         None,
@@ -342,15 +342,15 @@ async fn radio_seeds_resolve() {
 /// the playlist parser (that browseId is YouTube's own Library ▸ Songs, despite the name). Nothing
 /// else in the app touches it, so this is what says whether YouTube still answers it with a track
 /// shelf and a paging token.
-///   RYOTUNES_COOKIE=… RYOTUNES_VISITOR=… cargo test -p innertube --features integration-tests library_songs -- --ignored --nocapture
+///   DUSKYTUNES_COOKIE=… DUSKYTUNES_VISITOR=… cargo test -p innertube --features integration-tests library_songs -- --ignored --nocapture
 #[tokio::test]
 #[ignore]
 async fn library_songs_browse_returns_tracks() {
-    let Some(cookie) = std::env::var("RYOTUNES_COOKIE").ok().filter(|s| !s.is_empty()) else {
-        eprintln!("skipped: set RYOTUNES_COOKIE (+RYOTUNES_VISITOR) to run");
+    let Some(cookie) = std::env::var("DUSKYTUNES_COOKIE").ok().filter(|s| !s.is_empty()) else {
+        eprintln!("skipped: set DUSKYTUNES_COOKIE (+DUSKYTUNES_VISITOR) to run");
         return;
     };
-    let visitor = std::env::var("RYOTUNES_VISITOR").ok().filter(|s| !s.is_empty());
+    let visitor = std::env::var("DUSKYTUNES_VISITOR").ok().filter(|s| !s.is_empty());
     let it = InnerTube::new(
         Session { cookie: Some(cookie), visitor_data: visitor, ..Session::default() },
         None,

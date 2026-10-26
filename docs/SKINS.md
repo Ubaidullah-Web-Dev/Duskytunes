@@ -1,10 +1,10 @@
-# Ryotunes skins
+# Duskytunes skins
 
 A **skin** is one file, `skin.json`, that names every colour, type face, radius and duration the
-Ryotunes chrome reads. You pick one in Settings (or let it follow the desktop); editing its file
+Duskytunes chrome reads. You pick one in Settings (or let it follow the desktop); editing its file
 re-paints the running app live. This is the format reference. The machine-checkable version is
 [`skins/skin.schema.json`](../skins/skin.schema.json); validate a skin with
-`ryotunes-cli skin check <dir>`.
+`duskytunes-cli skin check <dir>`.
 
 ## What a skin controls — and what it does not
 
@@ -14,7 +14,7 @@ A skin sets:
   on `Tokens` so every surface re-renders at once.
 - **Type** — the display, UI and mono font families.
 - **Shape** — corner radii.
-- **Motion** — the four base durations (they still pass Ryoku's reduce-motion gate).
+- **Motion** — the four base durations (they still pass Dusky's reduce-motion gate).
 - **Decor** — `rich` (full grain/texture) or `calm` (flatter, quieter).
 - **Accent** — where the highlight colour comes from: the artwork, the provider brand, the skin's
   own `sun`, or a fixed hex.
@@ -76,7 +76,7 @@ Paper's per-mode values.
 | `sun` | the primary / accent | `#e2342a` | `#e2342a` |
 | `alert` | error / destructive | `#d33b32` | `#d33b32` |
 
-`ryotunes-cli skin check` enforces WCAG contrast on the text pairs:
+`duskytunes-cli skin check` enforces WCAG contrast on the text pairs:
 
 | Pair | Threshold | Severity |
 | --- | --- | --- |
@@ -98,33 +98,33 @@ A skin may ship both `dark` and `light`, or just one. In Settings, **Light / Dar
 `Prefs.skin` is either `"system"` or a skin **id**. An id is looked up in these directories, and the
 **first hit per id wins**:
 
-1. `$RYOTUNES_SKIN_DIRS` — colon-separated, dev/preview only.
-2. `~/.config/ryotunes/skins/<id>/skin.json` — **user** skins; the `matugen` skin lives here.
-3. `~/.local/share/ryoku/ryotunes-skins/<id>/skin.json` — **store** skins, what RyoStore installs
-   (its `ryotunes-skins` category; each folder carries the store's receipt).
-4. `<shellDir>/../skins/<id>/skin.json` — **shipped**: `/usr/share/ryotunes/skins` when installed,
+1. `$DUSKYTUNES_SKIN_DIRS` — colon-separated, dev/preview only.
+2. `~/.config/duskytunes/skins/<id>/skin.json` — **user** skins; the `matugen` skin lives here.
+3. `~/.local/share/dusky/duskytunes-skins/<id>/skin.json` — **store** skins, what RyoStore installs
+   (its `duskytunes-skins` category; each folder carries the store's receipt).
+4. `<shellDir>/../skins/<id>/skin.json` — **shipped**: `/usr/share/duskytunes/skins` when installed,
    `./skins` in a checkout.
 
 So a user skin shadows a store install, which shadows a shipped skin of the same id. The user and
 store directories are watched: an install, a remove, or a folder dropped in shows up without a
-reload. `RYOTUNES_SKIN=<id>` pins a skin for one run (previews use this); `ryotunes-cli skin use
+reload. `DUSKYTUNES_SKIN=<id>` pins a skin for one run (previews use this); `duskytunes-cli skin use
 <id|system>` selects one from a shell (it writes `client.json`, and the running app repaints).
 
 ```
-/usr/share/ryotunes/skins/<id>/            shipped skins (skin.json, preview.png)
-/usr/share/ryotunes/matugen/ryotunes.json  the matugen template
-~/.local/share/ryoku/ryotunes-skins/<id>/  RyoStore installs (skin.json, preview, receipt)
-~/.config/ryotunes/skins/<id>/             user skins
-~/.config/ryotunes/skins/matugen/          the matugen-generated skin
-~/.config/ryotunes/client.json             prefs (skin, decor, themeMode, mini position)
+/usr/share/duskytunes/skins/<id>/            shipped skins (skin.json, preview.png)
+/usr/share/duskytunes/matugen/duskytunes.json  the matugen template
+~/.local/share/dusky/duskytunes-skins/<id>/  RyoStore installs (skin.json, preview, receipt)
+~/.config/duskytunes/skins/<id>/             user skins
+~/.config/duskytunes/skins/matugen/          the matugen-generated skin
+~/.config/duskytunes/client.json             prefs (skin, decor, themeMode, mini position)
 ```
 
 ## Installing skins from RyoStore
 
-On Ryoku, **Settings › Appearance › Get more skins** opens RyoStore on its *Ryotunes skins*
-category (`ryostore open ryotunes-skins`). Install there; the skin appears in the picker with a
-STORE badge, and the store shows it as ACTIVE while Ryotunes wears it. Removing it in the store
-takes it out of the picker (Ryotunes falls back to Paper if it was active). Nothing in Ryotunes
+On Dusky, **Settings › Appearance › Get more skins** opens RyoStore on its *Duskytunes skins*
+category (`ryostore open duskytunes-skins`). Install there; the skin appears in the picker with a
+STORE badge, and the store shows it as ACTIVE while Duskytunes wears it. Removing it in the store
+takes it out of the picker (Duskytunes falls back to Paper if it was active). Nothing in Duskytunes
 needs a restart for any of this.
 
 ## Live reload
@@ -135,7 +135,7 @@ watch it land.
 
 ## The `system` skin
 
-`system` is the default on a Ryoku desktop. It **follows the desktop theme** through `Tokens`:
+`system` is the default on a Dusky desktop. It **follows the desktop theme** through `Tokens`:
 
 - **Follows:** the colour scheme (the wallpaper palette or a named scheme), plus `decor` and
   `motion` from the shell.
@@ -149,15 +149,15 @@ desktop.
 ## matugen
 
 The `matugen` skin is just a skin whose file matugen writes from your wallpaper. The template shipped
-at `/usr/share/ryotunes/matugen/ryotunes.json` maps Material 3 roles to the eight skin colours in
+at `/usr/share/duskytunes/matugen/duskytunes.json` maps Material 3 roles to the eight skin colours in
 both modes, e.g. `"paper": "{{colors.surface.dark.hex}}"`, `"sun": "{{colors.primary.dark.hex}}"`.
 
 Add this to `~/.config/matugen/config.toml`:
 
 ```toml
-[templates.ryotunes]
-input_path = "/usr/share/ryotunes/matugen/ryotunes.json"
-output_path = "~/.config/ryotunes/skins/matugen/skin.json"
+[templates.duskytunes]
+input_path = "/usr/share/duskytunes/matugen/duskytunes.json"
+output_path = "~/.config/duskytunes/skins/matugen/skin.json"
 ```
 
 Then render it by hand from any image:
@@ -166,19 +166,19 @@ Then render it by hand from any image:
 matugen -t scheme-fidelity --prefer saturation image ~/Pictures/wallpaper.png
 ```
 
-That writes `~/.config/ryotunes/skins/matugen/skin.json`; select **Matugen** in Settings (it is
-marked *regenerated — fork to edit*, since the next palette change overwrites it). On **Ryoku**, the
+That writes `~/.config/duskytunes/skins/matugen/skin.json`; select **Matugen** in Settings (it is
+marked *regenerated — fork to edit*, since the next palette change overwrites it). On **Dusky**, the
 Hub's **Theme apps** toggle does all of this automatically, fanning the wallpaper palette into
-Ryotunes on every change.
+Duskytunes on every change.
 
 ## Authoring a skin
 
 1. **Start from something.** In Settings, **Fork** the current skin (it writes
-   `~/.config/ryotunes/skins/<id>/skin.json` from the painted palette and opens it), or copy
+   `~/.config/duskytunes/skins/<id>/skin.json` from the painted palette and opens it), or copy
    `skins/paper/` to `skins/<id>/` and rename `id` to `<id>`.
 2. **Edit live.** Change colours, type, `shape`, `motion`, `decor`, `accent`, `wash`. The app
    re-paints on save. Keep `id` equal to the folder name.
-3. **Check it.** `ryotunes-cli skin check skins/<id>` — fix every **error** (contrast, hex, ranges);
+3. **Check it.** `duskytunes-cli skin check skins/<id>` — fix every **error** (contrast, hex, ranges);
    address warnings where you can. Errors block a PR.
 4. **Do both modes.** If you ship `dark` and `light`, tune each; the validator checks contrast per
    mode. Pin Light and Dark in Settings and look at both.
@@ -187,22 +187,22 @@ Ryotunes on every change.
 
 ## Submitting a skin
 
-Community skins are **RyoStore products**: Ryotunes is a binary package, and the store is how a
-skin reaches every Ryoku desktop without a Ryotunes release. Open a PR against
-[ryoku-dev/ryostore](https://github.com/ryoku-dev/ryostore) that adds `ryotunes-skins/<id>/` and its
-entry in `ryotunes-skins/registry.json` — the layout, the packing tool and the checklist are in
-that repo's [`ryotunes-skins/AUTHORING.md`](https://github.com/ryoku-dev/ryostore/blob/main/ryotunes-skins/AUTHORING.md).
+Community skins are **RyoStore products**: Duskytunes is a binary package, and the store is how a
+skin reaches every Dusky desktop without a Duskytunes release. Open a PR against
+[dusky-dev/ryostore](https://github.com/dusky-dev/ryostore) that adds `duskytunes-skins/<id>/` and its
+entry in `duskytunes-skins/registry.json` — the layout, the packing tool and the checklist are in
+that repo's [`duskytunes-skins/AUTHORING.md`](https://github.com/dusky-dev/ryostore/blob/main/duskytunes-skins/AUTHORING.md).
 In short:
 
-- [ ] `skin.json` with `format: 1`, `id` = the folder name, `ryotunes-cli skin check` with **no errors**.
+- [ ] `skin.json` with `format: 1`, `id` = the folder name, `duskytunes-cli skin check` with **no errors**.
 - [ ] `license` is `CC0-1.0` or `MIT`; `LICENSE` and `PROVENANCE.txt` beside it.
 - [ ] `preview.png`, 800×500, from `scripts/dev/skin-preview.sh <dir> <dir>/preview.png`.
 - [ ] Any bundled `fonts/` are freely redistributable — **no proprietary fonts**. Prefer naming a
       common family in `type` over bundling.
-- [ ] `tools/pack-product.py ryotunes-skins/<id>` run last (it writes `manifest.json` and the
+- [ ] `tools/pack-product.py duskytunes-skins/<id>` run last (it writes `manifest.json` and the
       registry hash); `python3 tests/validate-store.py` passes.
 
-Test it live before submitting: `echo "file://$HOME/Work/ryostore" > ~/.config/ryoku/ryostore-base`
+Test it live before submitting: `echo "file://$HOME/Work/ryostore" > ~/.config/dusky/ryostore-base`
 points the store at your checkout (see ryostore's `DEVELOP.md`), so Install/Remove run against your
 folder exactly as they will for users.
 

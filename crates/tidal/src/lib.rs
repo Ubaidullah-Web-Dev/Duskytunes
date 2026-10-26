@@ -1,4 +1,4 @@
-//! TIDAL provider for Ryotunes.
+//! TIDAL provider for Duskytunes.
 //!
 //! The crate owns one HTTP funnel, the two OAuth flows TIDAL offers a desktop client, the slice of
 //! the catalogue a player needs, and the step that turns a track into something openable. It holds

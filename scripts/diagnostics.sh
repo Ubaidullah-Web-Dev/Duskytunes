@@ -7,9 +7,9 @@ line() { printf '%-22s %s\n' "$1" "$2"; }
 printf '%s\n' 'Duskytunes diagnostics (sanitized)'
 printf '%s\n' '----------------------------------'
 if command -v xbps-query >/dev/null 2>&1; then
-  pkg_version="$(xbps-query -p pkgver duskytunes 2>/dev/null || xbps-query -p pkgver ryotunes 2>/dev/null || printf 'source/unpackaged')"
+  pkg_version="$(xbps-query -p pkgver duskytunes 2>/dev/null || xbps-query -p pkgver duskytunes 2>/dev/null || printf 'source/unpackaged')"
 else
-  pkg_version="$(pacman -Q duskytunes 2>/dev/null | awk '{print $2}' || pacman -Q ryotunes 2>/dev/null | awk '{print $2}' || printf 'source/unpackaged')"
+  pkg_version="$(pacman -Q duskytunes 2>/dev/null | awk '{print $2}' || pacman -Q duskytunes 2>/dev/null | awk '{print $2}' || printf 'source/unpackaged')"
 fi
 line 'Duskytunes package:' "$pkg_version"
 line 'Kernel:' "$(uname -sr 2>/dev/null || printf 'unknown')"
@@ -34,8 +34,8 @@ line 'pnpm:' "$(pnpm --version 2>/dev/null || printf 'not installed')"
 line 'Hyprland:' "$(hyprctl version -j 2>/dev/null | sed -n 's/.*"tag":"\([^"]*\)".*/\1/p' | head -n 1 || true)"
 line 'GPU classes:' "$(lspci 2>/dev/null | grep -Ei 'VGA|3D controller' | sed -E 's/^[0-9a-f:.]+ //' | paste -sd ';' - || printf 'unknown')"
 
-find_ryotunes_pid() {
-  local expected='/usr/lib/ryotunes-v2.4/ryotunes' p exe
+find_duskytunes_pid() {
+  local expected='/usr/lib/duskytunes-v2.4/duskytunes' p exe
   for p in /proc/[0-9]*; do
     [[ -e "$p/exe" ]] || continue
     exe="$(readlink -f "$p/exe" 2>/dev/null || true)"
@@ -44,11 +44,11 @@ find_ryotunes_pid() {
   return 1
 }
 
-ryo_pid="$(find_ryotunes_pid || true)"
+ryo_pid="$(find_duskytunes_pid || true)"
 if [[ -n "$ryo_pid" ]]; then
-  line 'Ryotunes running:' "yes (pid $ryo_pid)"
+  line 'Duskytunes running:' "yes (pid $ryo_pid)"
 else
-  line 'Ryotunes running:' 'no'
+  line 'Duskytunes running:' 'no'
 fi
 
 printf '\n%s\n' 'Dependency status'
@@ -69,4 +69,4 @@ else
   printf '  [!!] %s\n' 'Qt TLS plugin missing (no cover art)'
 fi
 
-printf '\n%s\n' 'This report does not include Ryotunes logs, account details, cookies, tokens, local file paths, or network endpoints.'
+printf '\n%s\n' 'This report does not include Duskytunes logs, account details, cookies, tokens, local file paths, or network endpoints.'

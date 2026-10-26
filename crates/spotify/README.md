@@ -1,12 +1,12 @@
-# ryotunes-spotify
+# duskytunes-spotify
 
-A Spotify provider for Ryotunes: OAuth sign-in, rich metadata, and audio streamed into Ryotunes'
+A Spotify provider for Duskytunes: OAuth sign-in, rich metadata, and audio streamed into Duskytunes'
 single libmpv engine.
 
 ## Origin & license
 
 Lifted from **[nolight132/sonora](https://github.com/nolight132/sonora)**, `crates/music/src/spotify`,
-commit **695242e**. Sonora is **GPL-3.0-or-later**; so is Ryotunes and so is this crate. librespot
+commit **695242e**. Sonora is **GPL-3.0-or-later**; so is Duskytunes and so is this crate. librespot
 itself is MIT.
 
 Streaming uses **librespot 0.8** with nolight132's librespot-audio fix. The workspace pins the whole
@@ -43,10 +43,10 @@ hash-registry parsing), which run offline.
 
 ## Audio: pipe → FIFO → mpv
 
-Ryotunes plays everything through one libmpv instance (tempo/pitch/fx on its filter chain), so
+Duskytunes plays everything through one libmpv instance (tempo/pitch/fx on its filter chain), so
 Spotify audio must reach mpv, not a soundcard. One librespot `Player` per `Client` decodes and writes
 **raw S16LE / 44100 Hz / stereo** through librespot-playback's built-in `pipe` backend into a
-per-session FIFO at `$XDG_RUNTIME_DIR/ryotunes/spotify-<pid>.pcm`.
+per-session FIFO at `$XDG_RUNTIME_DIR/duskytunes/spotify-<pid>.pcm`.
 
 The daemon points mpv at the FIFO with the rawaudio demuxer:
 
@@ -79,16 +79,16 @@ librespot finishes decoding a track within seconds of it starting. Two consequen
 - A seek is a plain mpv seek within that cache. librespot has already left its playing state, so
   `StreamHandle::seek` would be rejected there.
 
-Endianness: librespot emits native-endian S16, i.e. little-endian on Ryotunes' Linux x86-64 target,
+Endianness: librespot emits native-endian S16, i.e. little-endian on Duskytunes' Linux x86-64 target,
 matching `s16le`.
 
-## Type mapping → `ryotunes_core::innertube` (`SongItem`)
+## Type mapping → `duskytunes_core::innertube` (`SongItem`)
 
 The provider returns Sonora's richer types (`Track`, `Album`, `Artist`, `Playlist`, `Lyrics`). The
 daemon converts a `Track` into the `SongItem`-like shape the existing InnerTube commands already
 return, so Spotify rides the same command surface:
 
-| `SongItem` field | from `ryotunes_spotify::Track` |
+| `SongItem` field | from `duskytunes_spotify::Track` |
 | --- | --- |
 | `video_id` | `"spotify:track:" + track.id` (the id is the Spotify base62; `None` ⇒ unplayable, skip) |
 | `title` | `track.name` |
@@ -137,7 +137,7 @@ let mut s   = client.stream("<track_id>")?;           // StreamHandle
 `crates/core::spotify::SpotifyState` wraps the provider + current client behind a `tokio::sync::RwLock`
 (`restore` / `sign_in` / `sign_out` / `status` / `client`) for the daemon.
 
-## Daemon wiring (to add in `crates/ryotunesd/src/methods.rs`)
+## Daemon wiring (to add in `crates/duskytunesd/src/methods.rs`)
 
 Spotify is an **additional** provider alongside YouTube Music, never a replacement — the InnerTube
 path is untouched. The daemon holds a `provider` selector (`"youtube" | "spotify"`, set by a top-bar
@@ -179,7 +179,7 @@ the mapping table.
 ## Testing
 
 ```sh
-cargo test -p ryotunes-spotify
+cargo test -p duskytunes-spotify
 ```
 
 All unit tests are offline (protobuf/pb-codec/wire/pathfinder-request/hash-registry parsing, lyric

@@ -1,18 +1,18 @@
 //! Live proof of the SoundCloud resolve path plus the `soundcloud_bridge` artist-page shape.
 //!
 //! Run (hits the network — needs internet):
-//!   `cargo run -p ryotunes-core --example soundcloud_resolve`
+//!   `cargo run -p duskytunes-core --example soundcloud_resolve`
 //!
 //! It resolves `sc:track:580008897` to an HLS stream URL (the same call `AppState::resolve` makes
 //! for a `sc:track:` id) and prints it, then builds `soundcloud_bridge::artist_page` for the user
 //! "Klingande" and prints the JSON keys the client binds to.
 
-use ryotunes_core::soundcloud_bridge;
-use ryotunes_soundcloud::SoundCloud;
+use duskytunes_core::soundcloud_bridge;
+use duskytunes_soundcloud::SoundCloud;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let cache = std::env::temp_dir().join("ryotunes-sc-example");
+    let cache = std::env::temp_dir().join("duskytunes-sc-example");
     let sc = SoundCloud::new(cache);
 
     // 1) Resolve sc:track:580008897 -> HLS m3u8 stream URL (mpv plays it directly).

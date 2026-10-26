@@ -412,7 +412,7 @@ export const removeLocalFolder = (path: string) => runLocal(() => api.removeLoca
 // The store lives in the daemon now (`AppState::{personal,set_personal}`), not localStorage: a
 // native client can't read this webview's browser storage, and this is user state like any other.
 // Loaded from `get_personal` on startup and saved back through `set_personal` (debounced, below).
-const PERSONAL_KEY = 'ryotunes:personal';
+const PERSONAL_KEY = 'duskytunes:personal';
 
 export const personal = $state<Personal>(pl.empty());
 

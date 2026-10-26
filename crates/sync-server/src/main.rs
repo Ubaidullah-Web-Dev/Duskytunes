@@ -1,8 +1,8 @@
-//! Ryotunes "Listen Together" sync server. A self-hosted WebSocket hub that relays small playback
+//! Duskytunes "Listen Together" sync server. A self-hosted WebSocket hub that relays small playback
 //! control messages between a host and guests — audio never touches it; every client streams
 //! direct from YouTube (session protocol). Host-authoritative, server-extrapolated position.
 //!
-//! Plain WebSocket relay. It binds to `127.0.0.1:8080` by default; set `RYOTUNES_SYNC_BIND`
+//! Plain WebSocket relay. It binds to `127.0.0.1:8080` by default; set `DUSKYTUNES_SYNC_BIND`
 //! (for example `0.0.0.0:8080`) when intentionally exposing it to a LAN or reverse proxy.
 //! TLS is terminated by the reverse proxy, so the server itself stays transport-only.
 //!
@@ -703,12 +703,12 @@ async fn main() {
         )
         .init();
 
-    let addr = std::env::var("RYOTUNES_SYNC_BIND").unwrap_or_else(|_| {
+    let addr = std::env::var("DUSKYTUNES_SYNC_BIND").unwrap_or_else(|_| {
         let port = std::env::var("PORT").ok().and_then(|p| p.parse::<u16>().ok()).unwrap_or(8080);
         format!("127.0.0.1:{port}")
     });
     let listener = TcpListener::bind(&addr).await.expect("bind");
-    tracing::info!(%addr, "ryotunes-sync listening (plain ws; use a TLS reverse proxy for wss)");
+    tracing::info!(%addr, "duskytunes-sync listening (plain ws; use a TLS reverse proxy for wss)");
 
     let server = Arc::new(Server::default());
 

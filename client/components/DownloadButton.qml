@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Shapes
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The one-click "save this track" control that sits beside the like heart. It reads the shared

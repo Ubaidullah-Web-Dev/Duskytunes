@@ -1,4 +1,4 @@
-// Reactive UI language for the Ryotunes chrome. Content coming from the
+// Reactive UI language for the Duskytunes chrome. Content coming from the
 // InnerTube API is already localised by the backend session locale (hl/gl);
 // this module only covers the hard-coded Svelte strings (context menus,
 // dialogs, settings, status text), which the API never sees.

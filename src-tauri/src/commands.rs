@@ -330,15 +330,15 @@ pub async fn get_queue(state: St<'_>) -> Result<serde_json::Value, String> {
 }
 
 #[tauri::command]
-pub async fn check_for_updates() -> Result<ryotunes_core::update::UpdateInfo, String> {
-    ryotunes_core::update::check_for_updates().await
+pub async fn check_for_updates() -> Result<duskytunes_core::update::UpdateInfo, String> {
+    duskytunes_core::update::check_for_updates().await
 }
 
 #[tauri::command]
 pub async fn install_update(
     version: String,
-) -> Result<ryotunes_core::update::InstalledUpdate, String> {
-    ryotunes_core::update::install_update(version).await
+) -> Result<duskytunes_core::update::InstalledUpdate, String> {
+    duskytunes_core::update::install_update(version).await
 }
 
 #[tauri::command]
@@ -360,10 +360,10 @@ pub async fn get_settings(
     Ok(snapshot)
 }
 
-/// Resolve the same live Material-role chain used by Ryoku.Ui.Singletons.Tokens.
+/// Resolve the same live Material-role chain used by Dusky.Ui.Singletons.Tokens.
 #[tauri::command]
-pub fn ryoku_theme_tokens() -> serde_json::Value {
-    crate::ryoku_theme::tokens()
+pub fn dusky_theme_tokens() -> serde_json::Value {
+    crate::dusky_theme::tokens()
 }
 
 #[tauri::command]
@@ -539,7 +539,7 @@ pub async fn open_mini(app: tauri::AppHandle) -> Result<(), String> {
 }
 
 /// Swap back. Same path as the tray, so the widget and the tray can't disagree about what
-/// "show Ryotunes" means.
+/// "show Duskytunes" means.
 #[tauri::command]
 pub async fn close_mini(app: tauri::AppHandle) -> Result<(), String> {
     crate::tray::show_main(&app);
@@ -640,7 +640,7 @@ pub async fn get_library_artists(state: St<'_>) -> Result<Vec<BrowseItem>, Strin
 }
 
 /// A playlist or album page. `id` is the browseId (`VL…` / `MPRE…`); Liked Songs is `VLLM`, and
-/// `RYOTUNES_ON_REPEAT` is the local auto-playlist rather than anything YouTube knows about.
+/// `DUSKYTUNES_ON_REPEAT` is the local auto-playlist rather than anything YouTube knows about.
 ///
 /// `sort` asks YouTube for the tracks in a given order; `None` gets whatever order the account
 /// already has the list in, which is what a fresh visit wants (it matches YouTube Music).
@@ -1029,7 +1029,7 @@ fn transfer_path(mut path: std::path::PathBuf) -> Result<std::path::PathBuf, Str
             Ok(path)
         }
         Some(ext) if ext == "json" => Ok(path),
-        _ => Err("Ryotunes playlist files must end in .json".into()),
+        _ => Err("Duskytunes playlist files must end in .json".into()),
     }
 }
 
@@ -1042,7 +1042,7 @@ fn safe_transfer_name(title: &str) -> String {
         .take(80)
         .collect();
     if cleaned.trim_matches([' ', '.', '-']).is_empty() {
-        "Ryotunes Playlist".into()
+        "Duskytunes Playlist".into()
     } else {
         cleaned
     }
@@ -1090,9 +1090,9 @@ pub async fn export_playlist_file(
     let Some(chosen) = app
         .dialog()
         .file()
-        .set_title("Export Ryotunes playlist")
+        .set_title("Export Duskytunes playlist")
         .set_file_name(file_name)
-        .add_filter("Ryotunes playlist", &["json"])
+        .add_filter("Duskytunes playlist", &["json"])
         .blocking_save_file()
     else {
         return Ok(false);
@@ -1128,8 +1128,8 @@ pub async fn import_playlist_file(
     let Some(chosen) = app
         .dialog()
         .file()
-        .set_title("Import Ryotunes playlist")
-        .add_filter("Ryotunes playlist", &["json"])
+        .set_title("Import Duskytunes playlist")
+        .add_filter("Duskytunes playlist", &["json"])
         .blocking_pick_file()
     else {
         return Ok(None);
@@ -1145,7 +1145,7 @@ pub async fn import_playlist_file(
     }
     let bytes = std::fs::read(&path).map_err(|e| e.to_string())?;
     let mut transfer: PlaylistTransfer = serde_json::from_slice(&bytes)
-        .map_err(|_| "That is not a Ryotunes playlist file.".to_string())?;
+        .map_err(|_| "That is not a Duskytunes playlist file.".to_string())?;
     if transfer.version != 1 || transfer.items.len() > 5_000 {
         return Err("That playlist file version or size is not supported.".into());
     }
@@ -1862,7 +1862,7 @@ mod tests {
             video_id: "abc".into(),
             title: "Grace".into(),
             queued: true,
-            queued_by: Some("ryotunes-test".into()),
+            queued_by: Some("duskytunes-test".into()),
             autoplay: true,
             set_video_id: Some("SVI".into()),
             ..Default::default()

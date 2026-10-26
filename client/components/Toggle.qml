@@ -1,5 +1,5 @@
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The on/off switch the settings surface uses in place of the Svelte `Switch`. Purely

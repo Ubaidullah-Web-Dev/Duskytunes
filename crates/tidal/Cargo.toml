@@ -1,9 +1,9 @@
 [package]
-name = "ryotunes-tidal"
+name = "duskytunes-tidal"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Ryotunes TIDAL provider: OAuth device and PKCE sign-in, catalogue, and stream resolution with an explicit refusal on protected manifests."
+description = "Duskytunes TIDAL provider: OAuth device and PKCE sign-in, catalogue, and stream resolution with an explicit refusal on protected manifests."
 
 [dependencies]
 serde = { workspace = true }

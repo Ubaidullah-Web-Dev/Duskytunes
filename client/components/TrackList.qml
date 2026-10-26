@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // A reused ListView of TrackRow, the shared body of every track surface (playlist, album, library

@@ -34,7 +34,7 @@ const APP_COMMANDS: &[&str] = &[
     "check_for_updates",
     "install_update",
     "discord_status",
-    "ryoku_theme_tokens",
+    "dusky_theme_tokens",
     "set_setting",
     "get_personal",
     "set_personal",
@@ -103,15 +103,15 @@ const APP_COMMANDS: &[&str] = &[
 
 fn main() {
     // Last.fm API credentials live in a gitignored `lastfm.keys` next to this file (the repo is
-    // public — they must never be tracked). Format: `RYOTUNES_LASTFM_API_KEY=…` and
-    // `RYOTUNES_LASTFM_API_SECRET=…`, one per line. Exported as compile-time env for `option_env!`
+    // public — they must never be tracked). Format: `DUSKYTUNES_LASTFM_API_KEY=…` and
+    // `DUSKYTUNES_LASTFM_API_SECRET=…`, one per line. Exported as compile-time env for `option_env!`
     // in lastfm.rs; missing file just means the scrobbler reports "not configured".
     println!("cargo:rerun-if-changed=lastfm.keys");
     if let Ok(keys) = std::fs::read_to_string("lastfm.keys") {
         for line in keys.lines() {
             if let Some((k, v)) = line.split_once('=') {
                 let (k, v) = (k.trim(), v.trim());
-                if k == "RYOTUNES_LASTFM_API_KEY" || k == "RYOTUNES_LASTFM_API_SECRET" {
+                if k == "DUSKYTUNES_LASTFM_API_KEY" || k == "DUSKYTUNES_LASTFM_API_SECRET" {
                     println!("cargo:rustc-env={k}={v}");
                 }
             }

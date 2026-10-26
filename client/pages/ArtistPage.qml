@@ -3,7 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../components"
 

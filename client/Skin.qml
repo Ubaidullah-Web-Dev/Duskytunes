@@ -2,17 +2,17 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 
 // The skin: every colour, type face, radius and duration the chrome reads, resolved from ONE
 // source the user picks (Prefs.skin):
 //
-//   "system"   Ryoku's live theme through Tokens (the wallpaper palette or the named scheme,
-//              shell.json's font and decor) - the default on a Ryoku desktop.
+//   "system"   Dusky's live theme through Tokens (the wallpaper palette or the named scheme,
+//              shell.json's font and decor) - the default on a Dusky desktop.
 //   <id>       a skin directory `<dir>/<id>/skin.json`, looked up in order:
-//                $RYOTUNES_SKIN_DIRS (colon list, dev)   > ~/.config/ryotunes/skins  > <shellDir>/../skins
+//                $DUSKYTUNES_SKIN_DIRS (colon list, dev)   > ~/.config/duskytunes/skins  > <shellDir>/../skins
 //              so a user skin shadows a shipped one of the same id. `matugen` is just a skin
-//              whose file matugen writes (matugen/ryotunes.json is the template).
+//              whose file matugen writes (matugen/duskytunes.json is the template).
 //
 // A skin file is watched: editing it re-applies live, which is how skins get authored. Colours
 // are applied the way the old light/dark pins were - as a Material scheme on Tokens.namedScheme
@@ -25,16 +25,16 @@ Singleton {
     // --- paths -------------------------------------------------------------------------------
     readonly property string configHome: Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")
     readonly property string dataHome: Quickshell.env("XDG_DATA_HOME") || (Quickshell.env("HOME") + "/.local/share")
-    readonly property string userDir: configHome + "/ryotunes/skins"
-    // What RyoStore installs (category `ryotunes-skins`, one folder per product with a receipt).
-    readonly property string storeDir: dataHome + "/ryoku/ryotunes-skins"
+    readonly property string userDir: configHome + "/duskytunes/skins"
+    // What store installs, one folder per product with a receipt.
+    readonly property string storeDir: dataHome + "/dusky/duskytunes-skins"
     readonly property string shippedDir: Quickshell.shellDir + "/../skins"
-    readonly property var devDirs: (Quickshell.env("RYOTUNES_SKIN_DIRS") || "").split(":").filter((d) => d.length > 0)
+    readonly property var devDirs: (Quickshell.env("DUSKYTUNES_SKIN_DIRS") || "").split(":").filter((d) => d.length > 0)
     // Search order; first hit per id wins: a user's own copy shadows a store install, which
     // shadows a shipped skin of the same id.
     readonly property var dirs: root.devDirs.concat([root.userDir, root.storeDir, root.shippedDir])
 
-    // RyoStore on this box (Ryoku): Settings offers "Get more skins" only then.
+    // RyoStore on this box (Dusky): Settings offers "Get more skins" only then.
     property bool storeAvailable: false
     Process {
         command: ["sh", "-c", "command -v ryostore >/dev/null 2>&1 && echo yes || echo no"]
@@ -43,8 +43,8 @@ Singleton {
     }
 
     // --- selection ---------------------------------------------------------------------------
-    // RYOTUNES_SKIN pins a skin for a preview run (scripts/dev/skin-preview.sh); Prefs otherwise.
-    readonly property string forced: Quickshell.env("RYOTUNES_SKIN") || ""
+    // DUSKYTUNES_SKIN pins a skin for a preview run (scripts/dev/skin-preview.sh); Prefs otherwise.
+    readonly property string forced: Quickshell.env("DUSKYTUNES_SKIN") || ""
     readonly property string id: root.forced || Prefs.skin || "system"
     readonly property bool followSystem: root.id === "system"
 
@@ -85,9 +85,9 @@ Singleton {
     // --- mode --------------------------------------------------------------------------------
     // Prefs.themeMode "light"/"dark" pins a mode; "system" means the skin's own default, or, for
     // the system skin, whatever the desktop is (no pin at all).
-    // RYOTUNES_SKIN_MODE pins the mode for a preview run (so a light-first skin renders light
+    // DUSKYTUNES_SKIN_MODE pins the mode for a preview run (so a light-first skin renders light
     // whatever the user's own pin is); Prefs otherwise.
-    readonly property string wantMode: Quickshell.env("RYOTUNES_SKIN_MODE") || Prefs.themeMode || "system"
+    readonly property string wantMode: Quickshell.env("DUSKYTUNES_SKIN_MODE") || Prefs.themeMode || "system"
     readonly property string mode: root.wantMode !== "system" ? root.wantMode
         : (root.followSystem ? "system" : (root.manifest["default"] || "dark"))
     readonly property bool unpinned: root.followSystem && root.mode === "system"
@@ -119,7 +119,7 @@ Singleton {
     // mono Nerd font) and would put the whole app in it. The system skin keeps Paper's type.
     readonly property var type: ({ display: root.pick("type", "display"), ui: root.pick("type", "ui"), mono: root.pick("type", "mono") })
     readonly property var shape: ({ radius: root.pick("shape", "radius"), radiusCard: root.pick("shape", "radiusCard") })
-    // Durations pass through Tokens' motion gate (reduce motion, the motion scale) like Ryoku's own.
+    // Durations pass through Tokens' motion gate (reduce motion, the motion scale) like Dusky's own.
     readonly property var motion: {
         var r = Tokens.reduceMotion, s = Tokens.motionScale;  // bind
         function d(ms) { return r ? 0 : Math.round(ms * s); }
@@ -260,7 +260,7 @@ Singleton {
     FileView { path: root.userDir; watchChanges: true; printErrors: false; onFileChanged: rescan.restart() }
     Timer { id: rescan; interval: 400; onTriggered: root.reload() }
 
-    // ~/.config/ryotunes/skins exists from the first run, so "Open skins folder" and a matugen
+    // ~/.config/duskytunes/skins exists from the first run, so "Open skins folder" and a matugen
     // template have somewhere to land.
     Process {
         id: mkuser

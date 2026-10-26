@@ -1,9 +1,9 @@
-pkgbase = ryotunes-bin
-	pkgdesc = Ryoku-native desktop music player with native libmpv playback
+pkgbase = duskytunes-bin
+	pkgdesc = Dusky-native desktop music player with native libmpv playback
 	pkgver = 2.2.0
 	pkgrel = 1
-	url = https://github.com/ashmitvoid/RYOTUNES
-	install = ryotunes-bin.install
+	url = https://github.com/Ubaidullah-Web-Dev/Duskytunes
+	install = duskytunes-bin.install
 	arch = x86_64
 	license = GPL-3.0-or-later
 	depends = webkit2gtk-4.1
@@ -14,9 +14,9 @@ pkgbase = ryotunes-bin
 	depends = desktop-file-utils
 	depends = hicolor-icon-theme
 	depends = xdg-utils
-	provides = ryotunes=2.2.0
-	conflicts = ryotunes-v2.2
-	source_x86_64 = ryotunes-v2.2.0-linux-x86_64.tar.zst::https://github.com/ashmitvoid/RYOTUNES/releases/download/v2.2.0/ryotunes-v2.2.0-linux-x86_64.tar.zst
+	provides = duskytunes=2.2.0
+	conflicts = duskytunes-v2.2
+	source_x86_64 = duskytunes-v2.2.0-linux-x86_64.tar.zst::https://github.com/Ubaidullah-Web-Dev/Duskytunes/releases/download/v2.2.0/duskytunes-v2.2.0-linux-x86_64.tar.zst
 	sha256sums_x86_64 = 2214e492c2402cf1f7ec6026cf94d630af6eafb2e272234876558bc0384493ac
 
-pkgname = ryotunes-bin
+pkgname = duskytunes-bin

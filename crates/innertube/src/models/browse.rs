@@ -94,7 +94,7 @@ pub struct HomePage {
 
 /// The orders YouTube can put a playlist in. browse parser.
 ///
-/// YouTube stores this choice itself, which is why Ryotunes asks for a sorted page instead of
+/// YouTube stores this choice itself, which is why Duskytunes asks for a sorted page instead of
 /// sorting one in the UI: the list then reads the same way here, in YouTube Music, and in every
 /// other client on the account.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -107,7 +107,7 @@ pub enum PlaylistSort {
     Title,
     Artist,
     Album,
-    /// YouTube's "Top voted". Ryotunes's own menu does not offer it, but a list can already be in
+    /// YouTube's "Top voted". Duskytunes's own menu does not offer it, but a list can already be in
     /// it, so it still has to round-trip.
     Top,
 }

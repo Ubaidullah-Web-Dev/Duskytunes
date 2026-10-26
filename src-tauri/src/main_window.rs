@@ -25,15 +25,15 @@ const IDLE_EXIT_GRACE: Duration = Duration::from_secs(5 * 60);
 /// Stable Wayland identity used by Tauri/GTK and Hyprland. `enableGTKAppId` in tauri.conf.json is
 /// what makes this the actual Wayland app id instead of merely Tauri's bundle identifier.
 #[cfg(target_os = "linux")]
-const RYOTUNES_APP_ID: &str = "dev.ryoku.ryotunes";
+const DUSKYTUNES_APP_ID: &str = "dev.dusky.duskytunes";
 #[cfg(target_os = "linux")]
-const RYOTUNES_MAIN_TITLE: &str = "Ryotunes";
+const DUSKYTUNES_MAIN_TITLE: &str = "Duskytunes";
 
-/// Ryoku v2.3 installs a persistent `hl.window_rule` drop-in through the Arch replacement package,
-/// exactly like Ryoku Settings/Ryowalls. Do not append transient `windowrulev2` values at runtime:
+/// Dusky v2.3 installs a persistent `hl.window_rule` drop-in through the Arch replacement package,
+/// exactly like Dusky Settings/Ryowalls. Do not append transient `windowrulev2` values at runtime:
 /// those are version-sensitive, accumulate across launches, and in field testing still allowed the
 /// first surface to enter the tiling tree. The post-map IPC helper below remains a defensive fallback
-/// for source/dev runs where the packaged Ryoku rule is not installed.
+/// for source/dev runs where the packaged Dusky rule is not installed.
 #[cfg(target_os = "linux")]
 pub fn install_hyprland_map_rules() {}
 
@@ -49,9 +49,9 @@ pub fn is_background_mode() -> bool {
     BACKGROUND_MODE.load(Ordering::Acquire)
 }
 
-/// Put the main window into Ryotunes' deliberate floating daily-driver geometry.
+/// Put the main window into Duskytunes' deliberate floating daily-driver geometry.
 ///
-/// Hyprland/Ryoku can remember or apply a maximized state independently of Tauri's JSON window
+/// Hyprland/Dusky can remember or apply a maximized state independently of Tauri's JSON window
 /// defaults, so relying on `fullscreen:false` alone is not enough. Every cold surface and every
 /// tray reconstruction explicitly leaves fullscreen/maximized mode and is sized against the
 /// monitor work area (panels excluded). This still leaves the user free to maximize manually
@@ -70,7 +70,7 @@ pub fn enforce_floating_geometry(app: &AppHandle) {
     };
 
     let area = monitor.work_area();
-    // v2.3 field target: a large, centered daily-driver canvas matching the accepted Ryoku
+    // v2.3 field target: a large, centered daily-driver canvas matching the accepted Dusky
     // reference screenshot. The pre-map JSON fallback is 1760×1000 logical; once mapped, this
     // adaptive pass uses the real monitor work area so smaller/larger displays keep modest margins.
     let max_width = area.size.width.saturating_sub(24).max(640);
@@ -86,10 +86,10 @@ pub fn enforce_floating_geometry(app: &AppHandle) {
     let _ = win.set_position(PhysicalPosition::new(x, y));
 }
 
-/// Ask Hyprland to treat Ryotunes as a floating daily-driver window.
+/// Ask Hyprland to treat Duskytunes as a floating daily-driver window.
 ///
 /// Wayland clients cannot universally declare "float me"; tiling vs floating is compositor policy.
-/// On Ryoku/Hyprland we can, however, use Hyprland's own IPC without modifying the user's config.
+/// On Dusky/Hyprland we can, however, use Hyprland's own IPC without modifying the user's config.
 /// The helper is completely inert elsewhere. It looks up this process by PID, uses `setfloating`
 /// only when needed (never toggle), then reapplies the work-area geometry after Hyprland has moved
 /// the client out of the tiling tree.
@@ -119,10 +119,10 @@ pub fn request_hyprland_float(app: &AppHandle) {
                 rows.iter()
                     .filter(|row| row.get("pid").and_then(|v| v.as_u64()) == Some(pid))
                     .filter(|row| {
-                        row.get("class").and_then(|v| v.as_str()) == Some(RYOTUNES_APP_ID)
+                        row.get("class").and_then(|v| v.as_str()) == Some(DUSKYTUNES_APP_ID)
                     })
                     .filter(|row| {
-                        row.get("title").and_then(|v| v.as_str()) == Some(RYOTUNES_MAIN_TITLE)
+                        row.get("title").and_then(|v| v.as_str()) == Some(DUSKYTUNES_MAIN_TITLE)
                     })
                     .find(|row| !row.get("floating").and_then(|v| v.as_bool()).unwrap_or(false))
                     .or_else(|| {
@@ -130,7 +130,7 @@ pub fn request_hyprland_float(app: &AppHandle) {
                             .filter(|row| row.get("pid").and_then(|v| v.as_u64()) == Some(pid))
                             .find(|row| {
                                 row.get("title").and_then(|v| v.as_str())
-                                    == Some(RYOTUNES_MAIN_TITLE)
+                                    == Some(DUSKYTUNES_MAIN_TITLE)
                             })
                     })
             }) else {
@@ -242,9 +242,9 @@ pub fn arm_reveal_failsafe(app: &AppHandle, delay: Duration) {
 
 /// Authoritative reveal handshake from a mounted frontend. Cold start and reconstructed WebViews
 /// both arrive here while hidden, after their first real UI tree exists. Geometry is set while
-/// hidden; Hyprland's persistent Ryoku rule supplies float/center at map time; only then do we show
+/// hidden; Hyprland's persistent Dusky rule supplies float/center at map time; only then do we show
 /// and focus. The mini player is destroyed *after* the main surface is visible, so its expand button
-/// can never leave the user with playback but no visible Ryotunes window.
+/// can never leave the user with playback but no visible Duskytunes window.
 pub fn frontend_ready(app: &AppHandle) -> Result<(), String> {
     let Some(w) = app.get_webview_window("main") else {
         return Err("main window is missing".into());
@@ -256,7 +256,7 @@ pub fn frontend_ready(app: &AppHandle) -> Result<(), String> {
     let _ = w.unminimize();
     let _ = w.set_focus();
     BACKGROUND_MODE.store(false, Ordering::Release);
-    // Only a fallback when the Ryoku config drop-in is absent (e.g. `cargo tauri dev`).
+    // Only a fallback when the Dusky config drop-in is absent (e.g. `cargo tauri dev`).
     request_hyprland_float(app);
     crate::mini::close(app);
     Ok(())
@@ -382,7 +382,7 @@ pub fn schedule_idle_exit(app: &AppHandle) {
         if !idle_exit_eligible(is_background_mode(), has_ui(&handle), playing) {
             return;
         }
-        tracing::info!("background playback is inactive; exiting idle Ryotunes process");
+        tracing::info!("background playback is inactive; exiting idle Duskytunes process");
         request_quit(&handle);
     });
 }

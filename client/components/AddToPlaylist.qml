@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The "Add to playlist" picker, ported from AddToPlaylist.svelte. A reusable overlay any surface can
@@ -51,8 +51,8 @@ Item {
         Daemon.call("get_library")
             .then((p) => {
                 root.playlists = (p || []).filter((i) => i.kind === "playlist"
-                    && i.id !== "RYOTUNES_ON_REPEAT" && i.id !== "RYOTUNES_RECENTLY_PLAYED"
-                    && i.id !== "RYOTUNES_REDISCOVER" && i.id !== "VLLM");
+                    && i.id !== "DUSKYTUNES_ON_REPEAT" && i.id !== "DUSKYTUNES_RECENTLY_PLAYED"
+                    && i.id !== "DUSKYTUNES_REDISCOVER" && i.id !== "VLLM");
                 root.loading = false;
             })
             .catch((e) => {
@@ -66,7 +66,7 @@ Item {
         root.close();
         if (!list.length)
             return;
-        var isLocal = String(pl.id).indexOf("RYOTUNES_LOCAL_PLAYLIST:") === 0;
+        var isLocal = String(pl.id).indexOf("DUSKYTUNES_LOCAL_PLAYLIST:") === 0;
         var added = 0;
         var chain = Promise.resolve();
         for (var i = 0; i < list.length; i++) {

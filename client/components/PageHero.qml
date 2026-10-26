@@ -1,10 +1,10 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
-// A page's head, Sonora's fixed art-plus-title block in Ryoku's type: 168 px art (a circle for
+// A page's head, Sonora's fixed art-plus-title block in Dusky's type: 168 px art (a circle for
 // artists), then the tracked eyebrow (ALBUM / PLAYLIST / ARTIST), the Fraunces title, a meta line
 // and the action row (Play, like, more). Flat paper behind it: the print texture rides the chrome
 // (the nav rail), never the content (docs/ui-ux.md).

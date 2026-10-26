@@ -33,7 +33,7 @@ sed -i '0,/^version = "[0-9][0-9.]*"$/s//version = "'"$ver"'"/' Cargo.toml
 sed -i 's/"version": "[0-9][0-9.]*"/"version": "'"$ver"'"/' src-tauri/tauri.conf.json
 sed -i 's/"version": "[0-9][0-9.]*"/"version": "'"$ver"'"/' ui/package.json
 # The native QML client reads its own APP version from this file at runtime
-# (Quickshell.shellDir + '/version'); it ships inside /usr/share/ryotunes/client.
+# (Quickshell.shellDir + '/version'); it ships inside /usr/share/duskytunes/client.
 printf '%s\n' "$ver" > client/version
 # Arch package: pkgver tracks the version, pkgrel is the release-asset contract's
 # fixed 1, epoch=1 is permanent so 1:X.Y.Z outranks the installed 2.x.
@@ -69,7 +69,7 @@ for name in names:
     )
 lock_path.write_text(lock)
 
-metadata = root / "packaging/linux/dev.ryoku.ryotunes.metainfo.xml"
+metadata = root / "packaging/linux/dev.dusky.duskytunes.metainfo.xml"
 text = metadata.read_text()
 current = re.search(r'<releases>\s*<release version="([^"]+)"', text)
 if current is None:

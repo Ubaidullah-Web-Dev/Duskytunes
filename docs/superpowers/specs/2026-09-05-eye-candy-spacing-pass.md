@@ -3,7 +3,7 @@
 The user's verdict on the current native client: "looks bad, overlaps, worse than the old
 design". The old design is the reference, captured live from the Tauri build on the rig:
 `docs/superpowers/refs/tauri-home-2026-09-05.png` (1762x938, window at 1:1). Read it first and
-match its proportions; the QML client must look like *that* app, in Ryoku's flat-paper skin.
+match its proportions; the QML client must look like *that* app, in Dusky's flat-paper skin.
 
 Two skills inform this pass: Emil Kowalski's design-eng skill (motion, polish) and
 tastemaker's spacing system (interface-quality-rules, style-tokens). Distilled rules:
@@ -52,11 +52,11 @@ tastemaker's spacing system (interface-quality-rules, style-tokens). Distilled r
 - **Familiar artists**: ONE bordered panel: left column `// ARTIST INDEX` list (01 Yeat ...),
   center the artist photo (square, bleeds to the panel's edges), right column
   `SELECTED ARTIST · 63M MONTHLY AUDIENCE`, name in Fraunces hero size, `TOP TRACKS` list rows.
-- **Sidebar** (ref, left): brand card (glyph tile + RYOTUNES / RYOKU // MUSIC) with a collapse
+- **Sidebar** (ref, left): brand card (glyph tile + DUSKYTUNES / DUSKY // MUSIC) with a collapse
   button, groups `01 DISCOVER / 02 COLLECTION / 03 SYSTEM` as mono eyebrows with a hairline,
   nav rows 40 px with icon + label, active row = paper-lift fill + accent left border. Then
   `04 PLAYLISTS` with a full-width `+ New playlist` outlined button and playlist rows (40 px
-  art tile, title, `N songs`). Footer: `RYOKU // MUSIC ··· LIVE` and a tiny spectrum strip.
+  art tile, title, `N songs`). Footer: `DUSKY // MUSIC ··· LIVE` and a tiny spectrum strip.
 - **Queue panel** rows: 48 px art, title (fillWidth, single line, elide), artist under it,
   duration mono right, drag handle 24 px on hover only. Explicit badge sits after the title,
   never steals width from it. Header: NOW PLAYING row highlighted, `UP NEXT` eyebrow.

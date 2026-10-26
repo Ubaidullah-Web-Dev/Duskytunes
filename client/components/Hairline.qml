@@ -1,5 +1,5 @@
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 
 // A one-pixel structural hairline, the recurring divider of the design language. Horizontal by
 // default (fill the row, one device pixel tall); a caller sets Layout.fillWidth or an explicit

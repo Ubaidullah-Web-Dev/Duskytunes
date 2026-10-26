@@ -9,7 +9,7 @@ var MAX_PICKS = 18;
 var MAX_PINS = 3;
 var MAX_RECENT = 100;
 var MAX_ARTISTS = 100;
-var ON_REPEAT_ID = "RYOTUNES_ON_REPEAT";
+var ON_REPEAT_ID = "DUSKYTUNES_ON_REPEAT";
 
 function normalizeLegacyId(id) {
     return id.slice(-10) === "_ON_REPEAT" ? ON_REPEAT_ID : id;

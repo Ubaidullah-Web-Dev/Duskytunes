@@ -1,17 +1,17 @@
-# Ryotunes design language
+# Duskytunes design language
 
-Ryotunes should look like it belongs to Ryoku before a user reads the title.
+Duskytunes should look like it belongs to Dusky before a user reads the title.
 
 This document exists to keep visual polish, shell integration and performance moving in the same direction.
 
 ## Product character
 
-Ryotunes is:
+Duskytunes is:
 
 - architectural rather than decorative;
 - warm rather than sterile;
 - dense enough to feel like a desktop tool, never cramped;
-- expressive through artwork and Ryoku colour, not through permanent animation;
+- expressive through artwork and Dusky colour, not through permanent animation;
 - precise about spacing, alignment and one-pixel structure.
 
 It is not a generic streaming-service clone and it should not become a rainbow dashboard.
@@ -20,15 +20,15 @@ It is not a generic streaming-service clone and it should not become a rainbow d
 
 ### Follow System
 
-Follow System is the primary Ryoku-native mode.
+Follow System is the primary Dusky-native mode.
 
-Rust resolves Ryoku Material roles and exposes semantic tokens to the frontend. Named Ryoku palettes and wallpaper-derived palettes therefore remain authoritative.
+Rust resolves Dusky Material roles and exposes semantic tokens to the frontend. Named Dusky palettes and wallpaper-derived palettes therefore remain authoritative.
 
-Do not introduce a second independent "Ryotunes system palette" that competes with Ryoku.
+Do not introduce a second independent "Duskytunes system palette" that competes with Dusky.
 
 ### Local overrides
 
-Explicit Light and Dark modes remain local Ryotunes choices.
+Explicit Light and Dark modes remain local Duskytunes choices.
 
 Light mode uses a restrained material family:
 
@@ -38,11 +38,11 @@ Light mode uses a restrained material family:
 - clay / terracotta playback emphasis;
 - muted gold only as a supporting detail.
 
-Dark mode stays ink-like and lets artwork or the live Ryoku palette provide most of the colour.
+Dark mode stays ink-like and lets artwork or the live Dusky palette provide most of the colour.
 
 ## Geometry
 
-Ryotunes follows the structural language already used across Ryoku:
+Duskytunes follows the structural language already used across Dusky:
 
 - one-pixel hairlines;
 - deliberate card boundaries;
@@ -50,7 +50,7 @@ Ryotunes follows the structural language already used across Ryoku:
 - clear separation between navigation, content and transport;
 - ornaments only in real dead space.
 
-The compositor owns initial main-window sizing and centring on Ryoku.
+The compositor owns initial main-window sizing and centring on Dusky.
 
 The mini-player is a separate surface and must never inherit the main-window exact-title rule.
 
@@ -87,7 +87,7 @@ Bad reasons to animate:
 - a background gradient can drift forever;
 - the frontend needs a permanent frame loop for decoration.
 
-Ryoku live motion settings and reduced-motion preferences take precedence.
+Dusky live motion settings and reduced-motion preferences take precedence.
 
 ## Artwork
 
@@ -133,7 +133,7 @@ The UI should be rich while visible and quiet while absent.
 
 Before merging a UI change, ask:
 
-- Does this still look like Ryoku?
+- Does this still look like Dusky?
 - Does Follow System remain semantically complete?
 - Is the Home DOM still stable?
 - Does the mini-player remain independent?

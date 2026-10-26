@@ -1,9 +1,9 @@
 [package]
-name = "ryotunes-soundcloud"
+name = "duskytunes-soundcloud"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Ryotunes SoundCloud provider: api-v2 client (guest scrape + OAuth bearer, HLS streams, waveforms)."
+description = "Duskytunes SoundCloud provider: api-v2 client (guest scrape + OAuth bearer, HLS streams, waveforms)."
 
 [dependencies]
 serde = { workspace = true }

@@ -23,7 +23,7 @@ use crate::state::AppState;
 
 pub const LABEL: &str = "mini";
 
-/// Logical size of the widget. Fixed: compact enough to live beside Ryoku shell widgets, but
+/// Logical size of the widget. Fixed: compact enough to live beside Dusky shell widgets, but
 /// wide enough for artwork, metadata and transport controls without cramming.
 const W: f64 = 724.0;
 const H: f64 = 356.0;
@@ -46,7 +46,7 @@ pub fn open(app: &AppHandle) -> Result<(), String> {
     }
 
     let win = WebviewWindowBuilder::new(app, LABEL, WebviewUrl::App("index.html".into()))
-        .title("Ryotunes Mini")
+        .title("Duskytunes Mini")
         .inner_size(W, H)
         .resizable(false)
         .decorations(false)

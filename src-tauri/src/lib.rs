@@ -1,4 +1,4 @@
-//! Ryotunes Tauri app. Wires transport + player + db + orchestrator behind the command boundary.
+//! Duskytunes Tauri app. Wires transport + player + db + orchestrator behind the command boundary.
 
 mod commands;
 mod host_sink;
@@ -6,7 +6,7 @@ mod local_scope;
 mod login_webview;
 mod main_window;
 mod mini;
-mod ryoku_theme;
+mod dusky_theme;
 #[cfg(target_os = "windows")]
 mod taskbar;
 mod tray;
@@ -17,7 +17,7 @@ use std::time::Duration;
 
 use innertube::{Clients, InnerTube, Locale, Session};
 use player::{Player, PlayerEvent};
-use ryotunes_core::{
+use duskytunes_core::{
     cipher, db, discord, lastfm, listentogether, local, lyrics, media, orchestrator, potoken,
     radio, state,
 };
@@ -56,12 +56,12 @@ fn spawn_heap_trimmer() {
 /// resources and previously viewed content"), sized against total system RAM. A music client
 /// browsing YTM shelves fills that with thumbnails: measured 627 MiB of on-disk WebKitCache and a
 /// web process that would not give the memory back (`malloc_trim` there freed 1 MiB, so it is all
-/// live cache). `DocumentViewer` is the smallest cache model: Ryotunes already owns browse/page caches and
+/// live cache). `DocumentViewer` is the smallest cache model: Duskytunes already owns browse/page caches and
 /// thumbnail sizing, so retaining a second browser-sized resource cache only inflates the renderer. wry also hard-enables the back/forward page cache (`webkitgtk/mod.rs:438`), which
 /// keeps whole previous documents alive; this is a SvelteKit SPA doing client-side routing, so it
 /// never gets a back/forward navigation to restore and that memory is pure waste.
 ///
-/// **Subsystems.** Ryotunes is audio-only: libmpv owns playback and the webview renders artwork,
+/// **Subsystems.** Duskytunes is audio-only: libmpv owns playback and the webview renders artwork,
 /// queue and lyrics. WebKit's media/GStreamer/WebGL stacks stay disabled permanently. This avoids
 /// waking the discrete GPU for a feature the app does not expose.
 ///
@@ -107,7 +107,7 @@ fn tune_webview(win: &tauri::WebviewWindow) {
     }
 }
 
-/// `RYOTUNES_WEBKIT_FEATURES=Name=1,Other=0` flips WebKitGTK feature flags on the app's webviews
+/// `DUSKYTUNES_WEBKIT_FEATURES=Name=1,Other=0` flips WebKitGTK feature flags on the app's webviews
 /// (the 2.42 feature API, which the `webkit2gtk` crate does not bind yet). A developer knob for
 /// profiling the renderer: `CompositingBordersVisible=1,CompositingRepaintCountersVisible=1` draws
 /// layer borders and per-layer repaint counters, which is how to see what a scroll repaints.
@@ -144,7 +144,7 @@ mod webkit_features {
     }
 
     pub fn apply_from_env(settings: &webkit2gtk::Settings) {
-        let Ok(spec) = std::env::var("RYOTUNES_WEBKIT_FEATURES") else { return };
+        let Ok(spec) = std::env::var("DUSKYTUNES_WEBKIT_FEATURES") else { return };
         let wanted: Vec<(&str, bool)> = spec
             .split(',')
             .filter_map(|kv| kv.split_once('='))
@@ -176,13 +176,13 @@ mod webkit_features {
                 if !applied.iter().any(|a| a.starts_with(&format!("{k}="))) {
                     tracing::warn!(
                         feature = *k,
-                        "RYOTUNES_WEBKIT_FEATURES: unknown WebKit feature"
+                        "DUSKYTUNES_WEBKIT_FEATURES: unknown WebKit feature"
                     );
                 }
             }
             tracing::info!(
                 features = applied.join(","),
-                "webkit: feature flags from RYOTUNES_WEBKIT_FEATURES"
+                "webkit: feature flags from DUSKYTUNES_WEBKIT_FEATURES"
             );
         }
     }
@@ -267,10 +267,10 @@ pub fn run() {
                 let _ = std::fs::set_permissions(&cache_dir, private_dir);
             }
 
-            // Use the Ryotunes database name while preserving state from previous local builds
+            // Use the Duskytunes database name while preserving state from previous local builds
             // without keeping any legacy product identifier in source: when the new database is
             // absent, adopt the sole sibling .sqlite file in this app-data directory.
-            let db_path = data_dir.join("ryotunes.sqlite");
+            let db_path = data_dir.join("duskytunes.sqlite");
             if !db_path.exists() {
                 if let Ok(entries) = std::fs::read_dir(&data_dir) {
                     let mut candidates =
@@ -342,7 +342,7 @@ pub fn run() {
 
             // Cipher and PoToken helpers run in hidden webviews behind the orchestrator.
             let config = Arc::new(PlayerConfigStore::new(&data_dir));
-            let js: Arc<dyn ryotunes_core::host::JsBridge> =
+            let js: Arc<dyn duskytunes_core::host::JsBridge> =
                 Arc::new(webview::TauriJs { app: handle.clone() });
             let cipher = Arc::new(CipherDeobfuscator::new(js.clone(), &data_dir, config));
             let potoken = Arc::new(PoTokenGenerator::new(js.clone(), db.clone()));
@@ -354,7 +354,7 @@ pub fn run() {
             ));
 
             // Push channel to every UI window: core emits through this sink, the host fans out.
-            let sink: Arc<dyn ryotunes_core::host::EventSink> =
+            let sink: Arc<dyn duskytunes_core::host::EventSink> =
                 Arc::new(host_sink::TauriSink(handle.clone()));
 
             // OS media controls (MPRIS/SMTC/NowPlaying). Control presses arrive over `media_rx`;
@@ -367,7 +367,7 @@ pub fn run() {
             taskbar::init(&handle);
 
             // Discord rich presence — off unless the user opted in; parks on its channel until then.
-            // The activity label is local vanity text; the fixed APP_ID remains Ryotunes' identity.
+            // The activity label is local vanity text; the fixed APP_ID remains Duskytunes' identity.
             let discord = discord::spawn(
                 db.get_setting("discord_rpc").as_deref() == Some("true"),
                 db.get_setting("discord_presence_name")
@@ -385,7 +385,7 @@ pub fn run() {
             // Listen Together session (session protocol). Server URL is a DB setting so "home PC → VPS" is
             // config, not a rebuild. The sync channel feeds the guest-playback bridge below.
             // Listen Together has no baked-in server. Community builds can point it at any
-            // compatible ryotunes-sync endpoint; a fresh install stays disconnected until the
+            // compatible duskytunes-sync endpoint; a fresh install stays disconnected until the
             // user chooses one.
             let lt_url =
                 db.get_setting("lt_server_url").filter(|u| !u.is_empty()).unwrap_or_default();
@@ -393,12 +393,12 @@ pub fn run() {
 
             // Where the core keeps its files (covers, db, mpv audio cache). The host owns the
             // XDG resolution; the core only ever joins onto these.
-            let paths = ryotunes_core::host::Paths {
+            let paths = duskytunes_core::host::Paths {
                 data_dir: data_dir.clone(),
                 cache_dir: cache_dir.clone(),
             };
             // Interactive Google sign-in lives in the host — it needs a visible browser window.
-            let login: Arc<dyn ryotunes_core::host::LoginFlow> =
+            let login: Arc<dyn duskytunes_core::host::LoginFlow> =
                 Arc::new(login_webview::TauriLogin { app: handle.clone() });
 
             let app_state = Arc::new(AppState::new(
@@ -429,10 +429,10 @@ pub fn run() {
                 });
             }
 
-            // Ryoku's own QML apps watch the live palette files. Mirror that with one blocking
+            // Dusky's own QML apps watch the live palette files. Mirror that with one blocking
             // inotify watcher rather than a JavaScript polling clock so named themes and wallpaper
-            // palettes reach Ryotunes immediately while idle CPU stays asleep.
-            ryoku_theme::spawn_watcher(sink.clone());
+            // palettes reach Duskytunes immediately while idle CPU stays asleep.
+            dusky_theme::spawn_watcher(sink.clone());
 
             // Local music artwork reaches the webview over the asset protocol, whose configured
             // scope is empty — the folders it may read are the ones the user picked (local.rs).
@@ -525,7 +525,7 @@ pub fn run() {
             #[cfg(target_os = "linux")]
             {
                 tune_webview_labelled(app.handle(), "main");
-                // Do not trust compositor/session restore for initial geometry. Ryotunes starts as
+                // Do not trust compositor/session restore for initial geometry. Duskytunes starts as
                 // the same centered floating instrument on every launch.
                 main_window::enforce_floating_geometry(app.handle());
                 main_window::request_hyprland_float(app.handle());
@@ -573,7 +573,7 @@ pub fn run() {
             commands::check_for_updates,
             commands::install_update,
             commands::discord_status,
-            commands::ryoku_theme_tokens,
+            commands::dusky_theme_tokens,
             commands::set_setting,
             commands::get_personal,
             commands::set_personal,
@@ -669,7 +669,7 @@ pub fn run() {
                         }
                     }
                     // Closing the compact player closes only that surface. Playback/backend stay
-                    // alive; only the explicit in-widget “Back to Ryotunes” action rebuilds main.
+                    // alive; only the explicit in-widget “Back to Duskytunes” action rebuilds main.
                     mini::LABEL => {
                         mini::save_position(window.app_handle());
                         main_window::prepare_hibernate(window.app_handle());

@@ -1,5 +1,5 @@
 [package]
-name = "ryotunes"
+name = "duskytunes"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -10,17 +10,10 @@ rust-version = "1.80"
 name = "duskytunes"
 path = "src/main.rs"
 
-[[bin]]
-name = "ryotunes"
-path = "src/main.rs"
-
 [lib]
 name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
-# Tauri's `dev` cfg is the absence of `custom-protocol`: without it a release binary still
-# points its window at `build.devUrl`. Default it on so `cargo build --release` (the source
-# PKGBUILD) ships the bundled frontend; `cargo tauri dev` passes --no-default-features.
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
@@ -39,21 +32,17 @@ thiserror = { workspace = true }
 tauri = { version = "2", features = ["webview-data-url", "tray-icon", "protocol-asset", "macos-private-api"] }
 tauri-plugin-single-instance = "2"
 tauri-plugin-autostart = "2"
-# WebView harness data-URL encoding for the cipher/PoToken bridge (webview.rs).
 urlencoding = "2"
 
 innertube = { path = "../crates/innertube" }
 player = { path = "../crates/player" }
-ryotunes-core = { workspace = true }
-ryotunes-protocol = { workspace = true }
+duskytunes-core = { workspace = true }
+duskytunes-protocol = { workspace = true }
 async-trait = { workspace = true }
-# OS media controls (MPRIS/SMTC) are surfaced by the host; the core drives them via EventSink.
 souvlaki = { version = "0.8.3", default-features = false, features = ["use_zbus"] }
 rand = { workspace = true }
 tauri-plugin-dialog = "2.7.2"
 
-# Taskbar thumbnail toolbar (#47). Same `windows` version tauri-runtime-wry already pulls in, so
-# `Window::hwnd()` hands us a matching HWND.
 [target.'cfg(target_os = "windows")'.dependencies]
 windows = { version = "0.61", features = [
   "Win32_Foundation",
@@ -66,5 +55,4 @@ windows = { version = "0.61", features = [
 [target.'cfg(target_os = "linux")'.dependencies]
 ksni = "0.3.6"
 libc = "0.2"
-# Reaching the WebKitGTK settings wry leaves at browser defaults. Must track wry's version.
 webkit2gtk = { version = "2.0", features = ["v2_40"] }

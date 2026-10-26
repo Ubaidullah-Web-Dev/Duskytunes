@@ -81,7 +81,7 @@
 	let inflight: Promise<void> | null = null;
 	let confirmingDelete = $state(false);
 	// Playlist hero: deterministic, bounded artwork only. Smart playlists get a deliberate
-	// Ryotunes identity instead of stretching one arbitrary track across the whole header.
+	// Duskytunes identity instead of stretching one arbitrary track across the whole header.
 	let heroFailed = $state<Record<string, boolean>>({});
 	let coverFailed = $state(false);
 
@@ -625,7 +625,7 @@
 			toast.error(t('Could not load the full playlist for export'));
 			return;
 		}
-		const title = pl?.title?.trim() || 'Ryotunes Playlist';
+		const title = pl?.title?.trim() || 'Duskytunes Playlist';
 		if (!pl) return;
 		try {
 			if (await api.exportPlaylistFile(title, pl.items)) toast.success(t('Playlist exported'));

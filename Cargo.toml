@@ -10,8 +10,8 @@ members = [
     "crates/soundcloud",
     "crates/tidal",
     "crates/protocol",
-    "crates/ryotunesd",
-    "crates/ryotunes-cli",
+    "crates/duskytunesd",
+    "crates/duskytunes-cli",
     "src-tauri",
 ]
 
@@ -31,8 +31,8 @@ futures-util = { version = "0.3", default-features = false, features = ["sink", 
 rand = "0.8"
 listen-protocol = { path = "crates/listen-protocol" }
 async-trait = "0.1"
-ryotunes-core = { path = "crates/core" }
-ryotunes-protocol = { path = "crates/protocol" }
+duskytunes-core = { path = "crates/core" }
+duskytunes-protocol = { path = "crates/protocol" }
 
 # Release profile: thin LTO + one codegen unit for cross-crate optimization, symbols stripped
 # for size: the desktop package should stay lean without changing runtime behaviour.

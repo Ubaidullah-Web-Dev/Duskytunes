@@ -1,8 +1,8 @@
 import { browser } from '$app/environment';
 
-const SCROLL_PREFIX = 'ryotunes:v20:scroll:';
-const LAST_ROUTE = 'ryotunes:v20:last-route';
-const ROUTE_TRAIL = 'ryotunes:route-trail:v1';
+const SCROLL_PREFIX = 'duskytunes:v20:scroll:';
+const LAST_ROUTE = 'duskytunes:v20:last-route';
+const ROUTE_TRAIL = 'duskytunes:route-trail:v1';
 const MAX_TRAIL = 64;
 
 function safeGet(key: string): string | null {
@@ -42,7 +42,7 @@ function writeTrail(trail: string[]): void {
 	safeSet(ROUTE_TRAIL, JSON.stringify(clean));
 }
 
-/** Keep an in-app route trail that Escape can peel back safely without ever leaving Ryotunes. */
+/** Keep an in-app route trail that Escape can peel back safely without ever leaving Duskytunes. */
 export function rememberRoute(url: URL): void {
 	const current = routeKey(url);
 	let trail = readTrail();

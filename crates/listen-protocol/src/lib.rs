@@ -1,4 +1,4 @@
-//! Shared wire types for Ryotunes "Listen Together". JSON over WebSocket, used by both the sync
+//! Shared wire types for Duskytunes "Listen Together". JSON over WebSocket, used by both the sync
 //! server (`crates/sync-server`) and the Tauri client (`src-tauri/src/listentogether`).
 //!
 //! The design is copied from Metrolist's `metroserver` (see `session protocol-listen-together.md`):

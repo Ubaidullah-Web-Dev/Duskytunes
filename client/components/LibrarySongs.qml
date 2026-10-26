@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The library Songs tab, ported from LibrarySongs.svelte: the account's saved songs, which browse
@@ -14,7 +14,7 @@ Item {
     // Signed in to YouTube Music: its liked videos. Otherwise the device's own Liked Songs,
     // the local playlist the heart writes to (the daemon's LIKED_SONGS_ID).
     readonly property bool youtubeLibrary: !!(Playback.auth && Playback.auth.signedIn)
-    readonly property string songsId: root.youtubeLibrary ? "FEmusic_liked_videos" : "RYOTUNES_LOCAL_PLAYLIST:liked"
+    readonly property string songsId: root.youtubeLibrary ? "FEmusic_liked_videos" : "DUSKYTUNES_LOCAL_PLAYLIST:liked"
     readonly property string sourceName: root.youtubeLibrary ? "Your songs" : "Liked Songs"
     onSongsIdChanged: root.load()
 

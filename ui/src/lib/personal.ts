@@ -13,7 +13,7 @@ export const MAX_PICKS = 18;
 export const MAX_PINS = 3;
 const MAX_RECENT = 100;
 const MAX_ARTISTS = 100;
-const ON_REPEAT_ID = 'RYOTUNES_ON_REPEAT';
+const ON_REPEAT_ID = 'DUSKYTUNES_ON_REPEAT';
 const normalizeLegacyId = (id: string) => id.endsWith('_ON_REPEAT') ? ON_REPEAT_ID : id;
 
 

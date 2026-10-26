@@ -3,7 +3,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
 import Quickshell
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../lib/ids.js" as Ids
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Print the next Ryotunes release version, computed purely from the published
+# Print the next Duskytunes release version, computed purely from the published
 # git tags. This is the single source of truth for the version ledger; the
 # release workflow calls it to reserve the next version, and it is safe to run
 # locally to preview the next number.
 #
 #   scripts/next-version.sh            # read tags from git
-#   RYOTUNES_TAGS="v1.0.9" scripts/next-version.sh   # smoke a rollover, no git
+#   DUSKYTUNES_TAGS="v1.0.9" scripts/next-version.sh   # smoke a rollover, no git
 #
 # The scheme (matches crates/core::update::version): the major is fixed at 1,
 # the patch is a single digit 0..9, the minor is unbounded. The next version is
@@ -14,8 +14,8 @@
 # tags (those are a different line and never enter this ledger).
 set -euo pipefail
 
-if [[ -n "${RYOTUNES_TAGS+x}" ]]; then
-  tags="$RYOTUNES_TAGS"
+if [[ -n "${DUSKYTUNES_TAGS+x}" ]]; then
+  tags="$DUSKYTUNES_TAGS"
 else
   tags="$(git tag -l 'v1.*')"
 fi

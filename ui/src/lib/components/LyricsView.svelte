@@ -6,7 +6,7 @@
 	import * as api from '$lib/api';
 	import { playback, setPlaybackPosition } from '$lib/player.svelte';
 	import { appearance } from '$lib/theme.svelte';
-	import { ryokuWheelScroll } from '$lib/ryoku-scroll';
+	import { duskyWheelScroll } from '$lib/dusky-scroll';
 	import { HugeiconsIcon } from '@hugeicons/svelte';
 	import { t } from '$lib/i18n.svelte';
 	import { RefreshIcon, MusicNote01Icon } from '@hugeicons/core-free-icons';
@@ -34,7 +34,7 @@
 	// Per-track manual correction for provider timing. Positive = lyrics appear later. Stored locally
 	// because it is a listening preference, not YouTube metadata, and capped so stale ids cannot
 	// grow localStorage forever.
-	const OFFSET_KEY = 'ryotunes:lyrics-offsets-v1';
+	const OFFSET_KEY = 'duskytunes:lyrics-offsets-v1';
 	let offsetMs = $state(0);
 	function readOffsets(): Record<string, number> {
 		try {
@@ -259,7 +259,7 @@
 	onwheel={onUserScroll}
 	ontouchmove={onUserScroll}
 	onpointerdown={onUserScroll}
-	{@attach ryokuWheelScroll}
+	{@attach duskyWheelScroll}
 	style="background:var(--ryo-paper);color:var(--ryo-ink);"
 	class="ryo-lyrics-scroller {compact ? 'ryo-lyrics-scroller-compact' : ''} min-h-0 flex-1 overflow-x-hidden overflow-y-auto {compact
 		? 'px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'

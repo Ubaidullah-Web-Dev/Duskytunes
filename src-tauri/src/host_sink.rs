@@ -1,6 +1,6 @@
 //! `EventSink` for the Tauri host: every core event becomes a Tauri event on every window.
 
-use ryotunes_core::host::EventSink;
+use duskytunes_core::host::EventSink;
 use serde_json::Value;
 use tauri::{AppHandle, Emitter};
 

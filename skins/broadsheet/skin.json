@@ -3,10 +3,10 @@
   "format": 1,
   "id": "broadsheet",
   "name": "Broadsheet",
-  "author": "Ryoku",
+  "author": "Dusky",
   "version": "1.0.0",
   "license": "CC0-1.0",
-  "homepage": "https://github.com/ryoku-dev/ryotunes",
+  "homepage": "https://github.com/Ubaidullah-Web-Dev/Duskytunes",
   "description": "Newsprint: warm off-white paper, black ink, one deep-red sun, Playfair titles over IBM Plex, hairline corners, almost no wash. Dark edition inside.",
   "default": "light",
   "modes": {

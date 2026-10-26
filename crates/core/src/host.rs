@@ -85,7 +85,7 @@ impl Paths {
         self.data_dir.join("covers")
     }
     pub fn db_path(&self) -> PathBuf {
-        self.data_dir.join("ryotunes.db")
+        self.data_dir.join("duskytunes.db")
     }
 }
 
@@ -126,6 +126,6 @@ mod tests {
     fn paths_derive_children() {
         let p = Paths { data_dir: "/d".into(), cache_dir: "/c".into() };
         assert_eq!(p.covers_dir(), PathBuf::from("/d/covers"));
-        assert_eq!(p.db_path(), PathBuf::from("/d/ryotunes.db"));
+        assert_eq!(p.db_path(), PathBuf::from("/d/duskytunes.db"));
     }
 }

@@ -2,7 +2,7 @@
 # Fail when a binary in the package needs a newer glibc than the oldest distro we ship to.
 # Void is the floor right now (2.41); Arch moves ahead of it on its own.
 #
-#   scripts/check-glibc.sh dist/ryotunes-<ver>-1-x86_64.pkg.tar.zst [max]
+#   scripts/check-glibc.sh dist/duskytunes-<ver>-1-x86_64.pkg.tar.zst [max]
 set -euo pipefail
 
 pkg=${1:?usage: check-glibc.sh <package> [max-glibc]}

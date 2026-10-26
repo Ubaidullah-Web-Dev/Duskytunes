@@ -1,34 +1,34 @@
-# Install on Arch / CachyOS / Ryoku
+# Install on Arch / CachyOS / Dusky
 
-Ryotunes is primarily distributed as a precompiled x86_64 pacman package. Normal users should install that package rather than compiling the Tauri application locally.
+Duskytunes is primarily distributed as a precompiled x86_64 pacman package. Normal users should install that package rather than compiling the Tauri application locally.
 
 ## Precompiled package
 
 The push-triggered release pipeline publishes a prebuilt x86_64 package and its checksum,
-`ryotunes-X.Y.Z-1-x86_64.pkg.tar.zst` and the same filename with `.sha256` appended.
+`duskytunes-X.Y.Z-1-x86_64.pkg.tar.zst` and the same filename with `.sha256` appended.
 Verify the checksum, then install with pacman (which preserves ownership and pacman's
 signature policy):
 
 ```bash
-package=ryotunes-X.Y.Z-1-x86_64.pkg.tar.zst # Use the filename you downloaded.
+package=duskytunes-X.Y.Z-1-x86_64.pkg.tar.zst # Use the filename you downloaded.
 sha256sum -c "$package.sha256"
 sudo pacman -U "./$package"
 ```
 
 The file name is epochless, but the package carries `epoch=1`, so this upgrades
-cleanly over a machine still on the legacy 2.x line (`pacman -Q ryotunes` then
-reports `1:X.Y.Z-1`). After updating, quit and reopen Ryotunes — closing the
+cleanly over a machine still on the legacy 2.x line (`pacman -Q duskytunes` then
+reports `1:X.Y.Z-1`). After updating, quit and reopen Duskytunes — closing the
 window is not enough — so the daemon and client load the new build.
 
-On Ryoku this is automated: `ryoku update` installs a newer published Ryotunes
-package, and `ryoku doctor --check` reports its availability without installing.
+On Dusky this is automated: `dusky update` installs a newer published Duskytunes
+package, and `dusky doctor --check` reports its availability without installing.
 
 Removing the package stops its user daemon and activation socket without deleting
-your music, personal library, or configuration. Reinstalling through `ryoku update`
+your music, personal library, or configuration. Reinstalling through `dusky update`
 repairs stale activation state left by older packages; the app launcher and Super+J
 work immediately, without a relogin. Ordinary upgrades do not restart playback.
 
-## Update inside Ryotunes
+## Update inside Duskytunes
 
 Open **Settings → About → Check for new version** in either client. About shows the
 app version (and the connected daemon version in the native client), the next
@@ -37,10 +37,10 @@ It credits [ashmitvoid](https://github.com/ashmitvoid) and
 [neur0map](https://github.com/neur0map), and links the original
 [LiMusic project](https://github.com/SimoHypers/limusic).
 
-Self update does not run `ryoku update`: it downloads the same official x86_64
+Self update does not run `dusky update`: it downloads the same official x86_64
 package, checks SHA-256 and its internal name/version, then asks polkit for
 administrator approval to run `pacman -U`. Pacman's dependency and signature
-policy still applies. It requires the official `ryotunes` pacman package and a
+policy still applies. It requires the official `duskytunes` pacman package and a
 desktop polkit authentication agent; development builds are not overwritten.
 On Void the same button repacks that package into an `.xbps` and installs it
 with `xbps-install`; see [INSTALL-VOID.md](INSTALL-VOID.md).
@@ -54,25 +54,25 @@ release is available rather than offering an old v2 source archive as an update.
 
 ## AUR binary package
 
-The intended AUR package is `ryotunes-bin`. It downloads the precompiled release payload rather than compiling Rust/Tauri locally.
+The intended AUR package is `duskytunes-bin`. It downloads the precompiled release payload rather than compiling Rust/Tauri locally.
 
 ```bash
-paru -S ryotunes-bin
+paru -S duskytunes-bin
 ```
 
 This command will become usable after the AUR package is published.
 
 ## Primary QML client
 
-On Linux, Ryotunes runs the native [Quickshell](https://quickshell.org) client with `ryotunesd`. The single desktop entry, dock and Super+J all use the same launcher:
+On Linux, Duskytunes runs the native [Quickshell](https://quickshell.org) client with `duskytunesd`. The single desktop entry, dock and Super+J all use the same launcher:
 
 ```bash
-ryotunes
+duskytunes
 ```
 
-The package requires `quickshell`; the client also uses the Ryoku QML runtime (`Ryoku.Ui.Singletons`). The daemon starts the installed client through `ryotunes-qml`, which runs `qs -p /usr/share/ryotunes/client`.
+The package requires `quickshell`; the client also uses the Dusky QML runtime (`Dusky.Ui.Singletons`). The daemon starts the installed client through `duskytunes-qml`, which runs `qs -p /usr/share/duskytunes/client`.
 
-The launcher asks `ryotunesd` to show its existing client or open one. If the daemon is absent, it starts the user socket unit, or starts the daemon directly when systemd is unavailable. An unreachable daemon produces an error; Linux never falls back to Tauri and has no legacy launch flag or environment override.
+The launcher asks `duskytunesd` to show its existing client or open one. If the daemon is absent, it starts the user socket unit, or starts the daemon directly when systemd is unavailable. An unreachable daemon produces an error; Linux never falls back to Tauri and has no legacy launch flag or environment override.
 
 ## Build from source
 

@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../components"
 import "../chrome"
@@ -232,7 +232,7 @@ Item {
                         spacing: 8
                         Rectangle { Layout.preferredWidth: 17; Layout.preferredHeight: 1; color: Tokens.inkDim; opacity: 0.58 }
                         Text {
-                            text: "力 RYOTUNES"
+                            text: "DUSKYTUNES"
                             color: Tokens.inkDim
                             font.family: Style.fontUi
                             font.pixelSize: 8

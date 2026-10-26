@@ -1,10 +1,10 @@
-# Ryotunes native client: design
+# Duskytunes native client: design
 
 Status: draft for review. Date: 2026-09-05.
 
 ## 1. Why
 
-Ryotunes 2.4.1 was measured on the Ryoku dev laptop (Ryzen 9 7940HS, Radeon
+Duskytunes 2.4.1 was measured on the Dusky dev laptop (Ryzen 9 7940HS, Radeon
 780M iGPU driving the 2560x1600@165 panel, RTX 4060 dGPU, Hyprland 0.56.2,
 WebKitGTK 2.52.6) before any change:
 
@@ -35,12 +35,12 @@ The backend is the good part: `crates/innertube`, `crates/player` (libmpv),
 `#[tauri::command]` handlers), `lib.rs`, `tray.rs`, `main_window.rs`,
 `webview.rs`, `mini.rs`, `session.rs` (login webview), and `AppHandle::emit`
 calls in `state.rs` (10), `media.rs`, `local.rs`, `lastfm.rs`,
-`listentogether/`, `ryoku_theme.rs`.
+`listentogether/`, `dusky_theme.rs`.
 
 The desktop itself was the larger heat source (Hyprland 75% + `qs` 26% of a
-core with Ryotunes quit); that is fixed separately in ryoku-arch
+core with Duskytunes quit); that is fixed separately in dusky-arch
 (`heat/idle-drift`) and the GPU mode was switched to hybrid. This document is
-about making Ryotunes itself cheap.
+about making Duskytunes itself cheap.
 
 ## 2. Goals
 
@@ -54,7 +54,7 @@ about making Ryotunes itself cheap.
   digits of a core.
 - Playback survives the UI: closing the window is `exit(0)` of the client;
   the daemon keeps playing. No destroy/recreate dance, no failsafe timers.
-- The Ryoku shell talks to the daemon directly (push events over the same
+- The Dusky shell talks to the daemon directly (push events over the same
   socket) instead of polling MPRIS every 500 ms.
 - Keep Linux-first. Nothing in the design forbids other platforms, but no
   task is spent on them.
@@ -64,15 +64,15 @@ about making Ryotunes itself cheap.
 - Reimplementing the YouTube cipher/PoToken outside a browser engine (section 6
   explains why that is a research project, not a task).
 - Video playback, Spotify, or any new provider.
-- A new theme system: the client consumes Ryoku's palette singletons.
+- A new theme system: the client consumes Dusky's palette singletons.
 
 ## 4. Architecture
 
 ```mermaid
 flowchart LR
-    SHELL["Ryoku shell (qs)\nnow-playing widget"] -- "JSON lines over unix socket\n(push events)" --> D
-    UI["ryotunes client\nQML (Quickshell runtime)"] -- "JSON lines over unix socket" --> D["ryotunesd\nRust daemon"]
-    CLI["ryotunes-cli --json"] --> D
+    SHELL["Dusky shell (qs)\nnow-playing widget"] -- "JSON lines over unix socket\n(push events)" --> D
+    UI["duskytunes client\nQML (Quickshell runtime)"] -- "JSON lines over unix socket" --> D["duskytunesd\nRust daemon"]
+    CLI["duskytunes-cli --json"] --> D
     D --> CORE["crates/core\nstate · orchestrator · db · lyrics\nlocal · discord · lastfm · listen together"]
     CORE --> MPV["crates/player (libmpv)"]
     D --> MPRIS["MPRIS · tray · media keys"]
@@ -91,9 +91,9 @@ and can be killed at any time.
 | `crates/innertube`, `crates/player`, `crates/listen-protocol`, `crates/sync-server` | unchanged | existing |
 | `crates/core` | `AppState`, orchestrator, db, lyrics, local, discord, lastfm, media (MPRIS), radio, listentogether, cipher, potoken, session (login), settings. No Tauri. Talks to the outside through three traits (4.2) | moved from `src-tauri/src` |
 | `crates/protocol` | request/response/event types, `serde` only, shared by daemon, CLI, tests | new |
-| `crates/ryotunesd` | binary: socket server, single-instance lock, systemd-friendly lifecycle, GTK thread hosting the hidden WebKitGTK views, tray | new; absorbs `tray.rs`, `webview.rs`, the login part of `session.rs` |
-| `crates/ryotunes-cli` | `ryotunes-cli <method> [json]` and `ryotunes-cli events`; the shell's and scripts' entry point | new |
-| `client/` | the QML client run by Quickshell: `qs -c ryotunes` (shipped as `/usr/share/ryotunes/client`), plus `client/mini/` for the mini player window | new, replaces `ui/` |
+| `crates/duskytunesd` | binary: socket server, single-instance lock, systemd-friendly lifecycle, GTK thread hosting the hidden WebKitGTK views, tray | new; absorbs `tray.rs`, `webview.rs`, the login part of `session.rs` |
+| `crates/duskytunes-cli` | `duskytunes-cli <method> [json]` and `duskytunes-cli events`; the shell's and scripts' entry point | new |
+| `client/` | the QML client run by Quickshell: `qs -c duskytunes` (shipped as `/usr/share/duskytunes/client`), plus `client/mini/` for the mini player window | new, replaces `ui/` |
 | `src-tauri/` | deleted at the end of phase 4 | removed |
 
 ### 4.2 The three traits `crates/core` talks through
@@ -136,9 +136,9 @@ same methods. `tauri::async_runtime::spawn` becomes `tokio::spawn`.
 
 ### 4.3 Socket protocol
 
-- Path: `$XDG_RUNTIME_DIR/ryotunes/ryotunesd.sock`, mode 0700 directory, socket
-  created under `umask 077` (the ryoku daemon's rule, `ryoku/shell/ipc/daemon.go:178-185`).
-- Single instance: `ryotunesd.sock.lock` held with `flock` for the process
+- Path: `$XDG_RUNTIME_DIR/duskytunes/duskytunesd.sock`, mode 0700 directory, socket
+  created under `umask 077` (the dusky daemon's rule, `dusky/shell/ipc/daemon.go:178-185`).
+- Single instance: `duskytunesd.sock.lock` held with `flock` for the process
   lifetime; a second start connects to the incumbent and asks it to `show`
   (today's `tauri-plugin-single-instance` behaviour).
 - Framing: newline-delimited JSON, UTF-8, one object per line, both ways.
@@ -161,7 +161,7 @@ same methods. `tauri::async_runtime::spawn` becomes `tokio::spawn`.
   `queue-changed`, `queue-index`, `stop-after-current`, `playback-error`,
   `playback-notice`, `rating`, `cover-error`, `auth-changed`, `login-done`,
   `login-error`, `account-selection-required`, `local-changed`, `lt-state`,
-  `lt-notice`, `ryoku-theme-changed` (kept for non-QML consumers such as the
+  `lt-notice`, `dusky-theme-changed` (kept for non-QML consumers such as the
   shell's own widgets), same payloads as today.
 - Cadence: `position` stays at 4 Hz while any client is subscribed to it and
   1 Hz otherwise (today's `PositionThrottle`, keyed on subscriptions instead of
@@ -171,22 +171,22 @@ same methods. `tauri::async_runtime::spawn` becomes `tokio::spawn`.
 
 ### 4.4 Lifecycle
 
-- `ryotunesd` is a systemd user unit (`ryotunesd.service`, socket-activated
-  via `ryotunesd.socket`), started on first client connection. Today's
+- `duskytunesd` is a systemd user unit (`duskytunesd.service`, socket-activated
+  via `duskytunesd.socket`), started on first client connection. Today's
   behaviours map 1:1: tray-only with nothing playing exits after the bounded
   5-minute idle (`main_window.rs` `IDLE_EXIT_GRACE`); explicit Quit stops
   playback, unregisters MPRIS and exits; the client closing while playing is
   "hibernation" for free.
-- The client is `qs -c ryotunes` (a Quickshell config, section 5). The
-  `ryotunes` command launches it; a second launch raises the window via the
-  daemon (`show`). Hyprland keeps matching the exact title `^(Ryotunes)$` for
-  the float-and-centre rule; the mini window keeps `Ryotunes Mini`.
+- The client is `qs -c duskytunes` (a Quickshell config, section 5). The
+  `duskytunes` command launches it; a second launch raises the window via the
+  daemon (`show`). Hyprland keeps matching the exact title `^(Duskytunes)$` for
+  the float-and-centre rule; the mini window keeps `Duskytunes Mini`.
 
 ## 5. The client
 
 ### 5.1 Runtime: Quickshell, pure QML
 
-The client is a Quickshell configuration, like `ryoku/hub` (`qs -c hub` with a
+The client is a Quickshell configuration, like `dusky/hub` (`qs -c hub` with a
 Go backend) and the shell. Reasons over a C++/Qt host or cxx-qt:
 
 - Zero C++ and zero FFI: Quickshell already gives QML unix sockets
@@ -195,13 +195,13 @@ Go backend) and the shell. Reasons over a C++/Qt host or cxx-qt:
 - The same Qt libraries are resident for the shell (measured reference: a
   Quickshell process with a full-screen surface idles at 83 MB PSS and 0% CPU
   on this laptop).
-- Follow System is literally `import Ryoku.Ui.Singletons` and `Theme.*`, the
+- Follow System is literally `import Dusky.Ui.Singletons` and `Theme.*`, the
   palette the shell uses; no inotify bridge, no CSS variable diffing.
-- Ryoku's `I18n`, `Motion`, `Perf` (reduce-motion, power tiers) singletons
+- Dusky's `I18n`, `Motion`, `Perf` (reduce-motion, power tiers) singletons
   apply to the client for free.
 
-Fallback for non-Ryoku hosts is out of scope; the app is Ryoku-native by
-charter (`README.md` "Built for Ryoku, not merely compatible with it").
+Fallback for non-Dusky hosts is out of scope; the app is Dusky-native by
+charter (`README.md` "Built for Dusky, not merely compatible with it").
 
 ### 5.2 Structure
 
@@ -214,7 +214,7 @@ client/
   surfaces/ NowPlaying.qml Queue.qml Lyrics.qml PlayerBar.qml Sidebar.qml TopBar.qml
   mini/   Mini.qml
   components/ Artwork.qml Shelf.qml MediaCard.qml TrackRow.qml TrackList.qml (ListView with reuseItems) Chip.qml Hairline.qml
-  style/  Tokens.qml (spacing, radii, type scale from ui/src/lib/ryotunes.css) Fonts.qml
+  style/  Tokens.qml (spacing, radii, type scale from ui/src/lib/duskytunes.css) Fonts.qml
 ```
 
 Rules carried over from `docs/DESIGN.md`, restated for QML:
@@ -234,7 +234,7 @@ Rules carried over from `docs/DESIGN.md`, restated for QML:
 
 ### 5.3 Mini player
 
-A second `FloatingWindow` in the same config (title `Ryotunes Mini`), toggled
+A second `FloatingWindow` in the same config (title `Duskytunes Mini`), toggled
 from the player bar; it subscribes to the same `Playback` singleton. The main
 window can be hidden while the mini stays.
 
@@ -245,7 +245,7 @@ Facts established in code (`src-tauri/src/cipher/config.rs:1-18`,
 
 - The 2025+ VM-dispatch `player.js` has no statically extractable sig/n
   function. rustypipe 0.11's regex + QuickJS path (`rustypipe/src/deobfuscate.rs`)
-  and yt-dlp's regexes are dead on the players YouTube serves; Ryotunes,
+  and yt-dlp's regexes are dead on the players YouTube serves; Duskytunes,
   like Metrolist, runs YouTube's own 2.9 MB `player.js` in a real browser and
   evaluates a registry-supplied call template (`Ii(25,558,INPUT)`) and the
   player's URL class (`new g.<nClass>(url, true)`) inside the IIFE closure.
@@ -256,7 +256,7 @@ Facts established in code (`src-tauri/src/cipher/config.rs:1-18`,
   stripped Deno plus a jsdom-class DOM to satisfy it.
 
 Decision for the daemon: keep the hidden-browser mechanism, without Tauri.
-`ryotunesd` owns one GTK main loop thread and creates `WebKitWebView`s
+`duskytunesd` owns one GTK main loop thread and creates `WebKitWebView`s
 through `webkit2gtk-rs` on demand, with the same harness HTML and injection
 (`po_token.html`, `cipher/extractor.rs build_injection`), implementing
 `JsBridge`/`JsSession`. Cost is unchanged (88 + 75 MB PSS while media is
@@ -274,17 +274,17 @@ Follow-ups, deliberately outside this design, each a bounded task later:
   (`VISIONOS -> ANDROID_VR -> IOS`, `crates/innertube/src/clients.rs`), so no
   hidden browser is ever created, at the cost of WEB_REMIX-only features.
 - A Deno-based solver (yt-dlp's `ejs` for the cipher, `rustypipe-botguard`
-  for PoToken) as an on-demand subprocess, zero resident memory, once Ryoku
+  for PoToken) as an on-demand subprocess, zero resident memory, once Dusky
   packages Deno.
 
 ## 7. Shell integration
 
 The shell's now-playing widget polls `player.position` every 500 ms
-(`ryoku/shell/quickshell/shell/modules/bar/barstyles/qsbar/panels/MprisPanel.qml:46-60`)
+(`dusky/shell/quickshell/shell/modules/bar/barstyles/qsbar/panels/MprisPanel.qml:46-60`)
 and drives cava from PipeWire. With the daemon, `services/Media.qml` can
-prefer a `ryotunes` source that connects to the socket and receives
+prefer a `duskytunes` source that connects to the socket and receives
 `position`/`now-playing` pushes; MPRIS remains for every other player. This is
-a ryoku-arch change and lands after the daemon ships; nothing in the daemon
+a dusky-arch change and lands after the daemon ships; nothing in the daemon
 is shell-specific beyond the socket location.
 
 ## 8. Migration
@@ -297,7 +297,7 @@ Each phase leaves a working, shippable product.
    `webview.rs`, `LoginFlow` = `session.rs`). `commands.rs` shrinks to
    one-line forwarders into `core`. Behaviour identical; the release gates in
    `scripts/release-check.sh` and `cargo test --workspace` stay green.
-2. **Daemon.** `ryotunesd` with the socket protocol, `ryotunes-cli`,
+2. **Daemon.** `duskytunesd` with the socket protocol, `duskytunes-cli`,
    webkit2gtk-rs `JsBridge` and `LoginFlow`, MPRIS and tray moved over,
    systemd units, packaging as a second binary in the same package. The
    Tauri app keeps working unchanged (it still embeds `core`), so nothing
@@ -305,7 +305,7 @@ Each phase leaves a working, shippable product.
 3. **QML client.** Built against the daemon page by page in `client/`, in
    the order Home, player bar, queue, Now Playing, search, library, playlist,
    album, artist, lyrics, radio, settings, mini. Ships behind a
-   `ryotunes --qml` flag until parity, then becomes the default.
+   `duskytunes --qml` flag until parity, then becomes the default.
 4. **Cutover.** Delete `src-tauri/`, `ui/`, the WebKit tuning, the
    hibernation lifecycle, `taskbar.rs`, macOS/Windows configs; packaging
    becomes daemon + client config + desktop entry; `docs/ARCHITECTURE.md`
@@ -313,8 +313,8 @@ Each phase leaves a working, shippable product.
 
 ## 9. Verification
 
-Same instruments as the baseline, recorded in the Ryoku vault journal
-(`~/.local/share/ryoku/rashin/journal/2026-09-04.md`):
+Same instruments as the baseline, recorded in the Dusky vault journal
+(`~/.local/share/dusky/rashin/journal/2026-09-04.md`):
 
 - `top -b -d 5 -n 3 -p <pids>` for CPU; `/proc/<pid>/smaps_rollup` `Pss:` for
   memory; `nvidia-smi` for VRAM and dGPU handles; the per-thread sampler for
@@ -337,7 +337,7 @@ Same instruments as the baseline, recorded in the Ryoku vault journal
   oneshot channel, the pattern `webview.rs` already uses via
   `run_on_main_thread`.
 - YouTube rotates players and challenge formats; the design keeps the exact
-  current mechanism so the daemon inherits Ryotunes' registry self-heal
+  current mechanism so the daemon inherits Duskytunes' registry self-heal
   unchanged.
 - Two long-lived processes to package and update together: the daemon and
   the client carry the same version and `hello` refuses a mismatch.

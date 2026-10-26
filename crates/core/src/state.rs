@@ -9,7 +9,7 @@ use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
 
-use ryotunes_spotify::{StreamEvent, StreamHandle};
+use duskytunes_spotify::{StreamEvent, StreamHandle};
 
 use innertube::{
     AccountIdentity, AccountInfo, AudioQuality, Clients, InnerTube, SongItem, MAIN_CLIENT,
@@ -28,23 +28,23 @@ use crate::orchestrator::{Orchestrator, PlaybackData, PlaybackPing, ResolveError
 /// Synthetic browseId for the On Repeat playlist. Not a YouTube id: `get_playlist` intercepts it
 /// and builds the page from local play counts, so it must never collide with a real browseId
 /// (`VL…` / `MPRE…` / `RD…`).
-pub const ON_REPEAT_ID: &str = "RYOTUNES_ON_REPEAT";
+pub const ON_REPEAT_ID: &str = "DUSKYTUNES_ON_REPEAT";
 /// How far back On Repeat looks. A month is long enough to survive a quiet week and short enough
 /// that the list still turns over with what you're actually playing.
 pub const ON_REPEAT_WINDOW_SECS: i64 = 30 * 24 * 60 * 60;
 /// How many songs it holds.
 pub const ON_REPEAT_LIMIT: usize = 20;
 /// Recent/Rediscover are also local smart playlists: never pass these ids to YouTube.
-pub const RECENTLY_PLAYED_ID: &str = "RYOTUNES_RECENTLY_PLAYED";
-pub const REDISCOVER_ID: &str = "RYOTUNES_REDISCOVER";
+pub const RECENTLY_PLAYED_ID: &str = "DUSKYTUNES_RECENTLY_PLAYED";
+pub const REDISCOVER_ID: &str = "DUSKYTUNES_REDISCOVER";
 pub const RECENTLY_PLAYED_WINDOW_SECS: i64 = 7 * 24 * 60 * 60;
 pub const REDISCOVER_OLDER_THAN_SECS: i64 = 14 * 24 * 60 * 60;
 pub const SMART_PLAYLIST_LIMIT: usize = 40;
-pub const LOCAL_PLAYLIST_PREFIX: &str = "RYOTUNES_LOCAL_PLAYLIST:";
+pub const LOCAL_PLAYLIST_PREFIX: &str = "DUSKYTUNES_LOCAL_PLAYLIST:";
 /// The device's own Liked Songs: where the heart lands whenever YouTube's rating is not on the
 /// table (no Google account, a SoundCloud or local track). A plain local playlist with a fixed
 /// id, created on the first like, so it pages, plays and edits like any other.
-pub const LIKED_SONGS_ID: &str = "RYOTUNES_LOCAL_PLAYLIST:liked";
+pub const LIKED_SONGS_ID: &str = "DUSKYTUNES_LOCAL_PLAYLIST:liked";
 pub const LIKED_SONGS_TITLE: &str = "Liked Songs";
 
 /// The persisted SoundCloud OAuth blob (access + rotating refresh token + session cookie).
@@ -166,11 +166,11 @@ pub struct AppState {
     spotify_stream: parking_lot::Mutex<Option<SpotifyStream>>,
     /// The SoundCloud provider (guest api-v2 client), cache dir `<data>/soundcloud`. SoundCloud
     /// tracks stream over plain HTTPS, so unlike `spotify_stream` there is no live handle to hold.
-    pub soundcloud: Arc<ryotunes_soundcloud::SoundCloud>,
+    pub soundcloud: Arc<duskytunes_soundcloud::SoundCloud>,
     /// The TIDAL provider, cache dir `<data>/tidal`. Like SoundCloud it streams over plain HTTPS,
     /// so there is no live handle to hold; unlike SoundCloud it has no guest catalogue, so every
     /// call needs a session.
-    pub tidal: Arc<ryotunes_tidal::Tidal>,
+    pub tidal: Arc<duskytunes_tidal::Tidal>,
     /// Play/like/genre for SoundCloud tracks seen by `resolve`, keyed by `sc:track:` id, so the
     /// now-playing snapshot can render the meta line without another round-trip. Bounded in
     /// `remember_sc_meta`.
@@ -339,7 +339,7 @@ pub fn persisted_data_sync_id(db: &Db) -> Option<String> {
 
 fn identity_selection_key(data_sync_id: &str) -> String {
     let mut hasher = DefaultHasher::new();
-    "ryotunes-account-identity-v1".hash(&mut hasher);
+    "duskytunes-account-identity-v1".hash(&mut hasher);
     data_sync_id.hash(&mut hasher);
     format!("identity-{:016x}", hasher.finish())
 }
@@ -438,14 +438,14 @@ impl AppState {
         let spotify =
             Arc::new(crate::spotify::SpotifyState::new(paths.data_dir.join("spotify"), selected));
         let soundcloud =
-            Arc::new(ryotunes_soundcloud::SoundCloud::new(paths.data_dir.join("soundcloud")));
+            Arc::new(duskytunes_soundcloud::SoundCloud::new(paths.data_dir.join("soundcloud")));
         // A captured SoundCloud sign-in survives restarts like the YouTube cookie does: the
         // JSON blob lives under a settings key outside UI_SETTINGS, so the renderer can
         // neither read nor overwrite it. Every token rotation writes the new pair back
         // through this hook (SoundCloud's refresh token is single-use — losing a rotation
         // dead-ends the session), and the restore is validated against /me by the host.
         if let Some(raw) = db.get_setting(SOUNDCLOUD_AUTH_KEY) {
-            if let Ok(auth) = serde_json::from_str::<ryotunes_soundcloud::SoundcloudAuth>(&raw) {
+            if let Ok(auth) = serde_json::from_str::<duskytunes_soundcloud::SoundcloudAuth>(&raw) {
                 soundcloud.set_auth(Some(auth));
             }
         }
@@ -458,7 +458,7 @@ impl AppState {
                 }
             }
         }));
-        let tidal = Arc::new(ryotunes_tidal::Tidal::new(paths.data_dir.join("tidal")));
+        let tidal = Arc::new(duskytunes_tidal::Tidal::new(paths.data_dir.join("tidal")));
         // The crate ships a credential pair so signing in needs nothing but the button. A stored
         // pair overrides it field by field, so someone supplying only their own device id keeps
         // the shipped PKCE half rather than losing hi-res.
@@ -468,7 +468,7 @@ impl AppState {
             }
         }
         if let Some(raw) = db.get_setting(TIDAL_AUTH_KEY) {
-            match serde_json::from_str::<ryotunes_tidal::TidalAuth>(&raw) {
+            match serde_json::from_str::<duskytunes_tidal::TidalAuth>(&raw) {
                 Ok(auth) => tidal.set_auth(Some(auth)),
                 Err(e) => tracing::warn!(error = %e, "tidal: stored session did not parse"),
             }
@@ -533,18 +533,18 @@ impl AppState {
     /// The TIDAL tier to ask for. Clamped by the provider to whatever the session is actually
     /// entitled to, so a hi-res setting on a device-flow token yields LOSSLESS rather than a
     /// thirty second preview.
-    fn tidal_quality(&self) -> ryotunes_tidal::Quality {
+    fn tidal_quality(&self) -> duskytunes_tidal::Quality {
         self.db
             .get_setting("tidal_quality")
             .as_deref()
-            .and_then(ryotunes_tidal::Quality::parse)
-            .unwrap_or(ryotunes_tidal::Quality::Lossless)
+            .and_then(duskytunes_tidal::Quality::parse)
+            .unwrap_or(duskytunes_tidal::Quality::Lossless)
     }
 
     /// User-disabled stream clients — comma-separated setting. Also the force-fail lever for the
-    /// rustypipe-solo acceptance test; `RYOTUNES_DISABLED_CLIENTS` env overrides for quick testing.
+    /// rustypipe-solo acceptance test; `DUSKYTUNES_DISABLED_CLIENTS` env overrides for quick testing.
     fn disabled_clients(&self) -> HashSet<String> {
-        let raw = std::env::var("RYOTUNES_DISABLED_CLIENTS")
+        let raw = std::env::var("DUSKYTUNES_DISABLED_CLIENTS")
             .ok()
             .or_else(|| self.db.get_setting("disabled_stream_clients"))
             .unwrap_or_default();
@@ -1081,14 +1081,14 @@ impl AppState {
             // AllClientsFailed sends the queue handler down the skip path, and a whole TIDAL
             // queue then walks itself to the tail one "Skipped" toast at a time.
             let stream = self.tidal.stream(id, want).await.map_err(|e| match e {
-                ryotunes_tidal::Error::SignedOut => {
+                duskytunes_tidal::Error::SignedOut => {
                     ResolveError::SignInRequired("Sign in to TIDAL to play this".to_owned())
                 }
                 e => ResolveError::AllClientsFailed(format!("{video_id}: {e}")),
             })?;
             let url = match stream.source {
-                ryotunes_tidal::Source::Direct(url) => url,
-                ryotunes_tidal::Source::Presentation { xml } => {
+                duskytunes_tidal::Source::Direct(url) => url,
+                duskytunes_tidal::Source::Presentation { xml } => {
                     let path = self.paths.data_dir.join("tidal").join(format!("{id}.mpd"));
                     if let Some(dir) = path.parent() {
                         let _ = std::fs::create_dir_all(dir);
@@ -2180,7 +2180,7 @@ impl AppState {
     /// Remember a SoundCloud track's play/like/genre counts (pre-formatted) so the now-playing
     /// snapshot can render its meta line. Bounded: cleared past a few hundred entries so a long
     /// session can't grow it without limit.
-    fn remember_sc_meta(&self, video_id: &str, track: &ryotunes_soundcloud::Track) {
+    fn remember_sc_meta(&self, video_id: &str, track: &duskytunes_soundcloud::Track) {
         let mut map = self.sc_meta.lock();
         if map.len() > 512 {
             map.clear();
@@ -4108,7 +4108,7 @@ fn loudness_gain(loudness_db: Option<f64>) -> Option<f64> {
 /// "Artist – Title" for mpv's per-file media title (what PipeWire and mpv's own metadata show).
 fn media_title(title: &str, artists: &str) -> String {
     match (title.trim(), artists.trim()) {
-        ("", "") => "Ryotunes".to_owned(),
+        ("", "") => "Duskytunes".to_owned(),
         (t, "") => t.to_owned(),
         ("", a) => a.to_owned(),
         (t, a) => format!("{a} – {t}"),
@@ -5099,7 +5099,7 @@ pub struct TidalCredentials {
     pub pkce_redirect: Option<String>,
 }
 
-impl From<TidalCredentials> for ryotunes_tidal::Credentials {
+impl From<TidalCredentials> for duskytunes_tidal::Credentials {
     /// A stored blob overrides the shipped pair field by field, never wholesale: a host that set
     /// one value, or a stale row left by an earlier build, must not blank the rest and leave the
     /// provider unable to sign in.
@@ -5110,8 +5110,8 @@ impl From<TidalCredentials> for ryotunes_tidal::Credentials {
                 _ => shipped,
             }
         }
-        let shipped = ryotunes_tidal::Credentials::default();
-        ryotunes_tidal::Credentials {
+        let shipped = duskytunes_tidal::Credentials::default();
+        duskytunes_tidal::Credentials {
             device_id: pick(c.device_id, shipped.device_id),
             device_secret: pick(c.device_secret, shipped.device_secret),
             pkce_id: pick(c.pkce_id, shipped.pkce_id),
@@ -5127,23 +5127,23 @@ mod tidal_credentials_tests {
 
     #[test]
     fn an_empty_stored_blob_keeps_the_shipped_pair() {
-        let shipped = ryotunes_tidal::Credentials::default();
-        let merged: ryotunes_tidal::Credentials = TidalCredentials::default().into();
+        let shipped = duskytunes_tidal::Credentials::default();
+        let merged: duskytunes_tidal::Credentials = TidalCredentials::default().into();
         assert_eq!(merged, shipped, "a blank row must not disarm sign-in");
         let blanks = TidalCredentials {
             device_id: Some("   ".into()),
             device_secret: Some(String::new()),
             ..Default::default()
         };
-        let merged: ryotunes_tidal::Credentials = blanks.into();
+        let merged: duskytunes_tidal::Credentials = blanks.into();
         assert_eq!(merged, shipped);
     }
 
     #[test]
     fn one_set_field_overrides_only_itself() {
-        let merged: ryotunes_tidal::Credentials =
+        let merged: duskytunes_tidal::Credentials =
             TidalCredentials { device_id: Some("mine".into()), ..Default::default() }.into();
         assert_eq!(merged.device_id.as_deref(), Some("mine"));
-        assert_eq!(merged.device_secret, ryotunes_tidal::Credentials::default().device_secret);
+        assert_eq!(merged.device_secret, duskytunes_tidal::Credentials::default().device_secret);
     }
 }

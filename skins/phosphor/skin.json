@@ -3,10 +3,10 @@
   "format": 1,
   "id": "phosphor",
   "name": "Phosphor",
-  "author": "Ryoku",
+  "author": "Dusky",
   "version": "1.0.0",
   "license": "CC0-1.0",
-  "homepage": "https://github.com/ryoku-dev/ryotunes",
+  "homepage": "https://github.com/Ubaidullah-Web-Dev/Duskytunes",
   "description": "A green-phosphor terminal: black glass, P1 green ink, an amber sun, Major Mono titles, square corners, instant motion, no wash.",
   "default": "dark",
   "modes": {

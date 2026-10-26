@@ -3,7 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../components"
 
@@ -230,11 +230,11 @@ Item {
     // ask the daemon to quit and close this window. If the helper somehow fails, the app
     // stays open showing the manual "quit and reopen" guidance as the fallback.
     function restartIntoUpdate() {
-        var lock = (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/ryotunes/ryotunesd.sock.lock";
+        var lock = (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/duskytunes/duskytunesd.sock.lock";
         Quickshell.execDetached([
             "sh", "-c",
-            "flock -w 60 \"$1\" -c true 2>/dev/null; exec ryotunes",
-            "ryotunes-update-restart", lock
+            "flock -w 60 \"$1\" -c true 2>/dev/null; exec duskytunes",
+            "duskytunes-update-restart", lock
         ]);
         Daemon.call("quit").catch(() => {});
         Qt.quit();
@@ -346,7 +346,7 @@ Item {
 
     // The client version file shipped beside the QML. blockLoading makes it ready on open; watching it
     // means a package upgrade updates the APP row live while the daemon row stays on its handshake
-    // version until Ryotunes is fully restarted.
+    // version until Duskytunes is fully restarted.
     FileView {
         id: versionFile
         path: Quickshell.shellDir + "/version"
@@ -376,7 +376,7 @@ Item {
     }
     Process {
         id: exportPicker
-        command: ["zenity", "--file-selection", "--save", "--confirm-overwrite", "--title=Export the queue", "--filename=ryotunes-queue.json"]
+        command: ["zenity", "--file-selection", "--save", "--confirm-overwrite", "--title=Export the queue", "--filename=duskytunes-queue.json"]
         stdout: StdioCollector {
             id: exportOut
             onStreamFinished: { var p = exportOut.text.trim(); if (p) page.doExport(p); }
@@ -464,7 +464,7 @@ Item {
                         font.letterSpacing: 1
                     }
                     Text {
-                        text: "RYOTUNES // 設定"
+                        text: "DUSKYTUNES // 設定"
                         color: Tokens.inkFaint
                         font.family: Style.fontMono
                         font.pixelSize: Style.fs.xs
@@ -589,7 +589,7 @@ Item {
 
                             SkinCard {
                                 title: "System"
-                                author: "Follow the Ryoku desktop"
+                                author: "Follow the Dusky desktop"
                                 swatches: [Tokens.paper, Tokens.paperLift, Tokens.ink, Tokens.sun, Tokens.bone]
                                 active: Skin.followSystem
                                 onClicked: page.chooseSkin("system")
@@ -628,12 +628,12 @@ Item {
                             Layout.fillWidth: true
                             Layout.topMargin: Style.sp(2)
                             spacing: Style.sp(2)
-                            // RyoStore's `ryotunes-skins` category, when the store is on this box.
-                            Btn { text: "Get more skins"; icon: "download"; primary: true; visible: Skin.storeAvailable; onClicked: Quickshell.execDetached(["ryostore", "open", "ryotunes-skins"]) }
+                            // RyoStore's `duskytunes-skins` category, when the store is on this box.
+                            Btn { text: "Get more skins"; icon: "download"; primary: true; visible: Skin.storeAvailable; onClicked: Quickshell.execDetached(["ryostore", "open", "duskytunes-skins"]) }
                             Btn { text: "Open skins folder"; icon: "library"; onClicked: Quickshell.execDetached(["xdg-open", Skin.userDir]) }
                             Btn { text: "New skin from current"; icon: "add"; onClicked: page.forkOpen = !page.forkOpen }
                             Btn { text: "Reload"; icon: "repeat"; onClicked: Skin.reload() }
-                            Btn { text: "Skins guide"; icon: "link"; onClicked: Quickshell.execDetached(["xdg-open", "https://github.com/ryoku-dev/ryotunes/blob/main/docs/SKINS.md"]) }
+                            Btn { text: "Skins guide"; icon: "link"; onClicked: Quickshell.execDetached(["xdg-open", "https://github.com/Ubaidullah-Web-Dev/Duskytunes/blob/main/docs/SKINS.md"]) }
                         }
 
                         // Fork the painted palette into a new user skin — kebab-cased id, opened to edit.
@@ -861,7 +861,7 @@ Item {
                     anchors { left: parent.left; right: parent.right; top: parent.top; leftMargin: Style.sp(6); rightMargin: Style.sp(6); topMargin: Style.sp(4) }
                     spacing: Style.sp(3)
 
-                    // Sound — the Ryotunes-only effect chain; opens the Sound dialog.
+                    // Sound — the Duskytunes-only effect chain; opens the Sound dialog.
                     SectionHeading { Layout.fillWidth: true; title: "Sound"; mark: "音響" }
 
                     RowLayout {
@@ -1535,7 +1535,7 @@ Item {
                     SectionHeading { Layout.fillWidth: true; Layout.topMargin: Style.sp(3); title: "Open source"; mark: "源" }
                     Text {
                         Layout.fillWidth: true
-                        text: "Duskytunes is an open-source desktop music player for Dusky and Linux, based on Ryotunes/LiMusic, released under the GNU General Public License v3.0 or later."
+                        text: "Duskytunes is an open-source desktop music player for Dusky and Linux, based on Duskytunes/LiMusic, released under the GNU General Public License v3.0 or later."
                         color: Tokens.inkMuted; font.family: Style.fontUi; font.pixelSize: Style.fs.sm; wrapMode: Text.WordWrap
                     }
                     RowLayout {
@@ -1543,7 +1543,6 @@ Item {
                         spacing: Style.sp(2)
                         Btn { text: "GitHub"; icon: "link"; onClicked: page.openUrl("https://github.com/Ubaidullah-Web-Dev/Duskytunes") }
                         Btn { text: "GPL-3.0-or-later"; icon: "link"; onClicked: page.openUrl("https://www.gnu.org/licenses/gpl-3.0.html") }
-                    }
                     }
                 }
             }

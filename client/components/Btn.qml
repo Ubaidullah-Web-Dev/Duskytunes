@@ -1,10 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The text button: 36 px, radius 8, md 500. `primary` is the one filled control on a surface
-// (bone on paper, Ryoku's inverse pair); everything else is a hairline ghost. Press scales 0.97,
+// (bone on paper, Dusky's inverse pair); everything else is a hairline ghost. Press scales 0.97,
 // hover lifts the border, both on Tokens' snap timing.
 Item {
     id: root

@@ -974,7 +974,7 @@ mod tests {
     #[test]
     fn device_playlists_survive_account_index_clears_and_keep_order() {
         let d = db();
-        let id = "RYOTUNES_LOCAL_PLAYLIST:test";
+        let id = "DUSKYTUNES_LOCAL_PLAYLIST:test";
         d.create_local_playlist(id, "Offline mix").unwrap();
 
         assert!(d.add_local_playlist_track(id, "a", r#"{"video_id":"a"}"#).unwrap());
@@ -1014,7 +1014,7 @@ mod tests {
     #[test]
     fn device_playlist_thumbnails_extract_in_order_and_skip_missing() {
         let d = db();
-        let id = "RYOTUNES_LOCAL_PLAYLIST:art";
+        let id = "DUSKYTUNES_LOCAL_PLAYLIST:art";
         d.create_local_playlist(id, "Art mix").unwrap();
         d.add_local_playlist_track(id, "a", r#"{"video_id":"a","thumbnail":"https://img/a"}"#)
             .unwrap();
@@ -1032,7 +1032,7 @@ mod tests {
     #[test]
     fn opening_the_db_clears_local_files_out_of_on_repeat() {
         // 0.3.1 counted local plays before On Repeat excluded them; opening the db drops the rows.
-        let path = std::env::temp_dir().join("ryotunes-plays-purge-test.sqlite");
+        let path = std::env::temp_dir().join("duskytunes-plays-purge-test.sqlite");
         std::fs::remove_file(&path).ok();
         {
             let d = Db::open(&path).unwrap();

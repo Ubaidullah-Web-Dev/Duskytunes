@@ -1,5 +1,5 @@
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // A one-dimensional drag control (volume, and the seek overlay with visuals off). A 2 px track with

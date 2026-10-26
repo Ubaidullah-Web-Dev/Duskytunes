@@ -1,6 +1,6 @@
 pragma ComponentBehavior: Bound
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The SoundCloud seek bar (the Orange look): the track's 240-sample waveform drawn as thin bars with

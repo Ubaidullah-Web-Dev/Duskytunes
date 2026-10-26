@@ -1,4 +1,4 @@
-//! Pure mapping from the Spotify provider's models ([`ryotunes_spotify`]) to the YouTube-shaped
+//! Pure mapping from the Spotify provider's models ([`duskytunes_spotify`]) to the YouTube-shaped
 //! browse JSON the client already renders. The daemon calls these when the selected provider is
 //! Spotify (browsing) or an id carries a `spotify:` prefix (a track/album/artist/playlist page).
 //!
@@ -18,7 +18,7 @@ use innertube::{
     AlbumPage, ArtistCarousel, ArtistPage, BrowseItem, HomePage, PlaylistPage, PlaylistSort,
     Rating, SearchResults, Section, SongItem, SortMenu,
 };
-use ryotunes_spotify::{
+use duskytunes_spotify::{
     Album, AlbumDetail, Artist, ArtistRef, GenreItem, HomeFeed, Lyrics, LyricsLine, Playlist,
     PlaylistDetail, ReleaseType, SavedArtist, SearchResults as SpotifyResults, Track,
 };
@@ -492,7 +492,7 @@ fn group_thousands(n: u64) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use ryotunes_spotify::{GenreSection, LyricsWord};
+    use duskytunes_spotify::{GenreSection, LyricsWord};
     use std::sync::Arc;
 
     fn track() -> Track {

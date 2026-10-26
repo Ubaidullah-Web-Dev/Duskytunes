@@ -12,12 +12,12 @@ if [[ ${EUID:-$(id -u)} -eq 0 ]]; then
   exit 2
 fi
 
-printf '%s\n' 'Installing Ryotunes build/runtime dependencies…'
+printf '%s\n' 'Installing Duskytunes build/runtime dependencies…'
 sudo pacman -S --needed --noconfirm \
   base-devel nodejs pnpm webkit2gtk-4.1 appmenu-gtk-module \
   libappindicator-gtk3 librsvg xdotool mpv openssl desktop-file-utils hicolor-icon-theme xdg-utils
 
-# Ryoku systems commonly use rustup. Installing Arch's `rust` package on top of it conflicts, so
+# Dusky systems commonly use rustup. Installing Arch's `rust` package on top of it conflicts, so
 # keep an existing toolchain and bootstrap rustup only when Cargo is genuinely absent.
 if ! command -v cargo >/dev/null 2>&1; then
   printf '%s\n' 'Rust toolchain not found; installing rustup…'
@@ -29,4 +29,4 @@ printf '%s\n' 'Building an Arch package from this source tree…'
 cd "$repo_root/packaging/arch"
 makepkg -si --needed
 
-printf '%s\n' 'Ryotunes installed. Launch it from your app menu or run: ryotunes'
+printf '%s\n' 'Duskytunes installed. Launch it from your app menu or run: duskytunes'

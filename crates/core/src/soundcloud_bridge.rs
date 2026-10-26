@@ -1,4 +1,4 @@
-//! Pure mapping from the SoundCloud provider's models ([`ryotunes_soundcloud`]) to the
+//! Pure mapping from the SoundCloud provider's models ([`duskytunes_soundcloud`]) to the
 //! YouTube-shaped browse JSON the client already renders — the SoundCloud twin of
 //! [`crate::spotify_bridge`]. The daemon calls these when the selected provider is SoundCloud
 //! (browsing) or an id carries an `sc:` prefix (a track/user/playlist page).
@@ -20,7 +20,7 @@
 
 use innertube::models::metadata::ArtistRun;
 use innertube::{AlbumPage, BrowseItem, HomePage, PlaylistPage, SearchResults, Section, SongItem};
-use ryotunes_soundcloud::{
+use duskytunes_soundcloud::{
     DiscoverItem, Playlist, PlaylistDetail, SearchResults as ScResults, Selection, SystemPlaylist,
     Track, User, UserRef,
 };
@@ -432,7 +432,7 @@ pub(crate) fn abbreviate(n: u64) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use ryotunes_soundcloud::UserRef;
+    use duskytunes_soundcloud::UserRef;
 
     fn track(id: u64) -> Track {
         Track {

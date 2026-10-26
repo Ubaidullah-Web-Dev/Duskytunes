@@ -1,5 +1,5 @@
 import QtQuick
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // A neutral loading placeholder. Deliberately static — no shimmer loop — so a page waiting on the

@@ -29,7 +29,7 @@
 	import ListeningInsights from '$lib/components/ListeningInsights.svelte';
 	import MediaCard from '$lib/components/MediaCard.svelte';
 	import ErrorState from '$lib/components/ErrorState.svelte';
-	import RyokuPageHeader from '$lib/components/RyokuPageHeader.svelte';
+	import DuskyPageHeader from '$lib/components/DuskyPageHeader.svelte';
 	import type { BrowseItem } from '$lib/api';
 	import * as api from '$lib/api';
 	import {
@@ -165,7 +165,7 @@
 {/snippet}
 
 <div class="ryo-route-page">
-	<RyokuPageHeader
+	<DuskyPageHeader
 		eyebrow="MUSIC / COLLECTION"
 		title={t('Library')}
 		blurb={t('Your saved music, local files and playlists — one collection, arranged like an instrument sheet.')}

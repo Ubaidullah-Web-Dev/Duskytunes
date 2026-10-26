@@ -1,12 +1,12 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../lib/browse.js" as Browse
 import "../lib/ids.js" as Ids
 
-// Home's personal blocks, the ones the original Ryotunes built its Home around: "Jump back in" as a
+// Home's personal blocks, the ones the original Duskytunes built its Home around: "Jump back in" as a
 // two-column grid of what you opened last (art 48, title, meta, play on hover); "Familiar artists"
 // as ONE bordered panel — the numbered ARTIST INDEX on the left, the selected artist's photo bleeding
 // to the panel's edges in the centre, and the SELECTED ARTIST inspector (eyebrow, Fraunces name, TOP

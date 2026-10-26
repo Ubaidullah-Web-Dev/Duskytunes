@@ -1,5 +1,5 @@
 //! The signed-in Spotify client. Adapted from nolight132/sonora `spotify/client.rs`: Sonora's
-//! `impl MusicApi for LibrespotClient` becomes inherent async methods on [`Client`] (Ryotunes has no
+//! `impl MusicApi for LibrespotClient` becomes inherent async methods on [`Client`] (Duskytunes has no
 //! `MusicApi` trait), and the client now owns the one librespot player/FIFO ([`stream::Engine`]) that
 //! streams every track into mpv.
 

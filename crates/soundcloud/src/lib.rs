@@ -1,4 +1,4 @@
-//! Ryotunes SoundCloud provider.
+//! Duskytunes SoundCloud provider.
 //!
 //! A client for SoundCloud's internal `api-v2`. Guest mode needs no account: it discovers a
 //! public `client_id` by scraping soundcloud.com's asset bundles, caches it in memory and on

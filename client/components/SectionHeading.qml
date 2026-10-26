@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // A shelf / section header: the title in lg 500, a hairline rule filling the dead space, an optional

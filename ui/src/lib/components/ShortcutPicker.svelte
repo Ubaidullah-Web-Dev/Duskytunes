@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Lightweight anchored popover; it reads the same ranked local
-	// search engine as the rest of Ryotunes and closes after an add so Home never sits under a stale
+	// search engine as the rest of Duskytunes and closes after an add so Home never sits under a stale
 	// library picker. Scroll/resize repositioning is event-driven; there is no animation loop.
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';

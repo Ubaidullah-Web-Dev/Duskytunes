@@ -28,8 +28,8 @@ rustypipe_reports/
 
 # Release/package output
 /dist/
-/ryotunes-v*-source.tar.gz
-/ryotunes-v*-full.tar.gz
+/duskytunes-v*-source.tar.gz
+/duskytunes-v*-full.tar.gz
 /*.pkg.tar.*
 /packaging/arch/pkg/
 /packaging/arch/src/

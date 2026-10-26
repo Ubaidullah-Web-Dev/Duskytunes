@@ -148,9 +148,9 @@ export interface HomePage {
  * like any other playlist; the only thing the UI does differently is draw an icon cover, because
  * a playlist built from local play counts has no artwork of its own.
  */
-export const ON_REPEAT_ID = 'RYOTUNES_ON_REPEAT';
-export const RECENTLY_PLAYED_ID = 'RYOTUNES_RECENTLY_PLAYED';
-export const REDISCOVER_ID = 'RYOTUNES_REDISCOVER';
+export const ON_REPEAT_ID = 'DUSKYTUNES_ON_REPEAT';
+export const RECENTLY_PLAYED_ID = 'DUSKYTUNES_RECENTLY_PLAYED';
+export const REDISCOVER_ID = 'DUSKYTUNES_REDISCOVER';
 export const SMART_PLAYLIST_IDS = new Set([ON_REPEAT_ID, RECENTLY_PLAYED_ID, REDISCOVER_ID]);
 export const isSmartPlaylistId = (id: string) => SMART_PLAYLIST_IDS.has(id);
 
@@ -176,8 +176,8 @@ export const LOCAL_SONG_PREFIX = 'LOCAL:';
 export const LOCAL_ALBUM_PREFIX = 'LOCALALBUM:';
 /** An artist on this disk. Renders through the album route: same page, no YouTube channel. */
 export const LOCAL_ARTIST_PREFIX = 'LOCALARTIST:';
-export const LOCAL_PLAYLIST_PREFIX = 'RYOTUNES_LOCAL_PLAYLIST:';
-export const RADIO_ID_PREFIX = 'RYOTUNES_RADIO:';
+export const LOCAL_PLAYLIST_PREFIX = 'DUSKYTUNES_LOCAL_PLAYLIST:';
+export const RADIO_ID_PREFIX = 'DUSKYTUNES_RADIO:';
 export const isLocalPlaylistId = (id: string | undefined | null): boolean =>
 	!!id && id.startsWith(LOCAL_PLAYLIST_PREFIX);
 export const isRadioId = (id: string | undefined | null): boolean =>
@@ -628,8 +628,8 @@ export const onLoginError = (cb: (msg: string) => void): Promise<UnlistenFn> =>
 export const onLoginDone = (cb: () => void): Promise<UnlistenFn> =>
 	listen('login-done', () => cb());
 
-// --- Ryoku live design tokens ---------------------------------------------------------------
-export interface RyokuThemeTokens {
+// --- Dusky live design tokens ---------------------------------------------------------------
+export interface DuskyThemeTokens {
 	detected: boolean;
 	paper: string;
 	paperLift: string;
@@ -660,9 +660,9 @@ export interface RyokuThemeTokens {
 	reduceMotion: boolean;
 	source: 'named' | 'wallpaper' | 'signature';
 }
-export const ryokuThemeTokens = () => invoke<RyokuThemeTokens>('ryoku_theme_tokens');
-export const onRyokuThemeChanged = (cb: (tokens: RyokuThemeTokens) => void): Promise<UnlistenFn> =>
-	listen<RyokuThemeTokens>('ryoku-theme-changed', (e) => cb(e.payload));
+export const duskyThemeTokens = () => invoke<DuskyThemeTokens>('dusky_theme_tokens');
+export const onDuskyThemeChanged = (cb: (tokens: DuskyThemeTokens) => void): Promise<UnlistenFn> =>
+	listen<DuskyThemeTokens>('dusky-theme-changed', (e) => cb(e.payload));
 
 // --- lyrics ---------------------------------------------------------------------------------
 export interface LyricWord {

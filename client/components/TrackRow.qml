@@ -1,11 +1,11 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../lib/ids.js" as Ids
 
-// One track-table row (Sonora's list in Ryoku's skin, spec section 4). The whole row is the play
+// One track-table row (Sonora's list in Dusky's skin, spec section 4). The whole row is the play
 // target; the leading slot carries the track number, swapping to a play glyph on hover and to an
 // accent note while this is the row that is playing. Columns — index | art | title / artist | album
 // | plays | length | actions — line up with the micro header TrackList draws when `showHeader`.

@@ -3,10 +3,10 @@
   "format": 1,
   "id": "ember",
   "name": "Ember",
-  "author": "Ryoku",
+  "author": "Dusky",
   "version": "1.0.0",
   "license": "CC0-1.0",
-  "homepage": "https://github.com/ryoku-dev/ryotunes",
+  "homepage": "https://github.com/Ubaidullah-Web-Dev/Duskytunes",
   "description": "Warm dark: deep-umber paper, warm bone ink, one amber sun. Firelit and rich; the accent follows the sun.",
   "default": "dark",
   "modes": {

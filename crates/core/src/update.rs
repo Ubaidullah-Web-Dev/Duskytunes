@@ -13,8 +13,8 @@ use sha2::{Digest, Sha256};
 use tokio::io::AsyncWriteExt;
 use tokio::process::Command;
 
-const REPOSITORY: &str = "https://github.com/ryoku-dev/ryotunes";
-const LATEST: &str = "https://api.github.com/repos/ryoku-dev/ryotunes/releases/latest";
+const REPOSITORY: &str = "https://github.com/dusky-dev/duskytunes";
+const LATEST: &str = "https://api.github.com/repos/dusky-dev/duskytunes/releases/latest";
 const MAX_PACKAGE: u64 = 1024 * 1024 * 1024;
 static INSTALL: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
 const VOID_DEPENDS: &str = include_str!("../../../packaging/void/depends");
@@ -80,7 +80,7 @@ fn version(raw: &str) -> Option<(u64, u64, u64)> {
 }
 
 fn package_name(version: &str) -> String {
-    format!("ryotunes-{version}-1-x86_64.pkg.tar.zst")
+    format!("duskytunes-{version}-1-x86_64.pkg.tar.zst")
 }
 
 fn release_info(release: Option<Release>, current: &str, reason: Option<String>) -> UpdateInfo {
@@ -121,7 +121,7 @@ fn release_info(release: Option<Release>, current: &str, reason: Option<String>)
 async fn response(url: &str, timeout: Duration) -> Result<reqwest::Response, String> {
     crate::http::client()
         .get(url)
-        .header(reqwest::header::USER_AGENT, concat!("Ryotunes/", env!("CARGO_PKG_VERSION")))
+        .header(reqwest::header::USER_AGENT, concat!("Duskytunes/", env!("CARGO_PKG_VERSION")))
         .header(reqwest::header::ACCEPT, "application/vnd.github+json")
         .timeout(timeout)
         .send()
@@ -167,15 +167,15 @@ async fn installation() -> Result<Manager, String> {
     owner.arg(if manager == Manager::Pacman { "-Qoq" } else { "-o" }).arg(exe).kill_on_drop(true);
     match tokio::time::timeout(Duration::from_secs(10), owner.output()).await {
         Ok(Ok(output)) if output.status.success() && owns(manager, &output.stdout) => Ok(manager),
-        _ => Err("This copy of Ryotunes was not installed from its package, so it cannot update itself. Install the package from the release page; development builds are never overwritten.".into()),
+        _ => Err("This copy of Duskytunes was not installed from its package, so it cannot update itself. Install the package from the release page; development builds are never overwritten.".into()),
     }
 }
 
-/// Whether the owner query names the ryotunes package. xbps answers
-/// `ryotunes-1.2.1_1: /usr/bin/ryotunesd (regular file)`.
+/// Whether the owner query names the duskytunes package. xbps answers
+/// `duskytunes-1.2.1_1: /usr/bin/duskytunesd (regular file)`.
 fn owns(manager: Manager, stdout: &[u8]) -> bool {
     match manager {
-        Manager::Pacman => stdout == b"ryotunes\n",
+        Manager::Pacman => stdout == b"duskytunes\n",
         Manager::Xbps => std::str::from_utf8(stdout)
             .ok()
             .and_then(|text| text.split_once(": "))
@@ -184,7 +184,7 @@ fn owns(manager: Manager, stdout: &[u8]) -> bool {
 }
 
 /// The running binary's path on disk. Once pacman replaces the file under a running daemon, the
-/// kernel reports `/usr/bin/ryotunesd (deleted)`; the package still owns the original path.
+/// kernel reports `/usr/bin/duskytunesd (deleted)`; the package still owns the original path.
 fn on_disk(exe: PathBuf) -> PathBuf {
     match exe.to_str().and_then(|path| path.strip_suffix(" (deleted)")) {
         Some(path) => PathBuf::from(path),
@@ -200,15 +200,15 @@ async fn installed_package_version(manager: Manager) -> Result<Option<String>, S
         Manager::Xbps => Command::new("/usr/bin/xbps-query"),
     };
     match manager {
-        Manager::Pacman => query.args(["-Q", "ryotunes"]),
-        Manager::Xbps => query.args(["-p", "pkgver", "ryotunes"]),
+        Manager::Pacman => query.args(["-Q", "duskytunes"]),
+        Manager::Xbps => query.args(["-p", "pkgver", "duskytunes"]),
     };
     let output = tokio::time::timeout(Duration::from_secs(10), query.kill_on_drop(true).output())
         .await
         .map_err(|_| "Timed out reading the installed package.")?
         .map_err(|e| format!("Could not query the installed package: {e}"))?;
     if !output.status.success() {
-        return Err("Could not query the installed Ryotunes package.".into());
+        return Err("Could not query the installed Duskytunes package.".into());
     }
     let text = String::from_utf8_lossy(&output.stdout);
     Ok(match manager {
@@ -217,17 +217,17 @@ async fn installed_package_version(manager: Manager) -> Result<Option<String>, S
     })
 }
 
-/// `ryotunes 1:1.1.9-1` → `1.1.9`.
+/// `duskytunes 1:1.1.9-1` → `1.1.9`.
 fn package_version(query: &str) -> Option<String> {
     query
         .trim()
-        .strip_prefix("ryotunes 1:")
+        .strip_prefix("duskytunes 1:")
         .and_then(|value| value.rsplit_once('-').map(|(version, _)| version.to_owned()))
 }
 
-/// `ryotunes-1.2.1_1` → `1.2.1`.
+/// `duskytunes-1.2.1_1` → `1.2.1`.
 fn xbps_version(pkgver: &str) -> Option<String> {
-    let (version, revision) = pkgver.trim().strip_prefix("ryotunes-")?.rsplit_once('_')?;
+    let (version, revision) = pkgver.trim().strip_prefix("duskytunes-")?.rsplit_once('_')?;
     let revision_ok = !revision.is_empty() && revision.bytes().all(|byte| byte.is_ascii_digit());
     (revision_ok && !version.contains('-')).then(|| version.to_owned())
 }
@@ -330,7 +330,7 @@ pub async fn install_update(requested: String) -> Result<InstalledUpdate, String
     if let Some(installed_version) = installed_package_version(manager).await? {
         if version(&installed_version) > version(&requested) {
             return Err(
-                "A newer package is already installed. Quit Ryotunes and open it again.".into()
+                "A newer package is already installed. Quit Duskytunes and open it again.".into()
             );
         }
         if installed_version == requested {
@@ -339,7 +339,7 @@ pub async fn install_update(requested: String) -> Result<InstalledUpdate, String
     }
     // Private random staging, removed on every success/error. No user-controlled path reaches root.
     let staging = tempfile::Builder::new()
-        .prefix("ryotunes-update-")
+        .prefix("duskytunes-update-")
         .tempdir()
         .map_err(|e| format!("Could not create private update staging: {e}"))?;
     let name = package_name(&requested);
@@ -365,10 +365,10 @@ async fn install_pacman(path: &Path, requested: &str) -> Result<(), String> {
         .await
         .map_err(|_| "Timed out reading the package identity.")?
         .map_err(|e| format!("Could not inspect the package: {e}"))?;
-    let expected_identity = format!("ryotunes 1:{requested}-1\n");
+    let expected_identity = format!("duskytunes 1:{requested}-1\n");
     if !output.status.success() || output.stdout != expected_identity.as_bytes() {
         return Err(
-            "Downloaded package identity does not match the selected Ryotunes release.".into()
+            "Downloaded package identity does not match the selected Duskytunes release.".into()
         );
     }
     // Explicit Update click + polkit approval authorizes just this package transaction. Retain
@@ -393,7 +393,7 @@ async fn install_pacman(path: &Path, requested: &str) -> Result<(), String> {
     Ok(())
 }
 
-/// Repack the verified Arch package as `ryotunes-<version>_1` in a private local repository and
+/// Repack the verified Arch package as `duskytunes-<version>_1` in a private local repository and
 /// install it from there. xbps-create and xbps-rindex run unprivileged; only the final
 /// xbps-install goes through polkit.
 async fn install_xbps(package: &Path, staging: &Path, requested: &str) -> Result<(), String> {
@@ -406,13 +406,13 @@ async fn install_xbps(package: &Path, staging: &Path, requested: &str) -> Result
     refuse_unrunnable(&root.join("usr/bin")).await?;
     tokio::fs::create_dir(&repo).await.map_err(|e| format!("Could not stage update: {e}"))?;
 
-    let pkgver = format!("ryotunes-{requested}_1");
+    let pkgver = format!("duskytunes-{requested}_1");
     let depends = void_depends();
     run(
         Command::new("/usr/bin/xbps-create")
             .current_dir(&repo)
             .args(["-q", "-A", "x86_64", "-n", &pkgver, "-l", "GPL-3.0-or-later", "-H", REPOSITORY])
-            .args(["-s", "Ryoku music client, playback daemon, and sync server"])
+            .args(["-s", "Dusky music client, playback daemon, and sync server"])
             .args(["-D", &depends])
             .arg(&root),
         "build the xbps package",
@@ -432,7 +432,7 @@ async fn install_xbps(package: &Path, staging: &Path, requested: &str) -> Result
         .arg("/usr/bin/xbps-install")
         .args(["-S", "-y", "-u"])
         .arg(format!("--repository={}", repo.display()))
-        .arg("ryotunes")
+        .arg("duskytunes")
         .stdin(Stdio::null())
         .output()
         .await
@@ -471,7 +471,7 @@ async fn refuse_unrunnable(bin: &Path) -> Result<(), String> {
     Ok(())
 }
 
-/// ldd: `/usr/lib/libm.so.6: version `GLIBC_2.44' not found (required by ./ryotunesd)`.
+/// ldd: `/usr/lib/libm.so.6: version `GLIBC_2.44' not found (required by ./duskytunesd)`.
 fn needs_newer_glibc(ldd: &[u8]) -> bool {
     String::from_utf8_lossy(ldd)
         .lines()
@@ -505,7 +505,7 @@ fn void_depends() -> String {
 }
 
 /// Unpack the package's `usr/` tree into `root`, then check `.PKGINFO` names this exact release.
-/// The systemd units are left out: Void has no user systemd, and `ryotunes` starts the daemon
+/// The systemd units are left out: Void has no user systemd, and `duskytunes` starts the daemon
 /// itself when it can't use the socket unit.
 fn unpack(package: &Path, root: &Path, requested: &str) -> Result<(), String> {
     let bad = |e: std::io::Error| format!("Could not unpack the package: {e}");
@@ -529,7 +529,7 @@ fn unpack(package: &Path, root: &Path, requested: &str) -> Result<(), String> {
     }
     if !pkginfo_matches(&pkginfo, requested) {
         return Err(
-            "Downloaded package identity does not match the selected Ryotunes release.".into()
+            "Downloaded package identity does not match the selected Duskytunes release.".into()
         );
     }
     Ok(())
@@ -538,7 +538,7 @@ fn unpack(package: &Path, root: &Path, requested: &str) -> Result<(), String> {
 fn pkginfo_matches(pkginfo: &str, requested: &str) -> bool {
     let field =
         |key: &str| pkginfo.lines().find_map(|line| line.strip_prefix(key)?.strip_prefix(" = "));
-    field("pkgname") == Some("ryotunes")
+    field("pkgname") == Some("duskytunes")
         && field("pkgver") == Some(format!("1:{requested}-1").as_str())
         && field("arch") == Some("x86_64")
 }
@@ -631,22 +631,22 @@ mod tests {
 
     #[test]
     fn a_replaced_binary_still_resolves_to_its_package_path() {
-        let replaced = PathBuf::from("/usr/bin/ryotunesd (deleted)");
-        assert_eq!(on_disk(replaced), PathBuf::from("/usr/bin/ryotunesd"));
-        let intact = PathBuf::from("/usr/bin/ryotunesd");
+        let replaced = PathBuf::from("/usr/bin/duskytunesd (deleted)");
+        assert_eq!(on_disk(replaced), PathBuf::from("/usr/bin/duskytunesd"));
+        let intact = PathBuf::from("/usr/bin/duskytunesd");
         assert_eq!(on_disk(intact.clone()), intact);
-        assert_eq!(package_version("ryotunes 1:1.1.9-1\n").as_deref(), Some("1.1.9"));
+        assert_eq!(package_version("duskytunes 1:1.1.9-1\n").as_deref(), Some("1.1.9"));
         assert_eq!(package_version("other 1:1.1.9-1"), None);
     }
 
     #[test]
-    fn xbps_owner_and_version_name_only_ryotunes() {
-        assert_eq!(xbps_version("ryotunes-1.2.1_1\n").as_deref(), Some("1.2.1"));
-        assert_eq!(xbps_version("ryotunes-1.2.1"), None);
-        assert_eq!(xbps_version("ryotunes-cli-1.2.1_1"), None);
-        assert_eq!(xbps_version("ryotunes-extra-1.2.1_1"), None);
-        assert!(owns(Manager::Xbps, b"ryotunes-1.2.1_1: /usr/bin/ryotunesd (regular file)\n"));
-        assert!(!owns(Manager::Xbps, b"ryoku-0.1_1: /usr/bin/ryotunesd (regular file)\n"));
+    fn xbps_owner_and_version_name_only_duskytunes() {
+        assert_eq!(xbps_version("duskytunes-1.2.1_1\n").as_deref(), Some("1.2.1"));
+        assert_eq!(xbps_version("duskytunes-1.2.1"), None);
+        assert_eq!(xbps_version("duskytunes-cli-1.2.1_1"), None);
+        assert_eq!(xbps_version("duskytunes-extra-1.2.1_1"), None);
+        assert!(owns(Manager::Xbps, b"duskytunes-1.2.1_1: /usr/bin/duskytunesd (regular file)\n"));
+        assert!(!owns(Manager::Xbps, b"dusky-0.1_1: /usr/bin/duskytunesd (regular file)\n"));
         assert!(!owns(Manager::Xbps, b""));
     }
 
@@ -660,8 +660,8 @@ mod tests {
             builder.append_data(&mut header, path, body).unwrap();
         };
         add(".PKGINFO", 0o644, pkginfo.as_bytes());
-        add("usr/bin/ryotunesd", 0o755, b"elf");
-        add("usr/lib/systemd/user/ryotunesd.service", 0o644, b"[Unit]");
+        add("usr/bin/duskytunesd", 0o755, b"elf");
+        add("usr/lib/systemd/user/duskytunesd.service", 0o644, b"[Unit]");
         let tar = builder.into_inner().unwrap();
         ruzstd::encoding::compress_to_vec(&tar[..], ruzstd::encoding::CompressionLevel::Fastest)
     }
@@ -670,13 +670,13 @@ mod tests {
     fn unpack_keeps_usr_without_systemd_and_checks_identity() {
         use std::os::unix::fs::PermissionsExt;
         let dir = tempfile::tempdir().unwrap();
-        let package = dir.path().join("ryotunes.pkg.tar.zst");
-        let good = "pkgname = ryotunes\npkgbase = ryotunes\npkgver = 1:1.2.2-1\narch = x86_64\n";
+        let package = dir.path().join("duskytunes.pkg.tar.zst");
+        let good = "pkgname = duskytunes\npkgbase = duskytunes\npkgver = 1:1.2.2-1\narch = x86_64\n";
         std::fs::write(&package, arch_package(good)).unwrap();
 
         let root = dir.path().join("root");
         unpack(&package, &root, "1.2.2").unwrap();
-        let daemon = std::fs::metadata(root.join("usr/bin/ryotunesd")).unwrap();
+        let daemon = std::fs::metadata(root.join("usr/bin/duskytunesd")).unwrap();
         assert_eq!(daemon.permissions().mode() & 0o777, 0o755);
         assert!(!root.join("usr/lib/systemd").exists());
         assert!(!root.join(".PKGINFO").exists());

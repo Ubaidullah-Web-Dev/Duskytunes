@@ -60,21 +60,21 @@ mod imp {
 
     /// `Handle` isn't `Clone`, so it lives here rather than in Tauri's managed state — that also
     /// keeps [`set_playing`] callable without borrowing across an await.
-    static HANDLE: OnceLock<Handle<RyotunesTray>> = OnceLock::new();
+    static HANDLE: OnceLock<Handle<DuskytunesTray>> = OnceLock::new();
 
-    struct RyotunesTray {
+    struct DuskytunesTray {
         app: AppHandle,
         playing: bool,
         icon: Vec<Icon>,
     }
 
-    impl Tray for RyotunesTray {
+    impl Tray for DuskytunesTray {
         fn id(&self) -> String {
-            "ryotunes".into()
+            "duskytunes".into()
         }
 
         fn title(&self) -> String {
-            "Ryotunes".into()
+            "Duskytunes".into()
         }
 
         fn icon_pixmap(&self) -> Vec<Icon> {
@@ -95,7 +95,7 @@ mod imp {
                 })
             };
             vec![
-                item("Show Ryotunes", "show"),
+                item("Show Duskytunes", "show"),
                 MenuItem::Separator,
                 item(if self.playing { "Pause" } else { "Play" }, "play_pause"),
                 item("Next", "next"),
@@ -117,7 +117,7 @@ mod imp {
     }
 
     pub fn init(app: &AppHandle) -> tauri::Result<()> {
-        let tray = RyotunesTray { app: app.clone(), playing: false, icon: icon_pixmap(app) };
+        let tray = DuskytunesTray { app: app.clone(), playing: false, icon: icon_pixmap(app) };
         // Registering with the StatusNotifierWatcher is async and can outlive setup(); a failure
         // here costs the tray, not the app, so it's logged rather than propagated.
         tauri::async_runtime::spawn(async move {
@@ -153,7 +153,7 @@ mod imp {
     }
 
     pub fn init(app: &AppHandle) -> tauri::Result<()> {
-        let show = MenuItem::with_id(app, "show", "Show Ryotunes", true, None::<&str>)?;
+        let show = MenuItem::with_id(app, "show", "Show Duskytunes", true, None::<&str>)?;
         let play_pause = MenuItem::with_id(app, "play_pause", "Play", true, None::<&str>)?;
         let next = MenuItem::with_id(app, "next", "Next", true, None::<&str>)?;
         let prev = MenuItem::with_id(app, "prev", "Previous", true, None::<&str>)?;
@@ -176,7 +176,7 @@ mod imp {
         let mut builder = TrayIconBuilder::with_id("main")
             .menu(&menu)
             .show_menu_on_left_click(false)
-            .tooltip("Ryotunes")
+            .tooltip("Duskytunes")
             .on_menu_event(|app, event| handle_menu(app, event.id.as_ref()))
             .on_tray_icon_event(|tray, event| {
                 if let TrayIconEvent::DoubleClick { button: MouseButton::Left, .. } = event {

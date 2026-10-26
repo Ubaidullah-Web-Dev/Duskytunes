@@ -1,15 +1,15 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui as RU
-import Ryoku.Ui.Singletons
+import Dusky.Ui as DU
+import Dusky.Ui.Singletons
 import "../"
 import "../lib/ids.js" as Ids
 
 // The Home hero's Now Playing card (spec "Home hero"): a ~550 x 125 paper card with a square, full
 // height artwork on the left (the shared Spectrum ramped over its foot while playing) and, on the
 // right, the PLAYBACK / STREAM readout, the track title in Fraunces, the artist, three mono stat
-// cells that surface Ryotunes' Sound effects (RATIO / SPEED / TEMPO), a tiny prev / play / next
+// cells that surface Duskytunes' Sound effects (RATIO / SPEED / TEMPO), a tiny prev / play / next
 // transport at the foot and a QUEUE pill that opens the Now Playing stage's queue tab. It only
 // exists while something plays; HomePage hides it (and drops to a single column) on a narrow page,
 // so it can never overlap the greeting column.
@@ -113,7 +113,7 @@ Rectangle {
             }
 
             // the spectrum, ramped from the cover accent into ink
-            RU.SpectrumField {
+            DU.SpectrumField {
                 anchors.fill: parent
                 levels: Spectrum.levels
                 energy: Spectrum.energy

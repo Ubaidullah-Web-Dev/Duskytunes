@@ -2,7 +2,7 @@ import QtQuick
 import QtTest
 import "../lib/ids.js" as Ids
 
-// The source tag on cards and rows: every catalogue id wears its catalogue's glyph, and Ryotunes'
+// The source tag on cards and rows: every catalogue id wears its catalogue's glyph, and Duskytunes'
 // own collections (which share YouTube's unprefixed id space in providerOf) wear none, so a smart or
 // local playlist never claims to come from YouTube Music.
 TestCase {
@@ -27,11 +27,11 @@ TestCase {
         compare(Ids.providerOf("tidalish"), "youtube");
     }
 
-    function test_ryotunes_own_collections_wear_none() {
-        compare(Ids.sourceGlyph("RYOTUNES_ON_REPEAT"), "");
-        compare(Ids.sourceGlyph("RYOTUNES_REDISCOVER"), "");
-        compare(Ids.sourceGlyph("RYOTUNES_LOCAL_PLAYLIST:42"), "");
-        compare(Ids.sourceGlyph("RYOTUNES_RADIO:station"), "");
+    function test_duskytunes_own_collections_wear_none() {
+        compare(Ids.sourceGlyph("DUSKYTUNES_ON_REPEAT"), "");
+        compare(Ids.sourceGlyph("DUSKYTUNES_REDISCOVER"), "");
+        compare(Ids.sourceGlyph("DUSKYTUNES_LOCAL_PLAYLIST:42"), "");
+        compare(Ids.sourceGlyph("DUSKYTUNES_RADIO:station"), "");
         compare(Ids.sourceGlyph("LOCALALBUM:x"), "");
         compare(Ids.sourceGlyph(""), "");
         compare(Ids.sourceGlyph(undefined), "");

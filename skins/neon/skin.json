@@ -3,10 +3,10 @@
   "format": 1,
   "id": "neon",
   "name": "Neon",
-  "author": "Ryoku",
+  "author": "Dusky",
   "version": "1.0.0",
   "license": "CC0-1.0",
-  "homepage": "https://github.com/ryoku-dev/ryotunes",
+  "homepage": "https://github.com/Ubaidullah-Web-Dev/Duskytunes",
   "description": "Tokyo after midnight: ink-blue paper, hot magenta bone, a cyan sun. Unbounded titles, sharp corners, fast motion, the cover wash turned up.",
   "default": "dark",
   "modes": {

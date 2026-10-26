@@ -14,7 +14,7 @@
 
 - `cargo test --workspace --locked`, `cargo check --workspace --locked`, `cargo fmt --all -- --check` and `scripts/release-check.sh` must pass after every task (they are the release gates in `README.md`).
 - No behaviour change: the Svelte UI, the hidden cipher/PoToken webviews, MPRIS, tray, Last.fm, Discord, Listen Together and login work exactly as before; `RUST_LOG=info` logs show the same `cipher: building webview`, `PoToken minter ready`, `resolved stream client="WEB_REMIX"` lines.
-- `crates/core` must not depend on `tauri`, `tauri-plugin-*`, `webkit2gtk` or `ksni`; `cargo tree -p ryotunes-core -i tauri` must print `error: package ID specification tauri did not match any packages`.
+- `crates/core` must not depend on `tauri`, `tauri-plugin-*`, `webkit2gtk` or `ksni`; `cargo tree -p duskytunes-core -i tauri` must print `error: package ID specification tauri did not match any packages`.
 - Commit subjects follow the existing history style (`build: ...`, `host: ...`, `core: ...`), imperative, no trailing period, no attribution trailers.
 - Do not touch `ui/`, `crates/innertube`, `crates/player`, `crates/listen-protocol`, `crates/sync-server`.
 - The workspace `Cargo.lock` is locked: adding `async-trait` is the only new dependency; add it to `[workspace.dependencies]` and run `cargo update -p async-trait --precise <version>` once, commit the lock.
@@ -31,7 +31,7 @@
 - Test: `crates/core/src/host.rs` (`#[cfg(test)]`)
 
 **Interfaces:**
-- Produces: `ryotunes_core::host::{EventSink, JsBridge, JsSession, JsError, LoginFlow, LoginResult, LoginError, Paths}` used by every later task.
+- Produces: `duskytunes_core::host::{EventSink, JsBridge, JsSession, JsError, LoginFlow, LoginResult, LoginError, Paths}` used by every later task.
 
 - [ ] **Step 1: Add the crate to the workspace**
 
@@ -52,18 +52,18 @@ members = [
 [workspace.dependencies]
 # ... existing lines unchanged ...
 async-trait = "0.1"
-ryotunes-core = { path = "crates/core" }
+duskytunes-core = { path = "crates/core" }
 ```
 
 - [ ] **Step 2: Write `crates/core/Cargo.toml`**
 
 ```toml
 [package]
-name = "ryotunes-core"
+name = "duskytunes-core"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Ryotunes playback core: state, orchestration, integrations. No UI."
+description = "Duskytunes playback core: state, orchestration, integrations. No UI."
 
 [dependencies]
 serde = { workspace = true }
@@ -99,7 +99,7 @@ libc = "0.2"
 `crates/core/src/lib.rs`:
 
 ```rust
-//! Ryotunes playback core. Everything that is not a window lives here; the host (Tauri today, the
+//! Duskytunes playback core. Everything that is not a window lives here; the host (Tauri today, the
 //! daemon tomorrow) supplies the three traits in [`host`].
 pub mod host;
 ```
@@ -193,7 +193,7 @@ impl Paths {
         self.data_dir.join("covers")
     }
     pub fn db_path(&self) -> PathBuf {
-        self.data_dir.join("ryotunes.db")
+        self.data_dir.join("duskytunes.db")
     }
 }
 
@@ -234,24 +234,24 @@ mod tests {
     fn paths_derive_children() {
         let p = Paths { data_dir: "/d".into(), cache_dir: "/c".into() };
         assert_eq!(p.covers_dir(), PathBuf::from("/d/covers"));
-        assert_eq!(p.db_path(), PathBuf::from("/d/ryotunes.db"));
+        assert_eq!(p.db_path(), PathBuf::from("/d/duskytunes.db"));
     }
 }
 ```
 
 - [ ] **Step 4: Run the tests and the isolation check**
 
-Run: `cargo test -p ryotunes-core`
+Run: `cargo test -p duskytunes-core`
 Expected: 2 passed.
 
-Run: `cargo tree -p ryotunes-core -i tauri`
+Run: `cargo tree -p duskytunes-core -i tauri`
 Expected: `error: package ID specification `tauri` did not match any packages`.
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add Cargo.toml Cargo.lock crates/core
-git commit -m "core: add the ryotunes-core crate with the host traits"
+git commit -m "core: add the duskytunes-core crate with the host traits"
 ```
 
 ---
@@ -263,7 +263,7 @@ git commit -m "core: add the ryotunes-core crate with the host traits"
 - Modify: `crates/core/src/lib.rs`, `src-tauri/src/lib.rs`, `src-tauri/Cargo.toml`
 
 **Interfaces:**
-- Produces: `ryotunes_core::{db, http}` with the same `pub` items the host used via `crate::db` / `crate::http`.
+- Produces: `duskytunes_core::{db, http}` with the same `pub` items the host used via `crate::db` / `crate::http`.
 
 Only these two are leaves. `radio.rs` imports `crate::orchestrator::PlaybackData`, `lyrics.rs` takes `&AppState`, and `lyrics.rs`/`discord.rs` call `crate::local::is_local_song`; those three ride with the modules they depend on (`local`, `orchestrator` and `state` in Task 5). Core can never depend on the host, so a module moves only once everything it imports is already in core.
 
@@ -291,15 +291,15 @@ pub mod http;
 In `src-tauri/src/lib.rs` delete `mod db; mod http;` and add:
 
 ```rust
-use ryotunes_core::{db, http};
+use duskytunes_core::{db, http};
 ```
 
-In `src-tauri/Cargo.toml` add `ryotunes-core = { workspace = true }` under `[dependencies]`. `pub(crate)` items the host uses become `pub`.
+In `src-tauri/Cargo.toml` add `duskytunes-core = { workspace = true }` under `[dependencies]`. `pub(crate)` items the host uses become `pub`.
 
 - [ ] **Step 3: Build and test**
 
 Run: `cargo check --workspace --locked && cargo test --workspace --locked`
-Expected: both green; the `db` unit tests now run from `ryotunes-core`.
+Expected: both green; the `db` unit tests now run from `duskytunes-core`.
 
 - [ ] **Step 4: Commit**
 
@@ -320,7 +320,7 @@ git commit -m "core: move db and http out of the host"
 
 **Interfaces:**
 - Consumes: `host::{JsBridge, JsSession, JsError}` from Task 1.
-- Produces: `ryotunes_core::cipher::CipherDeobfuscator::new(js: Arc<dyn JsBridge>, app_data_dir: &Path, config: Arc<PlayerConfigStore>)`, `ryotunes_core::potoken::PoTokenGenerator::new(js: Arc<dyn JsBridge>, db: Arc<Db>)`; every other method signature unchanged.
+- Produces: `duskytunes_core::cipher::CipherDeobfuscator::new(js: Arc<dyn JsBridge>, app_data_dir: &Path, config: Arc<PlayerConfigStore>)`, `duskytunes_core::potoken::PoTokenGenerator::new(js: Arc<dyn JsBridge>, db: Arc<Db>)`; every other method signature unchanged.
 
 - [ ] **Step 1: Write the failing compile**
 
@@ -333,7 +333,7 @@ git mv src-tauri/cipher_configs.json crates/core/cipher_configs.json
 git mv src-tauri/po_token.html crates/core/po_token.html
 ```
 
-Add `pub mod cipher; pub mod potoken;` to `crates/core/src/lib.rs`. Run `cargo check -p ryotunes-core`.
+Add `pub mod cipher; pub mod potoken;` to `crates/core/src/lib.rs`. Run `cargo check -p duskytunes-core`.
 Expected: errors on `use tauri::AppHandle` and `use crate::webview::Bridge` in `cipher/mod.rs` and `potoken/mod.rs`; that is the list of edits for Step 2.
 
 - [ ] **Step 2: Replace `AppHandle`/`Bridge` with the traits**
@@ -388,7 +388,7 @@ Mechanical substitutions in both modules, each a one-liner:
 Append to `src-tauri/src/webview.rs`:
 
 ```rust
-use ryotunes_core::host::{JsBridge, JsError, JsSession};
+use duskytunes_core::host::{JsBridge, JsError, JsSession};
 
 impl From<Error> for JsError {
     fn from(e: Error) -> Self {
@@ -448,7 +448,7 @@ Add `async-trait = { workspace = true }` to `src-tauri/Cargo.toml`.
 In `src-tauri/src/lib.rs` replace the two constructions:
 
 ```rust
-let js: Arc<dyn ryotunes_core::host::JsBridge> = Arc::new(webview::TauriJs { app: handle.clone() });
+let js: Arc<dyn duskytunes_core::host::JsBridge> = Arc::new(webview::TauriJs { app: handle.clone() });
 let cipher = Arc::new(CipherDeobfuscator::new(js.clone(), &data_dir, config));
 let potoken = Arc::new(PoTokenGenerator::new(js.clone(), db.clone()));
 ```
@@ -458,7 +458,7 @@ let potoken = Arc::new(PoTokenGenerator::new(js.clone(), db.clone()));
 Run: `cargo check --workspace --locked && cargo test --workspace --locked`
 Expected: green; `cipher::tests::parses_signature_cipher` and friends run from core.
 
-Run: `cd ui && pnpm build && cd .. && cargo tauri build --no-bundle` then `RUST_LOG=info ./target/release/ryotunes` and skip to a fresh track.
+Run: `cd ui && pnpm build && cd .. && cargo tauri build --no-bundle` then `RUST_LOG=info ./target/release/duskytunes` and skip to a fresh track.
 Expected log lines, in order: `cipher: building webview`, `cipher analysis complete sig_available=true n_available=true`, `PoToken minter ready`, `resolved stream client="WEB_REMIX"`. Two extra `WebKitWebProcess` appear in `ps`, as before.
 
 - [ ] **Step 5: Commit**
@@ -477,10 +477,10 @@ Landed as commit 85cd37d. Scope shrank from the original text for the same reaso
 **Files:**
 - Moved: `src-tauri/src/media.rs`, `src-tauri/src/listentogether/` to `crates/core/src/`
 - Created: `src-tauri/src/host_sink.rs` (`TauriSink(AppHandle)` implementing `EventSink`)
-- Modified: `src-tauri/src/lib.rs` (sink construction, media command channel drained by `handle_media_event`), `src-tauri/src/ryoku_theme.rs` (`spawn_watcher(sink: Arc<dyn EventSink>)`), `src-tauri/src/taskbar.rs` (Windows shim)
+- Modified: `src-tauri/src/lib.rs` (sink construction, media command channel drained by `handle_media_event`), `src-tauri/src/dusky_theme.rs` (`spawn_watcher(sink: Arc<dyn EventSink>)`), `src-tauri/src/taskbar.rs` (Windows shim)
 
 **Interfaces:**
-- Produces: `ryotunes_core::media::spawn(sink: Arc<dyn EventSink>, commands: UnboundedSender<MediaControlEvent>) -> Option<MediaHandle>`; `ryotunes_core::listentogether::LtSession::new(sink: Arc<dyn EventSink>, url: String)`; `host_sink::TauriSink`.
+- Produces: `duskytunes_core::media::spawn(sink: Arc<dyn EventSink>, commands: UnboundedSender<MediaControlEvent>) -> Option<MediaHandle>`; `duskytunes_core::listentogether::LtSession::new(sink: Arc<dyn EventSink>, url: String)`; `host_sink::TauriSink`.
 - Test: `listentogether::tests::emit_state_reaches_the_sink` using `host::test_support::RecordingSink`.
 
 ---
@@ -495,7 +495,7 @@ Landed as commit 85cd37d. Scope shrank from the original text for the same reaso
 
 **Interfaces:**
 - Consumes: everything above. `local::covers_dir(paths: &Paths) -> PathBuf { paths.covers_dir() }` (XDG fallbacks move into the host's `Paths` construction); `lastfm::emit_state(sink: &dyn EventSink, ...)` emitting `lastfm-state`; `lastfm::{connect,disconnect,status}` reach the sink through `state.sink`; `lastfm::spawn` uses `tokio::spawn`; `tauri::Url::parse` in `lastfm::browser_url` becomes `url::Url::parse` (`url` is already a transitive dependency of `reqwest`; add `url = "2"` to `crates/core/Cargo.toml`, the one allowed extra since it is already in the lock).
-- Produces: `ryotunes_core::state::AppState::new(it, clients, player, db, sink: Arc<dyn EventSink>, login: Arc<dyn LoginFlow>, paths: Paths, orchestrator, lt, media, discord, lastfm)`; `AppState::sign_in(self: &Arc<Self>)` which awaits `self.login.sign_in()` and then runs today's cookie-application code; `AppState::emit(&self, event, payload)` replacing every `self.app.emit`; `ryotunes_core::{radio, lyrics, discord}` with their existing `pub` items.
+- Produces: `duskytunes_core::state::AppState::new(it, clients, player, db, sink: Arc<dyn EventSink>, login: Arc<dyn LoginFlow>, paths: Paths, orchestrator, lt, media, discord, lastfm)`; `AppState::sign_in(self: &Arc<Self>)` which awaits `self.login.sign_in()` and then runs today's cookie-application code; `AppState::emit(&self, event, payload)` replacing every `self.app.emit`; `duskytunes_core::{radio, lyrics, discord}` with their existing `pub` items.
 
 - [ ] **Step 1: Move and let the compiler list the edits**
 
@@ -510,7 +510,7 @@ git mv src-tauri/src/lyrics.rs crates/core/src/lyrics.rs
 git mv src-tauri/src/discord.rs crates/core/src/discord.rs
 ```
 
-Add `pub mod orchestrator; pub mod state; pub mod session; pub mod local; pub mod lastfm; pub mod radio; pub mod lyrics; pub mod discord;` to core's `lib.rs` and replace `mod ...;` with `use ryotunes_core::{...};` in the host. Run `cargo check -p ryotunes-core`.
+Add `pub mod orchestrator; pub mod state; pub mod session; pub mod local; pub mod lastfm; pub mod radio; pub mod lyrics; pub mod discord;` to core's `lib.rs` and replace `mod ...;` with `use duskytunes_core::{...};` in the host. Run `cargo check -p duskytunes-core`.
 Expected: errors only at `state.rs:15,54,328` (`AppHandle`), the ten `self.app.emit(...)` sites, the `tauri::async_runtime::spawn` sites in `state.rs` (`820`, `1314`, `1391`, `2066`) and `orchestrator.rs`, and `session.rs:13-15` plus `open_login`. `radio`, `lyrics` and `discord` need no edits beyond their `crate::` paths, which stay valid because their targets moved with them.
 
 - [ ] **Step 2: Replace `app` with `sink` + `login` in `AppState`**
@@ -558,7 +558,7 @@ impl AppState {
 
 where `apply_login(result: LoginResult)` is the tail of today's `open_login` (cookie harvest done, session written, `auth-changed`/`login-done`/`account-selection-required` emitted).
 
-`src-tauri/src/login_webview.rs` keeps the `WebviewWindowBuilder` login window, the `on_navigation` allow-list (calling `ryotunes_core::session::allowed_login_navigation`), the `PageLoadEvent` cookie harvest, and implements:
+`src-tauri/src/login_webview.rs` keeps the `WebviewWindowBuilder` login window, the `on_navigation` allow-list (calling `duskytunes_core::session::allowed_login_navigation`), the `PageLoadEvent` cookie harvest, and implements:
 
 ```rust
 pub struct TauriLogin { pub app: AppHandle }
@@ -596,7 +596,7 @@ git commit -m "core: move state, orchestrator, local, lastfm and session; host i
 Landed as commit 2fc74e7 (after 9d6165a, which fixed a startup panic the substitution table caused: `lastfm::spawn` runs from Tauri's synchronous `setup`, so it now takes an explicit `tokio::runtime::Handle`; the daemon will pass its own). 18 command bodies moved into `AppState` methods; 11 dependencies left `src-tauri/Cargo.toml`; `urlencoding` and `souvlaki` stay in the host. Smoke-tested: identical cipher/PoToken/WEB_REMIX sequence, MPRIS pause/play round-trip through `TauriSink`, close-while-playing and tray reopen, playing on Home at host 2.9% + web 2.1%.
 
 **Files:**
-- Modify: `src-tauri/src/commands.rs` (every handler forwards into `ryotunes_core`), `src-tauri/src/lib.rs` (setup builds `Paths`, the three trait objects, then `AppState::new`), `src-tauri/Cargo.toml` (drop dependencies now only used by core: `rusqlite`, `base64`, `regex`, `urlencoding`, `reqwest`, `souvlaki`, `tokio-tungstenite`, `rustls`, `discord-rich-presence`, `md-5`, `lofty`; keep `tauri*`, `webkit2gtk`, `ksni`, `libc`, `serde*`, `tokio`, `tracing*`, `async-trait`, `ryotunes-core`)
+- Modify: `src-tauri/src/commands.rs` (every handler forwards into `duskytunes_core`), `src-tauri/src/lib.rs` (setup builds `Paths`, the three trait objects, then `AppState::new`), `src-tauri/Cargo.toml` (drop dependencies now only used by core: `rusqlite`, `base64`, `regex`, `urlencoding`, `reqwest`, `souvlaki`, `tokio-tungstenite`, `rustls`, `discord-rich-presence`, `md-5`, `lofty`; keep `tauri*`, `webkit2gtk`, `ksni`, `libc`, `serde*`, `tokio`, `tracing*`, `async-trait`, `duskytunes-core`)
 - Modify: `docs/ARCHITECTURE.md` (add the crate table from the spec's 4.1), `scripts/check-rust-structure.py` if it asserts the old module list
 - Test: `scripts/release-check.sh`
 
@@ -620,26 +620,26 @@ where the body that used to live in the command becomes `AppState::search` in co
 - [ ] **Step 2: Run the structure and release checks**
 
 Run: `python3 scripts/check-rust-structure.py && python3 scripts/check-source-shapes.py && scripts/release-check.sh`
-Expected: green. If `check-rust-structure.py` enumerates `src-tauri/src` modules, update its list to the host's remaining files: `lib.rs main.rs commands.rs webview.rs host_sink.rs login_webview.rs local_scope.rs main_window.rs mini.rs tray.rs taskbar.rs ryoku_theme.rs`.
+Expected: green. If `check-rust-structure.py` enumerates `src-tauri/src` modules, update its list to the host's remaining files: `lib.rs main.rs commands.rs webview.rs host_sink.rs login_webview.rs local_scope.rs main_window.rs mini.rs tray.rs taskbar.rs dusky_theme.rs`.
 
 - [ ] **Step 3: Full gates and dependency audit**
 
-Run: `cargo fmt --all -- --check && cargo test --workspace --locked && cargo check --workspace --locked && cargo tree -p ryotunes-core -i tauri`
+Run: `cargo fmt --all -- --check && cargo test --workspace --locked && cargo check --workspace --locked && cargo tree -p duskytunes-core -i tauri`
 Expected: green, and the last command errors with `did not match any packages`.
 
-Run: `cargo tauri build --no-bundle && ls -la target/release/ryotunes`
+Run: `cargo tauri build --no-bundle && ls -la target/release/duskytunes`
 Expected: builds; binary size within 5% of the previous release build.
 
 - [ ] **Step 4: Measure that nothing regressed**
 
-With the built binary: `RUST_LOG=info ./target/release/ryotunes`, play, scroll Home for 10 s, open lyrics, close the window while playing, reopen from the tray. Record with the baseline instruments (`top -b -d 5 -n 3 -p <pids>`, `/proc/<pid>/smaps_rollup`).
+With the built binary: `RUST_LOG=info ./target/release/duskytunes`, play, scroll Home for 10 s, open lyrics, close the window while playing, reopen from the tray. Record with the baseline instruments (`top -b -d 5 -n 3 -p <pids>`, `/proc/<pid>/smaps_rollup`).
 Expected: the same numbers as the 2026-09-04 baseline within noise (host ~3% + web ~2% playing; ~585 MB PSS); hibernation still destroys the main webview (`ps` shows the main `WebKitWebProcess` gone while playback continues).
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add -A src-tauri crates/core docs/ARCHITECTURE.md scripts
-git commit -m "host: forward every command into ryotunes-core"
+git commit -m "host: forward every command into duskytunes-core"
 ```
 
 ---

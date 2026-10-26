@@ -4,7 +4,7 @@
 	import { HugeiconsIcon } from '@hugeicons/svelte';
 	import { Search01Icon } from '@hugeicons/core-free-icons';
 	import SearchSuggest from '$lib/components/SearchSuggest.svelte';
-	import RyokuMusicDeck from '$lib/components/RyokuMusicDeck.svelte';
+	import DuskyMusicDeck from '$lib/components/DuskyMusicDeck.svelte';
 	import { auth } from '$lib/player.svelte';
 	import { t } from '$lib/i18n.svelte';
 
@@ -59,6 +59,6 @@
 	</div>
 
 	<div class="ryo-home-deck-wrap">
-		<RyokuMusicDeck />
+		<DuskyMusicDeck />
 	</div>
 </section>

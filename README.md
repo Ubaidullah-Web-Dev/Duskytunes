@@ -53,7 +53,7 @@ curl -sSL https://raw.githubusercontent.com/Ubaidullah-Web-Dev/Duskytunes/main/i
 
 The installer handles everything automatically:
 - Installs necessary system packages (`quickshell`, `libappindicator`, `mpv`, `yt-dlp`, `ffmpeg`, etc.)
-- Registers the QML design system runtime (`Ryoku.Ui.Singletons`)
+- Registers the QML design system runtime (`Dusky.Ui.Singletons`)
 - Installs the application binaries and desktop launchers
 - Enables and starts the background daemon socket via systemd
 
@@ -109,4 +109,4 @@ duskytunes-cli events                          # Stream real-time playback event
 
 - **Maintained & Packaged by**: [Ubaid](https://github.com/Ubaidullah-Web-Dev)
 - **GitHub**: [https://github.com/Ubaidullah-Web-Dev/Duskytunes](https://github.com/Ubaidullah-Web-Dev/Duskytunes)
-- Based on the Ryotunes and LiMusic open-source foundations under the GNU General Public License v3.0 or later.
+- Based on the Duskytunes and LiMusic open-source foundations under the GNU General Public License v3.0 or later.

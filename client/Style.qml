@@ -2,11 +2,11 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "lib/style.js" as Fns
 
 // The app's own scale plus everything the active Skin decides: radii, type, motion, the accent
-// policy and the cover wash. Colours reach every surface through Ryoku's Tokens (Skin pins its
+// policy and the cover wash. Colours reach every surface through Dusky's Tokens (Skin pins its
 // palette there, or leaves Tokens to the desktop for the system skin). thumb()/fmtTime() are
 // re-exposed from lib/style.js so a QtTest process, which cannot load Quickshell, can test the
 // same code.
@@ -50,7 +50,7 @@ Singleton {
     })
     readonly property real trackMicro: 1.4
 
-    // Durations (ms) from the skin, already through Ryoku's motion gate (reduce motion, the
+    // Durations (ms) from the skin, already through Dusky's motion gate (reduce motion, the
     // motion scale). snap: hover/press; move: a selector travelling; swap: content exchanging;
     // slow: a panel or page.
     readonly property var motion: Skin.motion
@@ -116,7 +116,7 @@ Singleton {
     readonly property color accentSoft: Qt.rgba(accent.r, accent.g, accent.b, 0.16)
 
     // --- decor level --------------------------------------------------------------------------
-    // Ryoku's calm / rich switch, owned by this client (Prefs.decor) rather than the desktop's
+    // Dusky's calm / rich switch, owned by this client (Prefs.decor) rather than the desktop's
     // hubDecor: Tokens re-reads shell.json on every change and would revert it, so the level is
     // re-applied whenever Tokens moves.
     // Prefs.decor "skin" follows the skin's own level; "rich"/"calm" override it.

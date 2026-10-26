@@ -3,10 +3,10 @@
   "format": 1,
   "id": "arcade",
   "name": "Arcade",
-  "author": "Ryoku",
+  "author": "Dusky",
   "version": "1.0.0",
   "license": "CC0-1.0",
-  "homepage": "https://github.com/ryoku-dev/ryotunes",
+  "homepage": "https://github.com/Ubaidullah-Web-Dev/Duskytunes",
   "description": "8-bit cabinet: indigo paper, coin-yellow bone, a pink sun, Silkscreen titles and Press Start readouts, no corners, the provider's colour as the light.",
   "default": "dark",
   "modes": {

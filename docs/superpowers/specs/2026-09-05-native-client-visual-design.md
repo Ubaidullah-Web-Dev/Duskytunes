@@ -1,4 +1,4 @@
-# Ryotunes native client: visual system
+# Duskytunes native client: visual system
 
 Status: approved direction (2026-09-05), implementation in progress on `native/design`.
 
@@ -7,10 +7,10 @@ literally, set in 9–11 px type with per-page margins, and laid it out for a 90
 1600 px it reads as scattered furniture. This spec replaces that with one system. The structural
 reference is Sonora (github.com/nolight132/sonora): a fixed three-column frame, one spacing
 rhythm, table-style track lists, page heroes with a fixed art-plus-title block, and the playing
-artwork's colour as the adaptive theme. The skin is Ryoku's: ink/bone/paper tokens, Fraunces
+artwork's colour as the adaptive theme. The skin is Dusky's: ink/bone/paper tokens, Fraunces
 display type, Space Grotesk body, tracked mono labels, one-pixel lines, kana glosses, and the
-register backdrop behind the nav rail only. No grain, anywhere: Ryoku's paper is flat
-(ryoku-arch docs/ui-ux.md, "the print texture rides the chrome, never the content").
+register backdrop behind the nav rail only. No grain, anywhere: Dusky's paper is flat
+(dusky-arch docs/ui-ux.md, "the print texture rides the chrome, never the content").
 
 ## 1. One rule for colour
 
@@ -25,8 +25,8 @@ The artwork is the only saturated thing on screen, and it is allowed to bleed:
   0.14 (light); Now Playing and the mini use 0.6. Static between tracks: zero per-frame cost.
 - Everything else is Tokens: `paper`, `paperLift`, `ink`, `inkDim`, `inkMuted`, `inkFaint`,
   `line`, `lineSoft`, `lineStrong`, `bone`/`inkOnBone`, `tint5`/`tint10`/`tint16`.
-  Primary buttons are bone (Ryoku), not accent (Sonora).
-- Decor level (`Style.decorRich`, Prefs, default on): `Ryoku.Ui.Reg` behind the sidebar
+  Primary buttons are bone (Dusky), not accent (Sonora).
+- Decor level (`Style.decorRich`, Prefs, default on): `Dusky.Ui.Reg` behind the sidebar
   rail (the Hub does the same behind its NavRail) and the kana glosses on nav items and
   section headings. Calm drops both. Never `Grain`, never a texture behind a page, a hero,
   a table or a control: the paper under content is flat paper.
@@ -70,7 +70,7 @@ player bar 88.
 +--------------------------------------------------------------+
 ```
 
-- Sidebar: brand (力 RYOTUNES / RYOKU // MUSIC), nav rows 40 px (icon 18, label md,
+- Sidebar: brand (力 DUSKYTUNES / DUSKY // MUSIC), nav rows 40 px (icon 18, label md,
   kana seal at the right when rich), sections DISCOVER / COLLECTION / SYSTEM as micro
   labels with a hairline, Library expands to Songs / Albums / Artists / Playlists / Local.
   Below: PINNED (Personal.picks) as 40 px art + name/kind rows. Edition tag at the foot.
@@ -100,7 +100,7 @@ player bar 88.
   present) | length xs mono 56 | actions 40. Hover `tint5`, playing row `tint10` + accent
   title. Hairlines between rows.
 - `MediaCard` 168: art 168 radiusCard, title md, sub sm, hover lift (translate -2, border
-  `lineStrong`) via `Ryoku.Ui.Anim`. `round` for artists.
+  `lineStrong`) via `Dusky.Ui.Anim`. `round` for artists.
 - `Shelf { title, items, more }`: `SectionHeading` + horizontally flicking row of cards,
   gap 16. `CardGrid` for full-page grids: columns = max(2, floor(width / 184)).
 - `SectionHeading { title, action, mark }`: lg 500 + optional "See all" + kana mark.
@@ -126,13 +126,13 @@ player bar 88.
 
 ## 6. Motion and cost
 
-`Ryoku.Ui.Anim`/`Entrance` with `Tokens.dur*` (reduce-motion zeroes them). Transform and
+`Dusky.Ui.Anim`/`Entrance` with `Tokens.dur*` (reduce-motion zeroes them). Transform and
 opacity only. Page change: crossfade 150 ms. Hover lift 90 ms. Shelf reveal: Entrance
 stagger. The spectrum (`Spectrum` singleton, cava on the PipeWire monitor, 40 bands 30 fps)
 runs only while a claiming surface is visible AND something is playing; surfaces claim with
 `Spectrum.claim(id, on)`. Static layers re-render only on track change.
 
-## 7. Sound (a Ryotunes feature normal players do not have)
+## 7. Sound (a Duskytunes feature normal players do not have)
 
 Daemon: `set_audio_fx { speed, semitones, reverb, bass, width }` over the socket; the mpv
 `af` chain gains `aecho` (reverb 0..1), `bass=g=` (bass -6..+12 dB) and `stereowiden`
@@ -167,7 +167,7 @@ Motion. Two kinds, each gated:
 - *Active* (answers an input): hover lift and border, press scale 0.97, tab indicator slide,
   right panel slide-in, page crossfade + 8 px rise, art and title swap on track change,
   heart pop, play/pause morph, shelf `Entrance` stagger, queue reorder. Durations from
-  `Tokens.dur*` (90-300 ms), curves from `Ryoku.Ui.Anim`; `Animator` types for opacity,
+  `Tokens.dur*` (90-300 ms), curves from `Dusky.Ui.Anim`; `Animator` types for opacity,
   scale, x/y so the render thread carries them.
 - *Passive* (ambient, while listening): the backdrop bloom drifts (scale 1.0-1.06, 12 s,
   stepped by a 10 fps Timer, not per vsync), the LIVE dot breathes at 1 Hz, the spectrum
@@ -183,7 +183,7 @@ paused: <= 0.3% CPU. Playing, ambient on, no spectrum: <= 3%. Spectrum surface v
 
 ## 10. Implementation notes
 
-- `import Ryoku.Ui as RU` (qualified): Ryoku.Ui ships its own `Btn`, `Icon`-like names that
+- `import Dusky.Ui as RU` (qualified): Dusky.Ui ships its own `Btn`, `Icon`-like names that
   shadow the client's components when imported bare. Use `RU.Reg`, `RU.Anim`,
   `RU.Entrance`, `RU.SpectrumField`, `RU.DitherImage`.
 - Client singletons: `Style` (scale, fs roles, accent, ambient, decorRich), `Prefs`,

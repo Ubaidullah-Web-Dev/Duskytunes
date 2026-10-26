@@ -1,8 +1,5 @@
 #!/bin/sh
 # Duskytunes native (QML) client launcher.
-if [ -d "/usr/share/duskytunes/client" ]; then
-    CLIENT_DIR="/usr/share/duskytunes/client"
-else
-    CLIENT_DIR="/usr/share/ryotunes/client"
-fi
+CLIENT_DIR="/usr/share/duskytunes/client"
+export QML_IMPORT_PATH="/usr/share/duskytunes/qml:${HOME}/.local/share/quickshell:${HOME}/.local/lib/qt6/qml:/usr/lib/qt6/qml:${QML_IMPORT_PATH}"
 exec qs -p "$CLIENT_DIR" "$@"

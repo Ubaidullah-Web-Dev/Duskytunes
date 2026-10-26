@@ -3,7 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// The playback spectrum: cava on the PipeWire monitor, 40 bands at 30 fps, the Ryoku shell's
+// The playback spectrum: cava on the PipeWire monitor, 40 bands at 30 fps, the Dusky shell's
 // AudioBars pattern. A surface that draws it claims the feed with claim(id, true) while it is
 // visible and releases with claim(id, false); the analyser runs only while at least one surface
 // claims it AND Style.live holds (something is playing). Power-saver no longer gates it: a
@@ -36,7 +36,7 @@ Singleton {
 
     Process {
         id: cava
-        command: ["sh", "-c", "command -v cava >/dev/null 2>&1 || exit 0; cfg=\"${XDG_RUNTIME_DIR:-/tmp}/ryotunes-cava.conf\"; printf '%s\\n' '[general]' 'framerate = " + root.fps + "' 'bars = " + root.bands + "' '' '[input]' 'method = pipewire' 'source = auto' '' '[output]' 'method = raw' 'raw_target = /dev/stdout' 'data_format = ascii' 'ascii_max_range = 100' 'channels = mono' 'mono_option = average' '' '[smoothing]' 'noise_reduction = 45' > \"$cfg\"; exec cava -p \"$cfg\""]
+        command: ["sh", "-c", "command -v cava >/dev/null 2>&1 || exit 0; cfg=\"${XDG_RUNTIME_DIR:-/tmp}/duskytunes-cava.conf\"; printf '%s\\n' '[general]' 'framerate = " + root.fps + "' 'bars = " + root.bands + "' '' '[input]' 'method = pipewire' 'source = auto' '' '[output]' 'method = raw' 'raw_target = /dev/stdout' 'data_format = ascii' 'ascii_max_range = 100' 'channels = mono' 'mono_option = average' '' '[smoothing]' 'noise_reduction = 45' > \"$cfg\"; exec cava -p \"$cfg\""]
         // Bound, never assigned (an imperative write would detach it from the gate).
         running: root.analysing && !cava.backoff
         property bool backoff: false

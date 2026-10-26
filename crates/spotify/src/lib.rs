@@ -1,12 +1,12 @@
-//! Ryotunes Spotify provider.
+//! Duskytunes Spotify provider.
 //!
 //! Lifted from nolight132/sonora (`crates/music/src/spotify`, GPL-3.0-or-later), commit 695242e,
-//! and rewired for Ryotunes. See `README.md` for provenance, the `SongItem` mapping, and the
+//! and rewired for Duskytunes. See `README.md` for provenance, the `SongItem` mapping, and the
 //! daemon-wiring notes.
 //!
 //! Boundary: this crate knows nothing about GPUI, Tauri, mpv, or UI state. Metadata comes from
 //! librespot's session (Pathfinder GraphQL + protobuf extended-metadata + the collection v2 API).
-//! Audio reaches Ryotunes' single libmpv engine through librespot-playback's `pipe` backend written
+//! Audio reaches Duskytunes' single libmpv engine through librespot-playback's `pipe` backend written
 //! to a per-session FIFO that mpv opens as raw S16LE / 44100 Hz / stereo — never cpal or rodio.
 
 pub mod credentials;

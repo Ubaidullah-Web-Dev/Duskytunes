@@ -3,7 +3,7 @@ import QtQuick
 import Quickshell
 import "lib/ids.js" as Ids
 
-// The client's mirror of ryotunesd's download queue and history, plus the one place a surface asks
+// The client's mirror of duskytunesd's download queue and history, plus the one place a surface asks
 // to save a track. Like Playback it holds no truth: the daemon owns every job, this singleton just
 // reflects it. State is seeded by the `subscribe` snapshot's `downloads` block and refreshed by the
 // `downloads-changed` event, so the queue page and every download button update without polling; a

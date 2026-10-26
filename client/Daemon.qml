@@ -3,7 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// One connection to ryotunesd. Requests carry an id and resolve a Promise; lines without
+// One connection to duskytunesd. Requests carry an id and resolve a Promise; lines without
 // an id are events. A dropped connection is retried every 2 s; once a subscription is asked
 // for it is re-sent on every reconnect, and every pending request is rejected on a drop so no
 // page waits forever.
@@ -37,7 +37,7 @@ Singleton {
         if (root.connected) return;
         if (root.sock) root.sock.destroy();
         var duskyPath = root.runtimeDir + "/duskytunes/duskytunesd.sock";
-        var ryoPath = root.runtimeDir + "/ryotunes/ryotunesd.sock";
+        var ryoPath = root.runtimeDir + "/duskytunes/duskytunesd.sock";
         root.socketPath = (root.retryCount++ % 2 === 0) ? duskyPath : ryoPath;
         root.sock = socketComponent.createObject(root);
         root.sock.connected = true;
@@ -49,8 +49,8 @@ Singleton {
             if (!root.connected) {
                 // The daemon never sees this failure, so it can only be recorded here: a user
                 // clicking play against a dead daemon is a support ticket with no other trace.
-                root.callFailed("warn", "rpc:" + method, "ryotunesd is not connected");
-                reject({ code: "disconnected", message: "ryotunesd is not connected" });
+                root.callFailed("warn", "rpc:" + method, "duskytunesd is not connected");
+                reject({ code: "disconnected", message: "duskytunesd is not connected" });
                 return;
             }
             const id = root.nextId++;
@@ -70,7 +70,7 @@ Singleton {
 
     function _subscribe() {
         if (!root.connected)
-            return Promise.reject({ code: "disconnected", message: "ryotunesd is not connected" });
+            return Promise.reject({ code: "disconnected", message: "duskytunesd is not connected" });
         root.call("hello").then(h => { root.protocol = h.protocol; root.daemonVersion = h.daemon; });
         const p = root.call("subscribe", { events: ["*"] });
         p.then(s => root.snapshot(s));
@@ -101,7 +101,7 @@ Singleton {
                 if (connection.connected) {
                     if (root.wantSubscribe) root._subscribe();
                 } else {
-                    root.callFailed("error", "daemon", "connection to ryotunesd lost (socket closed)");
+                    root.callFailed("error", "daemon", "connection to duskytunesd lost (socket closed)");
                     for (const id in root.pending) root.pending[id].reject({ code: "disconnected", message: "connection lost" });
                     root.pending = {};
                 }

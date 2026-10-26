@@ -27,7 +27,7 @@ function dragging(v) {
 }
 
 // Apply one daemon event to `s`. Returns a { toast, kind } descriptor for the events that surface a
-// message, else null. Event payload shapes are the daemon's, verified against ryotunesd: position
+// message, else null. Event payload shapes are the daemon's, verified against duskytunesd: position
 // and duration wrap their value in an object; playback-state and volume are bare scalars.
 function applyEvent(s, name, data) {
     switch (name) {

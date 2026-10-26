@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // "Edit playlist" details, ported from EditPlaylistDialog.svelte: name, description and visibility.

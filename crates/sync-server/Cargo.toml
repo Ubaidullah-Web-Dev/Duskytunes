@@ -3,10 +3,10 @@ name = "sync-server"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Ryotunes Listen Together sync server (self-hosted WebSocket hub)"
+description = "Duskytunes Listen Together sync server (self-hosted WebSocket hub)"
 
 [[bin]]
-name = "ryotunes-sync"
+name = "duskytunes-sync"
 path = "src/main.rs"
 
 [dependencies]

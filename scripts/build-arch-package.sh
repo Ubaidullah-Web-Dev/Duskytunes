@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Build the prebuilt Ryotunes pacman package from *this* checkout with an
+# Build the prebuilt Duskytunes pacman package from *this* checkout with an
 # unprivileged makepkg, exactly as the Release workflow does, and drop the
 # package plus its sha256 sidecar into dist/ (or the directory given as $1).
 #
-# The published asset name is the client contract that Ryoku's `update`/`doctor`
+# The published asset name is the client contract that Dusky's `update`/`doctor`
 # parse from the GitHub release:
 #
-#   ryotunes-<pkgver>-1-x86_64.pkg.tar.zst        # pkgrel is pinned to 1
-#   ryotunes-<pkgver>-1-x86_64.pkg.tar.zst.sha256 # "HEX␠␠filename"
+#   duskytunes-<pkgver>-1-x86_64.pkg.tar.zst        # pkgrel is pinned to 1
+#   duskytunes-<pkgver>-1-x86_64.pkg.tar.zst.sha256 # "HEX␠␠filename"
 #
 # The file name is epochless, but the package metadata carries epoch=1
-# (pacman -Qp -> "ryotunes 1:<pkgver>-1"), so an install upgrades off the 2.x line.
+# (pacman -Qp -> "duskytunes 1:<pkgver>-1"), so an install upgrades off the 2.x line.
 #
 # packaging/arch/PKGBUILD::prepare() tars the surrounding tree, so the package is
 # built from the exact source of the checkout this script runs in (the tagged
@@ -43,20 +43,20 @@ command -v makepkg >/dev/null || { echo "makepkg not found (run on Arch or in ar
 
 VERSION="$(sed -n 's/^version = "\([0-9.]*\)"/\1/p' "$ROOT/Cargo.toml" | head -1)"
 [[ -n "$VERSION" ]] || { echo "could not read version from Cargo.toml" >&2; exit 1; }
-# makepkg puts PKGBUILD's epoch into the file name (ryotunes-1:VER-1-...), but the
+# makepkg puts PKGBUILD's epoch into the file name (duskytunes-1:VER-1-...), but the
 # published asset the client parses is epochless. The epoch still lives in the
-# package metadata (pacman -Qp reports "ryotunes 1:VER-1"), which is what lets a
+# package metadata (pacman -Qp reports "duskytunes 1:VER-1"), which is what lets a
 # machine on the legacy 2.x line upgrade — so we build with the epoch and copy the
 # result to the epochless contract name.
 EPOCH="$(sed -n 's/^epoch=\([0-9][0-9]*\)$/\1/p' "$ROOT/packaging/arch/PKGBUILD" | head -1)"
-WANT="ryotunes-${EPOCH:+$EPOCH:}${VERSION}-1-x86_64.pkg.tar.zst"
-CONTRACT="ryotunes-${VERSION}-1-x86_64.pkg.tar.zst"
+WANT="duskytunes-${EPOCH:+$EPOCH:}${VERSION}-1-x86_64.pkg.tar.zst"
+CONTRACT="duskytunes-${VERSION}-1-x86_64.pkg.tar.zst"
 
 cd "$ROOT/packaging/arch"
 
 # --packagelist honours PKGDEST/PKGEXT and resolves epoch:pkgver-pkgrel-arch, so it
 # is the authoritative output path regardless of a host's makepkg.conf. Select the
-# contract asset by exact name (never a stray ryotunes-debug-* entry).
+# contract asset by exact name (never a stray duskytunes-debug-* entry).
 built=""
 while IFS= read -r p; do
   [[ "$(basename "$p")" == "$WANT" ]] && { built="$p"; break; }

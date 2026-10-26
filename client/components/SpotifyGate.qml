@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // The Spotify sign-in gate a page shows in place of its content while the provider is Spotify

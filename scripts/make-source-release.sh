@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the reproducible source tarball a release attaches, locally. This is the
-# same artifact the release workflow publishes: ryotunes-<version>.tar.gz with a
-# ryotunes-<version>/ prefix, produced by `git archive` so a tag yields identical
+# same artifact the release workflow publishes: duskytunes-<version>.tar.gz with a
+# duskytunes-<version>/ prefix, produced by `git archive` so a tag yields identical
 # bytes every time. Run from a committed checkout (uncommitted changes are not
 # included, by design).
 set -euo pipefail
@@ -14,10 +14,10 @@ if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
 fi
 
 ver="$(sed -n 's/^version = "\([0-9.]*\)"/\1/p' Cargo.toml | head -1)"
-out="${1:-$root/ryotunes-$ver.tar.gz}"
+out="${1:-$root/duskytunes-$ver.tar.gz}"
 
 "$root/scripts/release-check.sh"
 
-git archive --format=tar --prefix="ryotunes-$ver/" HEAD | gzip -n > "$out"
+git archive --format=tar --prefix="duskytunes-$ver/" HEAD | gzip -n > "$out"
 ( cd "$(dirname "$out")" && sha256sum "$(basename "$out")" > "$(basename "$out").sha256" )
 printf 'Created %s (+ .sha256)\n' "$out"

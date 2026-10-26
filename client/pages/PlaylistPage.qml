@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 import "../components"
 import "../lib/ids.js" as Ids
@@ -34,7 +34,7 @@ Item {
 
     readonly property bool isLiked: page.playlistId === "VLLM"
     readonly property bool isSmart: Ids.isSmartPlaylistId(page.playlistId)
-    readonly property bool isLocal: String(page.playlistId).indexOf("RYOTUNES_LOCAL_PLAYLIST:") === 0
+    readonly property bool isLocal: String(page.playlistId).indexOf("DUSKYTUNES_LOCAL_PLAYLIST:") === 0
     readonly property bool owned: !!(page.pl && page.pl.owned) && !page.isLiked
     readonly property bool hasSortMenu: !!(page.pl && page.pl.sortMenu)
     readonly property var sorts: [

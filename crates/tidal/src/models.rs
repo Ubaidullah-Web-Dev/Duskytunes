@@ -3,7 +3,7 @@
 //! Every struct here is the tolerant shape: TIDAL adds fields without warning and omits others per
 //! market, so nothing outside an id is required and a missing field degrades a label rather than
 //! failing a page. Ids are numeric on the wire and stay numeric here; the `tidal:` prefixes the
-//! rest of Ryotunes uses are the bridge's business, not this crate's.
+//! rest of Duskytunes uses are the bridge's business, not this crate's.
 
 use serde::Deserialize;
 

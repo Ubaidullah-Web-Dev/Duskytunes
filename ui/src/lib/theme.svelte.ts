@@ -1,11 +1,11 @@
-/* Ryotunes appearance and behaviour preferences.
+/* Duskytunes appearance and behaviour preferences.
  *
  * Light/dark ownership is explicit here so the app can follow the desktop without allowing
- * component-local hard-coded colours to fight the user's choice. Ryoku still supplies accent and
- * motion tokens through ryoku-live.ts; the luminance palette remains a comfortable Ryotunes one.
+ * component-local hard-coded colours to fight the user's choice. Dusky still supplies accent and
+ * motion tokens through dusky-live.ts; the luminance palette remains a comfortable Duskytunes one.
  */
 
-const APPEARANCE_KEY = 'ryotunes:appearance';
+const APPEARANCE_KEY = 'duskytunes:appearance';
 const LEGACY_APPEARANCE_KEY = 'appearance';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
@@ -23,20 +23,20 @@ export const appearance = $state({
 
 let mediaQuery: MediaQueryList | null = null;
 let mediaListener: ((event: MediaQueryListEvent) => void) | null = null;
-// In Follow system mode, Ryoku's resolved Material surface is more authoritative than the generic
+// In Follow system mode, Dusky's resolved Material surface is more authoritative than the generic
 // portal/media-query hint. Native theme events keep this updated without polling.
-let ryokuSystemLight: boolean | null = null;
+let duskySystemLight: boolean | null = null;
 
 export function resolvedTheme(): 'light' | 'dark' {
 	if (appearance.themeMode === 'light' || appearance.themeMode === 'dark') return appearance.themeMode;
-	if (ryokuSystemLight !== null) return ryokuSystemLight ? 'light' : 'dark';
+	if (duskySystemLight !== null) return duskySystemLight ? 'light' : 'dark';
 	return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
 		? 'dark'
 		: 'light';
 }
 
-export function setRyokuSystemTheme(light: boolean | null): void {
-	ryokuSystemLight = light;
+export function setDuskySystemTheme(light: boolean | null): void {
+	duskySystemLight = light;
 	if (appearance.themeMode === 'system') applyTheme();
 }
 
@@ -69,7 +69,7 @@ export function setAppearance(patch: Partial<typeof appearance>): void {
 	} catch {
 		// A locked/quota-limited store must never make playback or settings fail.
 	}
-	if (typeof window !== 'undefined') window.dispatchEvent(new Event('ryotunes-appearance-changed'));
+	if (typeof window !== 'undefined') window.dispatchEvent(new Event('duskytunes-appearance-changed'));
 }
 
 /** Restore safe, shape-checked preferences and attach the system-theme watcher once. */

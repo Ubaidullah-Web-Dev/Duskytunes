@@ -1,17 +1,17 @@
 .pragma library
 
 // Id prefix tests, ported from ui/src/lib/api.ts. A song/album/artist on disk carries a LOCAL*
-// prefix and a live radio station carries the RYOTUNES_RADIO prefix; neither has a YouTube rating,
+// prefix and a live radio station carries the DUSKYTUNES_RADIO prefix; neither has a YouTube rating,
 // so the like control hides for them exactly as the Svelte PlayerBar does. The three smart-playlist
 // ids draw an icon cover instead of artwork. Kept in a pure module so both the singletons and the
 // view components share one source of truth.
 var LOCAL_SONG = "LOCAL:";
 var LOCAL_ALBUM = "LOCALALBUM:";
 var LOCAL_ARTIST = "LOCALARTIST:";
-var RADIO = "RYOTUNES_RADIO:";
-var ON_REPEAT = "RYOTUNES_ON_REPEAT";
-var RECENTLY_PLAYED = "RYOTUNES_RECENTLY_PLAYED";
-var REDISCOVER = "RYOTUNES_REDISCOVER";
+var RADIO = "DUSKYTUNES_RADIO:";
+var ON_REPEAT = "DUSKYTUNES_ON_REPEAT";
+var RECENTLY_PLAYED = "DUSKYTUNES_RECENTLY_PLAYED";
+var REDISCOVER = "DUSKYTUNES_REDISCOVER";
 
 function isLocalId(id) {
     return !!id && (id.indexOf(LOCAL_SONG) === 0 || id.indexOf(LOCAL_ALBUM) === 0 || id.indexOf(LOCAL_ARTIST) === 0);
@@ -45,7 +45,7 @@ function providerOf(id) {
 }
 
 // The catalogue glyph a card or row wears so its source reads at a glance: "youtube-music",
-// "spotify" or "soundcloud". Ryotunes' own collections (smart playlists, local playlists, files
+// "spotify" or "soundcloud". Duskytunes' own collections (smart playlists, local playlists, files
 // on disk, radio) come from no catalogue and get "".
 function sourceGlyph(id) {
     switch (providerOf(id)) {
@@ -56,7 +56,7 @@ function sourceGlyph(id) {
     case "tidal":
         return "tidal";
     case "youtube":
-        return isSmartPlaylistId(id) || id.indexOf("RYOTUNES_") === 0 ? "" : "youtube-music";
+        return isSmartPlaylistId(id) || id.indexOf("DUSKYTUNES_") === 0 ? "" : "youtube-music";
     default:
         return "";
     }

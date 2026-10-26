@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import Ryoku.Ui.Singletons
-import Ryoku.Ui as RU
+import Dusky.Ui.Singletons
+import Dusky.Ui as DU
 import "chrome"
 import "components"
 

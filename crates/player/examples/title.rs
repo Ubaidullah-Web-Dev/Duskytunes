@@ -8,7 +8,7 @@ use player::Player;
 
 fn main() {
     let a = std::env::args().nth(1).expect("usage: cargo run -p player --example title -- <file>");
-    let cache = std::env::temp_dir().join("ryotunes-player-example");
+    let cache = std::env::temp_dir().join("duskytunes-player-example");
     std::fs::create_dir_all(&cache).ok();
     let p = Player::new(cache.to_str().unwrap()).expect("player");
     let title = std::env::args()

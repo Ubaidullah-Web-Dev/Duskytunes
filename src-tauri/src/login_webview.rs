@@ -14,8 +14,8 @@ use tauri::webview::cookie::Cookie;
 use tauri::webview::PageLoadEvent;
 use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
 
-use ryotunes_core::host::{LoginError, LoginFlow, LoginResult};
-use ryotunes_core::session::{allowed_login_navigation, LOGIN_URL};
+use duskytunes_core::host::{LoginError, LoginFlow, LoginResult};
+use duskytunes_core::session::{allowed_login_navigation, LOGIN_URL};
 
 const LOGIN_LABEL: &str = "login";
 

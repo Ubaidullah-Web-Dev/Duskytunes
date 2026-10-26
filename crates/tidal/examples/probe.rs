@@ -4,15 +4,15 @@
 //! The client id is not supplied here and is not in the crate. TIDAL publishes none for third
 //! party playback, so the host decides where one comes from; this example reads the environment.
 //!
-//!   RYOTUNES_TIDAL_CLIENT_ID=... RYOTUNES_TIDAL_CLIENT_SECRET=... \
-//!     cargo run -p ryotunes-tidal --example probe -- [track-id] [quality]
+//!   DUSKYTUNES_TIDAL_CLIENT_ID=... DUSKYTUNES_TIDAL_CLIENT_SECRET=... \
+//!     cargo run -p duskytunes-tidal --example probe -- [track-id] [quality]
 //!
 //! With no track id it signs in and reports the account. The session is cached next to the
 //! example's own data so a second run does not sign in again.
 
 use std::path::PathBuf;
 
-use ryotunes_tidal::{Credentials, Error, Quality, Source, Tidal, TidalAuth};
+use duskytunes_tidal::{Credentials, Error, Quality, Source, Tidal, TidalAuth};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
@@ -23,11 +23,11 @@ async fn main() {
     }
     let tidal = Tidal::new(dir.clone());
     tidal.set_credentials(Credentials {
-        device_id: std::env::var("RYOTUNES_TIDAL_CLIENT_ID").ok(),
-        device_secret: std::env::var("RYOTUNES_TIDAL_CLIENT_SECRET").ok(),
-        pkce_id: std::env::var("RYOTUNES_TIDAL_PKCE_ID").ok(),
-        pkce_secret: std::env::var("RYOTUNES_TIDAL_PKCE_SECRET").ok(),
-        pkce_redirect: std::env::var("RYOTUNES_TIDAL_PKCE_REDIRECT").ok(),
+        device_id: std::env::var("DUSKYTUNES_TIDAL_CLIENT_ID").ok(),
+        device_secret: std::env::var("DUSKYTUNES_TIDAL_CLIENT_SECRET").ok(),
+        pkce_id: std::env::var("DUSKYTUNES_TIDAL_PKCE_ID").ok(),
+        pkce_secret: std::env::var("DUSKYTUNES_TIDAL_PKCE_SECRET").ok(),
+        pkce_redirect: std::env::var("DUSKYTUNES_TIDAL_PKCE_REDIRECT").ok(),
     });
 
     let session = dir.join("auth.json");
@@ -144,5 +144,5 @@ fn cache_dir() -> PathBuf {
         .map(PathBuf::from)
         .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".cache")))
         .unwrap_or_else(std::env::temp_dir)
-        .join("ryotunes-tidal-probe")
+        .join("duskytunes-tidal-probe")
 }

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../"
 
 // A labelled pill action (Play / Shuffle / Save / Subscribe), the rounded header control the album,

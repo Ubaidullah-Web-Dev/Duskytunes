@@ -1,19 +1,19 @@
-# Ryotunes release checklist
+# Duskytunes release checklist
 
 ## Release pipeline
 1. Releases are automatic: each default-branch push checks out its exact event SHA, stamps the next `v1.x.x` version, verifies, tags and publishes it. GitHub's `queue: max` retains pending runs (up to its 100-run platform limit); plain `cancel-in-progress: false` alone would still discard pending pushes. Do not remove `queue` merely because actionlint 1.7.12 predates that documented option.
-2. Confirm the published assets are `ryotunes-<version>-1-x86_64.pkg.tar.zst`, its `.sha256`, `ryotunes-<version>.tar.gz` and its `.sha256`. New releases become latest; repairing an older release must not demote a newer v1 release. Notes combine authored changelog content, GitHub-generated notes and the actual commit range.
-3. `scripts/build-arch-package.sh` reproduces the package locally (`docker run --rm -v "$PWD:/src" -w /src archlinux:latest scripts/build-arch-package.sh`); the file name is epochless, but `pacman -Qp` on it reports `ryotunes 1:<version>-1`.
-4. The package upgrades cleanly over a machine still on the legacy 2.x line (`sudo pacman -U ./ryotunes-<version>-1-x86_64.pkg.tar.zst`); `pacman -Q ryotunes` then reports `1:<version>-1`.
-5. `/usr/bin/ryotunes`, `ryotunesd`, `ryotunes-cli` and the native client at `/usr/share/ryotunes/client` (including its `version` file) are installed; exactly one normal Ryotunes desktop launcher is visible.
-6. A package upgrade never restarts the app or daemon inside the pacman transaction; after updating, quitting and reopening Ryotunes loads the new build.
+2. Confirm the published assets are `duskytunes-<version>-1-x86_64.pkg.tar.zst`, its `.sha256`, `duskytunes-<version>.tar.gz` and its `.sha256`. New releases become latest; repairing an older release must not demote a newer v1 release. Notes combine authored changelog content, GitHub-generated notes and the actual commit range.
+3. `scripts/build-arch-package.sh` reproduces the package locally (`docker run --rm -v "$PWD:/src" -w /src archlinux:latest scripts/build-arch-package.sh`); the file name is epochless, but `pacman -Qp` on it reports `duskytunes 1:<version>-1`.
+4. The package upgrades cleanly over a machine still on the legacy 2.x line (`sudo pacman -U ./duskytunes-<version>-1-x86_64.pkg.tar.zst`); `pacman -Q duskytunes` then reports `1:<version>-1`.
+5. `/usr/bin/duskytunes`, `duskytunesd`, `duskytunes-cli` and the native client at `/usr/share/duskytunes/client` (including its `version` file) are installed; exactly one normal Duskytunes desktop launcher is visible.
+6. A package upgrade never restarts the app or daemon inside the pacman transaction; after updating, quitting and reopening Duskytunes loads the new build.
 7. Re-run a failed workflow (or Actions → Release → Run workflow with its existing tag) to repair publication without allocating a second version. Version commits are fast-forwarded to the default branch only if it still points to that run's source SHA; protected or newer branch history is never overwritten. About must handle an unpublished release, a failed check, a newer release, checksum/authentication failure and the final Quit-and-reopen state.
 
 ## Window/startup
-8. A genuine cold start shows the main UI on the **first invocation** (never tray-only until a second launch) and maps directly as a centered floating Ryotunes window at about 89% × 84% of usable work area, without a tiled/fullscreen flash.
+8. A genuine cold start shows the main UI on the **first invocation** (never tray-only until a second launch) and maps directly as a centered floating Duskytunes window at about 89% × 84% of usable work area, without a tiled/fullscreen flash.
 9. Desktop launcher, terminal, autostart and tray reconstruction produce the same floating default; manual maximize is not persisted as the next cold-start default.
 10. Cold start and tray reconstruction reveal only after the frontend is mounted; no black/blank startup frame.
-11. Mini-player renders polished Playing/Lyrics/Queue views; its WM close does not reopen full Ryotunes, its action menus are absent only inside mini, and Open Full Ryotunes keeps mini visible until the main UI is actually shown.
+11. Mini-player renders polished Playing/Lyrics/Queue views; its WM close does not reopen full Duskytunes, its action menus are absent only inside mini, and Open Full Duskytunes keeps mini visible until the main UI is actually shown.
 
 ## Home/Edit Home
 12. Above-fold Home becomes usable before optional lower enrichment; revisit from another page is near-instant from session cache.
@@ -43,24 +43,24 @@
 - Play at least one HTTP(S) station through native libmpv, close/hibernate the main window during playback, reopen, and confirm native playback/MPRIS continuity.
 - Verify Radio exposes no YouTube-only Like/Dislike, Add to playlist, Share, Start radio or lyrics actions; it must not enter On Repeat, Last.fm scrobbles or Home artist personalization.
 - With Listen Together active as host and as guest, starting Internet Radio must be rejected with a clear notice rather than desynchronizing peers.
-- **Device playlists signed out:** create from Library, sidebar and Add to playlist → **Create + add**. Restart Ryotunes and verify the playlist and tracks persist.
+- **Device playlists signed out:** create from Library, sidebar and Add to playlist → **Create + add**. Restart Duskytunes and verify the playlist and tracks persist.
 - Sign in, verify device playlists remain present and editable, then sign out and verify they remain. No device playlist may be cleared by the account playlist-index reset.
 - Add/remove tracks, rename, set/remove local artwork and delete a device playlist. Confirm no operation sends a device playlist id as a YouTube radio/autoplay seed.
-- **Discord presence title:** save a custom 2–128 character title, verify the active card updates without restarting playback, restart Ryotunes and verify persistence, then Reset to **Ryotunes**.
-- Verify album artwork carries the Ryotunes badge, missing/invalid artwork uses the Ryotunes mark, and local filesystem paths never reach Discord. YouTube and Spotify buttons must open the correct service; SoundCloud numeric IDs and local/radio tracks must not produce fabricated YouTube links.
-- Discord disabled/unavailable behaviour must remain parked/backed-off. The inherited application ID `1525891596804161727` is registered as **Limusic**; changing the activity artwork/name does not change its portal-owned lemon icon. A Ryotunes-owned Discord application ID is required before claiming the registered identity has been replaced.
+- **Discord presence title:** save a custom 2–128 character title, verify the active card updates without restarting playback, restart Duskytunes and verify persistence, then Reset to **Duskytunes**.
+- Verify album artwork carries the Duskytunes badge, missing/invalid artwork uses the Duskytunes mark, and local filesystem paths never reach Discord. YouTube and Spotify buttons must open the correct service; SoundCloud numeric IDs and local/radio tracks must not produce fabricated YouTube links.
+- Discord disabled/unavailable behaviour must remain parked/backed-off. The inherited application ID `1525891596804161727` is registered as **Limusic**; changing the activity artwork/name does not change its portal-owned lemon icon. A Duskytunes-owned Discord application ID is required before claiming the registered identity has been replaced.
 
 ## Integrations/lifecycle
-29. MPRIS and Ryoku QS controls play/pause/seek/next correctly before and after main-WebKit hibernation/reopen.
+29. MPRIS and Dusky QS controls play/pause/seek/next correctly before and after main-WebKit hibernation/reopen.
 30. Discord disabled mode performs no repeated IPC work; unavailable Discord backs off; enabled activity updates and shuts down on Quit.
-31. Start on login matches actual OS registration and launches the current normal `/usr/bin/ryotunes` route.
+31. Start on login matches actual OS registration and launches the current normal `/usr/bin/duskytunes` route.
 32. Close-to-tray + active playback keeps native playback/MPRIS alive with no user-facing main WebKit renderer.
 33. Tray only + no active playback starts the five-minute exit deadline; playback or UI restore cancels/resets it.
 34. Five full minutes without playback/UI fully exits and removes MPRIS/Music Island state.
 35. Explicit Quit tears down playback, media state/MPRIS and integrations immediately; it never waits for the five-minute timer.
 
 ## Resource/stability acceptance
-36. `resource-check.sh` discovers Ryotunes through `/proc/<pid>/exe`, not argv matching, and captures cold/visible-idle/active-scroll samples.
+36. `resource-check.sh` discovers Duskytunes through `/proc/<pid>/exe`, not argv matching, and captures cold/visible-idle/active-scroll samples.
 37. Run visible idle with and without playback, Home active touchpad scrolling, Low Resource OFF vs ON and background playback. Background should contain no main user-facing WebKit process.
 38. `background-check.sh`, `pause-resume-check.sh`, `quit-check.sh` and `tray-idle-exit-check.sh` pass.
 39. Run `long-session-check.sh` for 30–60 minutes while exercising Home/Search/Artist/Album/Playlist/Library/Queue/Lyrics/Settings/mini-player. After settling, CPU and PSS should stop climbing and return near the established idle band.

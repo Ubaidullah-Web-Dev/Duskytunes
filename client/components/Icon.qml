@@ -1,12 +1,12 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Shapes
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 import "../lib/glyphs.js" as Glyphs
 
 // One icon renderer for the whole client. The Hugeicons free-set glyphs the Svelte UI imports are
 // baked into lib/glyphs.js as 24x24 stroke paths and drawn as scene-graph geometry, the way the
-// Ryoku shell's GlyphIcon does it. No image, no offscreen layer, no colorization pass: a tint is a
+// Dusky shell's GlyphIcon does it. No image, no offscreen layer, no colorization pass: a tint is a
 // stroke colour, and a list of a thousand rows pays one geometry node per icon. (The previous
 // Image + layer.effect MultiEffect version cost two offscreen passes per track row.)
 Item {

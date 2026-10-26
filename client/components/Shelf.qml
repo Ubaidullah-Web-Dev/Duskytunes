@@ -1,11 +1,11 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui as RU
+import Dusky.Ui as DU
 import "../"
 
 // A shelf (spec section 4): a SectionHeading over a horizontally flicking row of MediaCards, gap 16,
-// each card revealed with a Ryoku.Ui.Entrance stagger. Fed either a feed `section`
+// each card revealed with a Dusky.Ui.Entrance stagger. Fed either a feed `section`
 // ({ title, items, moreBrowseId, moreParams }) or explicit `title`/`items`. A section with a
 // moreBrowseId routes "See all" into its list page; otherwise the host handles `moreClicked`.
 ColumnLayout {
@@ -59,7 +59,7 @@ ColumnLayout {
                     required property int index
                     implicitWidth: entrance.implicitWidth
                     implicitHeight: entrance.implicitHeight
-                    RU.Entrance {
+                    DU.Entrance {
                         id: entrance
                         index: cell.index
                         MediaCard {

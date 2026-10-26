@@ -17,7 +17,7 @@
 	import { blockWindows, fullWindow, type RowWindow } from '$lib/rows';
 	import { rowScroller } from '$lib/rows.svelte';
 	import { dragScroll, QUEUE_ROW_MIME } from '$lib/dnd';
-	import { ryokuWheelScroll } from '$lib/ryoku-scroll';
+	import { duskyWheelScroll } from '$lib/dusky-scroll';
 	import { playback, openAddToPlaylist, toggleStopAfterCurrent } from '$lib/player.svelte';
 	import { lt } from '$lib/lt.svelte';
 
@@ -396,7 +396,7 @@
 	style="background:var(--ryo-paper);color:var(--ryo-ink);"
 	bind:this={el}
 	{@attach sc.attach}
-	{@attach ryokuWheelScroll}
+	{@attach duskyWheelScroll}
 	{@attach (node) => dragScroll(node, QUEUE_ROW_MIME)}
 >
 	{#if !compact}

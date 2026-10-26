@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** A pure-QML Ryotunes client, run by Quickshell against `ryotunesd`, that reaches feature parity with the Svelte UI page by page while the Tauri app keeps shipping.
+**Goal:** A pure-QML Duskytunes client, run by Quickshell against `duskytunesd`, that reaches feature parity with the Svelte UI page by page while the Tauri app keeps shipping.
 
-**Architecture:** `client/` is a Quickshell config (`qs -p client`, later installed as `qs -c ryotunes`). `Daemon.qml` owns one `Socket` to `ryotunesd` with request ids and a promise-style `call(method, params)`; `Playback.qml` mirrors daemon events into QML state; every page is a `ListView`/`GridView` with reused delegates; visual tokens come from Ryoku's `Tokens` singleton (Follow System for free) with a local `Style.qml` for the app's own scale, radii and type. No timers at idle. Same window title (`Ryotunes`), so the existing Hyprland rule applies.
+**Architecture:** `client/` is a Quickshell config (`qs -p client`, later installed as `qs -c duskytunes`). `Daemon.qml` owns one `Socket` to `duskytunesd` with request ids and a promise-style `call(method, params)`; `Playback.qml` mirrors daemon events into QML state; every page is a `ListView`/`GridView` with reused delegates; visual tokens come from Dusky's `Tokens` singleton (Follow System for free) with a local `Style.qml` for the app's own scale, radii and type. No timers at idle. Same window title (`Duskytunes`), so the existing Hyprland rule applies.
 
-**Tech Stack:** Quickshell 0.3.1 (Qt 6.11): `Quickshell` (`ShellRoot`, `FloatingWindow`, `Singleton`, `IpcHandler`), `Quickshell.Io` (`Socket`, `SplitParser`, `Process`), `QtQuick`, `QtQuick.Layouts`, `QtQuick.Effects` (`MultiEffect` for the one artwork blur), `Ryoku.Ui.Singletons` (`Tokens`, `I18n`). Reference implementations on this machine: `ryoku/hub/quickshell/shell.qml` (FloatingWindow app), `ryoku/hub/quickshell/Singletons/Settings.qml` (Socket + SplitParser client), `ryoku/shell/quickshell/shell/services/Perf.qml` (power tiers).
+**Tech Stack:** Quickshell 0.3.1 (Qt 6.11): `Quickshell` (`ShellRoot`, `FloatingWindow`, `Singleton`, `IpcHandler`), `Quickshell.Io` (`Socket`, `SplitParser`, `Process`), `QtQuick`, `QtQuick.Layouts`, `QtQuick.Effects` (`MultiEffect` for the one artwork blur), `Dusky.Ui.Singletons` (`Tokens`, `I18n`). Reference implementations on this machine: `dusky/hub/quickshell/shell.qml` (FloatingWindow app), `dusky/hub/quickshell/Singletons/Settings.qml` (Socket + SplitParser client), `dusky/shell/quickshell/shell/services/Perf.qml` (power tiers).
 
 **Spec:** `docs/superpowers/specs/2026-09-05-native-client-design.md` (section 5; phase 3 of section 8)
 
@@ -16,17 +16,17 @@
 - No `Timer`/`FrameAnimation`/`NumberAnimation { loops: Infinite }` runs while nothing is playing and no pointer is down. The lyrics word-timer (67 ms) runs only while the lyrics surface is visible and playback is not paused. Verified by Task 9.
 - Every list of unbounded length is a `ListView`/`GridView` with `reuseItems: true` and `cacheBuffer` <= 2 viewport heights. No `Repeater` over API results.
 - Images: `Image { asynchronous: true; cache: true; sourceSize: Qt.size(px, px) }` with the URL rewritten by `Style.thumb(url, px)` (the `thumb.ts` rule: `=wN-hN` -> `=w{px}-h{px}`, `=sN` -> `=s{px}`, local paths -> `file://`).
-- Design language per `docs/DESIGN.md`: hairlines from `Tokens.line*`, compact radii, `Space Grotesk` for UI, `SpaceMono Nerd Font` for metadata, `Noto Sans CJK JP` fallback; colours only from `Tokens` (Follow System) or the two local palettes `Style.light`/`Style.dark` ported from `ui/src/lib/ryotunes.css` `--ryo-*` variables.
+- Design language per `docs/DESIGN.md`: hairlines from `Tokens.line*`, compact radii, `Space Grotesk` for UI, `SpaceMono Nerd Font` for metadata, `Noto Sans CJK JP` fallback; colours only from `Tokens` (Follow System) or the two local palettes `Style.light`/`Style.dark` ported from `ui/src/lib/duskytunes.css` `--ryo-*` variables.
 - Every page keeps the Svelte page's information architecture and interactions (what each control does), not its DOM; visual parity is checked by side-by-side screenshots in Task 9.
 - `qmllint` clean for every file (`qmllint -I /usr/lib/qt6/qml -I ~/.local/lib/qt6/qml client/**/*.qml`).
-- Launch during development: `qs -p client` from the repo; the daemon must be running (`cargo run -p ryotunesd`). Never both the Tauri app and the daemon at once (shared SQLite/mpv).
+- Launch during development: `qs -p client` from the repo; the daemon must be running (`cargo run -p duskytunesd`). Never both the Tauri app and the daemon at once (shared SQLite/mpv).
 - Commit subjects: `client: ...`, imperative, no trailing period, no attribution trailers.
 
 ## File Structure
 
 ```
 client/
-  shell.qml                 ShellRoot: main FloatingWindow ("Ryotunes"), mini FloatingWindow ("Ryotunes Mini"), IpcHandler("show")
+  shell.qml                 ShellRoot: main FloatingWindow ("Duskytunes"), mini FloatingWindow ("Duskytunes Mini"), IpcHandler("show")
   Daemon.qml                Singleton: Socket + SplitParser, call(), events, reconnect, hello/subscribe
   Playback.qml              Singleton: now/queue/position/duration/paused/volume/repeat/shuffle/lyrics/auth/settings from events
   Router.qml                Singleton: page stack (push/pop/replace), scroll offsets per entry
@@ -48,7 +48,7 @@ client/
 - Test: `client/tests/tst_daemon.qml` run with `qmltestrunner` if available, else a manual `qs -p client` check against a `socat` fake daemon (both described below)
 
 **Interfaces:**
-- Produces: `Daemon.connected: bool`, `Daemon.protocol: int`, `Daemon.call(method: string, params: object): Promise` (resolves `result`, rejects `{code, message}`), `Daemon.event(name: string, data: var)` signal, `Daemon.subscribeAll()` (sends `subscribe` and re-sends it after every reconnect), `Daemon.socketPath: string` (`$XDG_RUNTIME_DIR/ryotunes/ryotunesd.sock`).
+- Produces: `Daemon.connected: bool`, `Daemon.protocol: int`, `Daemon.call(method: string, params: object): Promise` (resolves `result`, rejects `{code, message}`), `Daemon.event(name: string, data: var)` signal, `Daemon.subscribeAll()` (sends `subscribe` and re-sends it after every reconnect), `Daemon.socketPath: string` (`$XDG_RUNTIME_DIR/duskytunes/duskytunesd.sock`).
 
 - [ ] **Step 1: Write `Daemon.qml`**
 
@@ -58,13 +58,13 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// One connection to ryotunesd. Requests carry an id and resolve a Promise; lines without
+// One connection to duskytunesd. Requests carry an id and resolve a Promise; lines without
 // an id are events. A dropped connection is retried every 2 s and re-subscribed, and every
 // pending request is rejected so no page waits forever.
 Singleton {
     id: root
 
-    readonly property string socketPath: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/ryotunes/ryotunesd.sock"
+    readonly property string socketPath: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/duskytunes/duskytunesd.sock"
     readonly property bool connected: sock.connected
     property int protocol: 0
     property string daemonVersion: ""
@@ -77,7 +77,7 @@ Singleton {
     function call(method, params) {
         return new Promise((resolve, reject) => {
             if (!sock.connected) {
-                reject({ code: "disconnected", message: "ryotunesd is not connected" });
+                reject({ code: "disconnected", message: "duskytunesd is not connected" });
                 return;
             }
             const id = root.nextId++;
@@ -128,19 +128,19 @@ Singleton {
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Ryoku.Ui.Singletons
+import Dusky.Ui.Singletons
 
 ShellRoot {
     FloatingWindow {
         id: win
-        title: "Ryotunes"
+        title: "Duskytunes"
         color: Tokens.paper
         minimumSize: Qt.size(900, 620)
         Text {
             anchors.centerIn: parent
             color: Tokens.ink
             font.family: "Space Grotesk"
-            text: Daemon.connected ? ("ryotunesd " + Daemon.daemonVersion + " (protocol " + Daemon.protocol + ")") : "connecting to ryotunesd…"
+            text: Daemon.connected ? ("duskytunesd " + Daemon.daemonVersion + " (protocol " + Daemon.protocol + ")") : "connecting to duskytunesd…"
         }
         Connections {
             target: Daemon
@@ -156,8 +156,8 @@ ShellRoot {
 
 - [ ] **Step 3: Test against the real daemon**
 
-Run: `cargo run -p ryotunesd` in one terminal (hub `start`), then `qs -p client` in another.
-Expected: a floating window titled `Ryotunes` (the Hyprland rule floats and centres it: `hyprctl clients -j | jq '.[]|select(.title=="Ryotunes")'` shows `floating: true`), showing `ryotunesd 2.4.1 (protocol 1)`; `ryotunes-cli next_track` makes the daemon emit events that `Daemon.event` receives (add a temporary `onEvent: console.log(name)` to see them in the qs log, then remove it).
+Run: `cargo run -p duskytunesd` in one terminal (hub `start`), then `qs -p client` in another.
+Expected: a floating window titled `Duskytunes` (the Hyprland rule floats and centres it: `hyprctl clients -j | jq '.[]|select(.title=="Duskytunes")'` shows `floating: true`), showing `duskytunesd 2.4.1 (protocol 1)`; `duskytunes-cli next_track` makes the daemon emit events that `Daemon.event` receives (add a temporary `onEvent: console.log(name)` to see them in the qs log, then remove it).
 
 - [ ] **Step 4: Commit**
 
@@ -233,12 +233,12 @@ git commit -m "client: playback state, style tokens and router"
 - `Sidebar`: Home, Search, Radio, Library, Settings, with the active route from `Router.current.page`.
 - `TitleBar`: app mark, back/forward (`Router`), account avatar menu (sign in/out, switch account, `sign_in` via `Daemon.call`), Listen Together / Discord / mini buttons as in `ui/src/routes/+layout.svelte`.
 
-- [ ] **Step 1: Build the chrome** following `ui/src/lib/components/PlayerBar.svelte`, `Sidebar` markup in `+layout.svelte`, and `ryotunes.css` `.ryo-playerbar*`, `.ryo-sidebar*`, `.ryo-titlebar*` for spacing and hairlines.
+- [ ] **Step 1: Build the chrome** following `ui/src/lib/components/PlayerBar.svelte`, `Sidebar` markup in `+layout.svelte`, and `duskytunes.css` `.ryo-playerbar*`, `.ryo-sidebar*`, `.ryo-titlebar*` for spacing and hairlines.
 
 - [ ] **Step 2: Verify by hand**
 
-Run the daemon and `qs -p client`; `ryotunes-cli next_track`.
-Expected: artwork, title and artist appear; play/pause toggles both ways (`playerctl -p ryotunes status` follows a click); seek drag then release outside the window commits (position jumps, then keeps ticking); volume slider drags without being yanked by `volume` events.
+Run the daemon and `qs -p client`; `duskytunes-cli next_track`.
+Expected: artwork, title and artist appear; play/pause toggles both ways (`playerctl -p duskytunes status` follows a click); seek drag then release outside the window commits (position jumps, then keeps ticking); volume slider drags without being yanked by `volume` events.
 
 - [ ] **Step 3: Commit**
 
@@ -277,7 +277,7 @@ git commit -m "client: home page with shelves, shortcuts and artist index"
 Found in Task 4: Shortcuts, "Jump back in", the artist index, local saves, pins and the Home arrangement live in the Svelte app's browser `localStorage` (`ui/src/lib/personal.ts` `Personal`), which no native client can read. It is user state, so it belongs in the daemon.
 
 **Files:**
-- Modify: `crates/core/src/state.rs` (two methods), `crates/core/src/db.rs` if a JSON blob setting helper is missing, `src-tauri/src/commands.rs` + `src-tauri/src/lib.rs` (two new commands), `crates/ryotunesd/src/methods.rs` (two arms), `ui/src/lib/personal.ts` + `ui/src/lib/player.svelte.ts` (`savePersonal`/load go through the commands, with a one-time migration from `localStorage`), `client/lib/personal.js` (port of the pure functions), `client/Personal.qml` (singleton), `client/pages/HomePage.qml` (Shortcuts, RecentRail, ArtistIndex fed from it)
+- Modify: `crates/core/src/state.rs` (two methods), `crates/core/src/db.rs` if a JSON blob setting helper is missing, `src-tauri/src/commands.rs` + `src-tauri/src/lib.rs` (two new commands), `crates/duskytunesd/src/methods.rs` (two arms), `ui/src/lib/personal.ts` + `ui/src/lib/player.svelte.ts` (`savePersonal`/load go through the commands, with a one-time migration from `localStorage`), `client/lib/personal.js` (port of the pure functions), `client/Personal.qml` (singleton), `client/pages/HomePage.qml` (Shortcuts, RecentRail, ArtistIndex fed from it)
 - Test: `crates/core/src/state.rs` round-trip test; `client/tests/tst_personal.qml` for `touchPick`, `noteArtist`, `arrangeSections`, `hydrate` tolerance (ported from the `personal.check.ts` cases)
 
 **Interfaces:**
@@ -287,7 +287,7 @@ Found in Task 4: Shortcuts, "Jump back in", the artist index, local saves, pins 
 - QML: `Personal` singleton mirrors the blob, applies `personal-changed`, and exposes the same reducers (`touchPick`, `noteArtist`, `addPick`, `removePick`, `pin`, `unpin`, `arrangeSections`) writing back through `set_personal`.
 
 - [ ] **Step 1: Core + daemon + Tauri command** (one commit `core: keep the personal store in the daemon`).
-- [ ] **Step 2: Svelte migration** (`ui: move the personal store to the backend`), verified by signing in on the Tauri app, seeing existing Shortcuts survive, and `ryotunes-cli get_personal` showing them.
+- [ ] **Step 2: Svelte migration** (`ui: move the personal store to the backend`), verified by signing in on the Tauri app, seeing existing Shortcuts survive, and `duskytunes-cli get_personal` showing them.
 - [ ] **Step 3: QML `Personal` + Home blocks** (`client: shortcuts, jump back in and artist index from the shared personal store`), verified by the same Shortcuts appearing in the QML client's Home.
 
 ---
@@ -318,7 +318,7 @@ Found in Task 4: Shortcuts, "Jump back in", the artist index, local saves, pins 
 - `QueuePanel`: `TrackList` of `Playback.queue.items` from `currentIndex`, "Up next", "Stop after current", search-in-queue, drag reorder -> `move_in_queue`, remove -> `remove_from_queue`.
 
 - [ ] **Step 1: Port** from `NowPlaying.svelte`, `QueueList.svelte`, `LyricsView.svelte`.
-- [ ] **Step 2: Verify**: lyrics timer stops when the panel closes or playback pauses (`qs` CPU returns to ~0 within 1 s); queue reorder reflected in `ryotunes-cli get_queue`.
+- [ ] **Step 2: Verify**: lyrics timer stops when the panel closes or playback pauses (`qs` CPU returns to ~0 within 1 s); queue reorder reflected in `duskytunes-cli get_queue`.
 - [ ] **Step 3: Commit** `client: now playing, queue and lyrics`.
 
 ---
@@ -327,10 +327,10 @@ Found in Task 4: Shortcuts, "Jump back in", the artist index, local saves, pins 
 
 **Files:**
 - Create: `client/pages/RadioPage.qml`, `client/pages/SettingsPage.qml`, `client/chrome/ListenTogether.qml`, `client/mini/MiniPlayer.qml`
-- Modify: `client/shell.qml` (second `FloatingWindow` titled `Ryotunes Mini`, `visible: Playback.miniOpen`)
+- Modify: `client/shell.qml` (second `FloatingWindow` titled `Duskytunes Mini`, `visible: Playback.miniOpen`)
 
 **Interfaces:**
-- Settings: every key in `ryotunes_core::state::UI_SETTINGS` (the daemon's `settings_snapshot`), written with `set_setting`; the theme mode (`system`/`light`/`dark`) switches `Style` between `Tokens` and the local palettes; low-resource and open-player-on-play behave as in `SettingsDialog.svelte`; file pickers use Ryoku's `Ryoku.Ui` `AppPicker`-style file dialog or `Process { command: ["zenity","--file-selection"] }` if none exists (report which), passing the chosen path to `add_local_folder`/`import_playlist_file`/`export_playlist_file` as the daemon expects.
+- Settings: every key in `duskytunes_core::state::UI_SETTINGS` (the daemon's `settings_snapshot`), written with `set_setting`; the theme mode (`system`/`light`/`dark`) switches `Style` between `Tokens` and the local palettes; low-resource and open-player-on-play behave as in `SettingsDialog.svelte`; file pickers use Dusky's `Dusky.Ui` `AppPicker`-style file dialog or `Process { command: ["zenity","--file-selection"] }` if none exists (report which), passing the chosen path to `add_local_folder`/`import_playlist_file`/`export_playlist_file` as the daemon expects.
 - Mini: `MiniPlayer.svelte` port; its own window keeps position via `set_setting("mini_geometry", ...)` as today.
 
 - [ ] **Step 1: Port**, commit `client: radio, settings, listen together and the mini player`.
@@ -340,10 +340,10 @@ Found in Task 4: Shortcuts, "Jump back in", the artist index, local saves, pins 
 ### Task 8: Launcher, packaging, `show`
 
 **Files:**
-- Create: `packaging/linux/ryotunes-qml` (shell script: `exec qs -c ryotunes "$@"`), `packaging/linux/ryotunes-qml.desktop`
-- Modify: `packaging/arch/PKGBUILD` (install `client/` to `/usr/share/ryotunes/client` and symlink `~/.config/quickshell/ryotunes` is NOT used; instead install to `/usr/share/quickshell/ryotunes`? Quickshell resolves `-c NAME` from `$XDG_CONFIG_HOME/quickshell/NAME` only, so install the client to `/usr/share/ryotunes/client` and make the launcher `exec qs -p /usr/share/ryotunes/client "$@"`), `crates/ryotunesd/src/lifecycle.rs` (`show` spawns `ryotunes-qml` when `RYOTUNES_CLIENT=qml`, else `ryotunes`), `docs/INSTALL-ARCH.md`
+- Create: `packaging/linux/duskytunes-qml` (shell script: `exec qs -c duskytunes "$@"`), `packaging/linux/duskytunes-qml.desktop`
+- Modify: `packaging/arch/PKGBUILD` (install `client/` to `/usr/share/duskytunes/client` and symlink `~/.config/quickshell/duskytunes` is NOT used; instead install to `/usr/share/quickshell/duskytunes`? Quickshell resolves `-c NAME` from `$XDG_CONFIG_HOME/quickshell/NAME` only, so install the client to `/usr/share/duskytunes/client` and make the launcher `exec qs -p /usr/share/duskytunes/client "$@"`), `crates/duskytunesd/src/lifecycle.rs` (`show` spawns `duskytunes-qml` when `DUSKYTUNES_CLIENT=qml`, else `duskytunes`), `docs/INSTALL-ARCH.md`
 - Test: launch via the desktop entry; a second launch raises the window (the daemon's `show` event + the client's `IpcHandler`).
-- Window rule (found in Task 1): Ryoku's shipped rule `ryoku/hyprland/modules/window_rules.lua` `float-ryotunes` matches `class = "^ryotunes$"`, the Tauri app's class; the QML client's class is `org.quickshell`, so it opens tiled. Cutover changes that rule to `match = { title = "^(Ryotunes)$" }` (the exact-title form `scripts/ryoku-window-rule.sh` already installs), which covers both clients and keeps `Ryotunes Mini` independent. Until then, `hl.dsp.window.float` by hand during development.
+- Window rule (found in Task 1): Dusky's shipped rule `dusky/hyprland/modules/window_rules.lua` `float-duskytunes` matches `class = "^duskytunes$"`, the Tauri app's class; the QML client's class is `org.quickshell`, so it opens tiled. Cutover changes that rule to `match = { title = "^(Duskytunes)$" }` (the exact-title form `scripts/dusky-window-rule.sh` already installs), which covers both clients and keeps `Duskytunes Mini` independent. Until then, `hl.dsp.window.float` by hand during development.
 
 - [ ] **Step 1: Wire it**, commit `client: launcher, desktop entry and packaging`.
 
@@ -355,7 +355,7 @@ Found in Task 4: Shortcuts, "Jump back in", the artist index, local saves, pins 
 - Create: `docs/superpowers/reports/2026-09-xx-qml-client-parity.md`
 
 - [ ] **Step 1: Side-by-side screenshots** of every page and surface in both clients at 900x620 and 1760x1000, listed in the report with the differences found and fixed.
-- [ ] **Step 2: Measurements** with the baseline instruments (journal 2026-09-04): idle window open; playing on Home; scrolling Home 30 notches; lyrics open; window closed while playing; 30-minute soak. Record `qs -p client` and `ryotunesd` CPU (`top -b -d 5`), PSS (`smaps_rollup`), VRAM (`nvidia-smi`) and compositor frames with the client mapped and idle (`hyprctl` `debug:overlay` unchanged).
+- [ ] **Step 2: Measurements** with the baseline instruments (journal 2026-09-04): idle window open; playing on Home; scrolling Home 30 notches; lyrics open; window closed while playing; 30-minute soak. Record `qs -p client` and `duskytunesd` CPU (`top -b -d 5`), PSS (`smaps_rollup`), VRAM (`nvidia-smi`) and compositor frames with the client mapped and idle (`hyprctl` `debug:overlay` unchanged).
 - [ ] **Step 3: Pass criteria** from the spec section 2: client <= 120 MB PSS and ~0 % idle; daemon <= 100 MB PSS playing (plus the two hidden WebKit helpers while media is loaded); scrolling in single digits of a core; zero compositor frames from the client at idle; no `/dev/nvidia*` handles in hybrid mode.
 - [ ] **Step 4: Commit** `docs: qml client parity and performance report`, then hand over to the phase 4 (cutover) plan.
 
@@ -373,7 +373,7 @@ Found in Task 4: Shortcuts, "Jump back in", the artist index, local saves, pins 
 Same instruments as the Tauri baseline (`top` process CPU over 7.5 s, PSS from smaps_rollup,
 ydotool wheel input, grim screenshots). Window 1008x1163 logical, 1.25x scale, RTX 4060 dGPU pinned.
 
-| State | qs (client) | ryotunesd | Tauri app (same state, 2026-09-04) |
+| State | qs (client) | duskytunesd | Tauri app (same state, 2026-09-04) |
 |---|---|---|---|
 | idle, window open, paused | 0.1% / 261 MB | 0.2% / 323 MB | 2.1% / 178 MB + 3 WebKit procs |
 | playing, idle on a page | 0.7% / 258 MB | 2.1% / 322 MB | 2-3% + 6% WebKitWebProcess |
@@ -392,5 +392,5 @@ Commit ba8dd79 replaced the per-icon Image+MultiEffect layer with QtQuick.Shapes
 rounded-rect SDF shader layer (`shaders/rounded.frag`); the long-list figure did not move, the
 list's cost is the flick itself.
 
-Open: real launch through `/usr/bin/ryotunes-qml` after makepkg; tray Show / second launch with
-`RYOTUNES_CLIENT=qml` needs the rebuilt daemon (Task 8 changed `tray.rs::show`).
+Open: real launch through `/usr/bin/duskytunes-qml` after makepkg; tray Show / second launch with
+`DUSKYTUNES_CLIENT=qml` needs the rebuilt daemon (Task 8 changed `tray.rs::show`).

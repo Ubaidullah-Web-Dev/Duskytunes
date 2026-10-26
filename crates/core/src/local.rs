@@ -367,7 +367,7 @@ fn cover_for(
         .or_else(|| sidecar_cover(album_key, dir?, covers_dir))
 }
 
-/// Copy a small cover sitting beside the music into Ryotunes' own cover directory. The renderer
+/// Copy a small cover sitting beside the music into Duskytunes' own cover directory. The renderer
 /// should never need recursive asset-protocol access to the user's music folder just to display
 /// cover.jpg. Existing v2.4 rows are reparsed once via SCAN_VERSION=5.
 fn sidecar_cover(key: &str, dir: &Path, covers_dir: &Path) -> Option<String> {
@@ -763,7 +763,7 @@ mod tests {
 
     #[test]
     fn a_file_with_no_album_never_borrows_artwork() {
-        let dir = std::env::temp_dir().join("ryotunes-cover-test");
+        let dir = std::env::temp_dir().join("duskytunes-cover-test");
         std::fs::create_dir_all(&dir).unwrap();
         std::fs::write(dir.join("cover.jpg"), b"not really a jpeg").unwrap();
         let covers = dir.join("covers");
@@ -799,7 +799,7 @@ mod tests {
     #[test]
     fn a_scan_reports_what_left_the_disk() {
         let db = Db::open(std::path::Path::new(":memory:")).unwrap();
-        let dir = std::env::temp_dir().join("ryotunes-local-scan-test");
+        let dir = std::env::temp_dir().join("duskytunes-local-scan-test");
         std::fs::create_dir_all(&dir).unwrap();
         add_folder(&db, dir.to_string_lossy().to_string());
         // Two tracks the library "knows" about; neither file exists any more.

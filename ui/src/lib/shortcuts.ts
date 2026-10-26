@@ -150,7 +150,7 @@ function toggleLyrics() {
 /** Execute a real app action. Returns true only when this dispatcher owns the key event. */
 function dispatchShortcut(e: KeyboardEvent, scope: 'main' | 'mini' = 'main'): boolean {
 	// The mini WebView owns only transport controls. App-navigation/overlay shortcuts remain scoped
-	// to the full Ryotunes window so Ctrl+K, Settings, Q/L and route navigation can never open
+	// to the full Duskytunes window so Ctrl+K, Settings, Q/L and route navigation can never open
 	// invisible surfaces behind the widget. Native MPRIS still owns hardware media keys globally.
 	if (scope === 'mini') {
 		if (editableTarget(e.target)) return false;

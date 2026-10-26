@@ -11,7 +11,7 @@ async fn main() {
     let a = args.next().expect("usage: cargo run -p player --example play -- <track-a> <track-b>");
     let b = args.next().expect("usage: cargo run -p player --example play -- <track-a> <track-b>");
 
-    let cache = std::env::temp_dir().join("ryotunes-player-example");
+    let cache = std::env::temp_dir().join("duskytunes-player-example");
     std::fs::create_dir_all(&cache).ok();
 
     let mut p = Player::new(cache.to_str().unwrap()).expect("player");

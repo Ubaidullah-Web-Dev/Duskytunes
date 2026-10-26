@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './layout.css';
-	import '$lib/ryotunes.css';
+	import '$lib/duskytunes.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import { HugeiconsIcon } from '@hugeicons/svelte';
 	import {
@@ -33,13 +33,13 @@
 	import NowPlaying from '$lib/components/NowPlaying.svelte';
 	import CommandPalette from '$lib/components/CommandPalette.svelte';
 	import KeyboardShortcuts from '$lib/components/KeyboardShortcuts.svelte';
-	import RyokuAtmosphere from '$lib/components/RyokuAtmosphere.svelte';
+	import DuskyAtmosphere from '$lib/components/DuskyAtmosphere.svelte';
 	import { auth, initApp, np, playback, ui } from '$lib/player.svelte';
 	import { win, initWin } from '$lib/win.svelte';
 	import { initZoom } from '$lib/zoom';
 	import { initShortcuts } from '$lib/shortcuts';
-	import { initRyokuLiveTokens } from '$lib/ryoku-live';
-	import { initPrecisionScrollFallback } from '$lib/ryoku-scroll';
+	import { initDuskyLiveTokens } from '$lib/dusky-live';
+	import { initPrecisionScrollFallback } from '$lib/dusky-scroll';
 	import * as api from '$lib/api';
 	import { loadRouteScroll, rememberRoute, saveRouteScroll } from '$lib/session';
 	import { t } from '$lib/i18n.svelte';
@@ -55,7 +55,7 @@
 		if (tabbed) ui.queueOpen = ui.lyricsOpen = false;
 	});
 
-	// All portal surfaces use the same Ryoku safe rectangle. Keep its left inset in sync with
+	// All portal surfaces use the same Dusky safe rectangle. Keep its left inset in sync with
 	// the rail instead of letting individual dialogs invent viewport coordinates.
 	$effect(() => {
 		if (!browser) return;
@@ -126,25 +126,25 @@
 	// Wire the Tauri event bridge once for the whole app and tear it down with the window.
 	onMount(() => {
 		if (isMini) {
-			document.getElementById('ryotunes-boot')?.remove();
+			document.getElementById('duskytunes-boot')?.remove();
 			const teardownApp = initApp(true);
 			const teardownShortcuts = initShortcuts('mini');
-			const ryokuTokens = initRyokuLiveTokens();
-			// Paint the current Ryoku palette before exposing the widget. The native reveal failsafe
+			const duskyTokens = initDuskyLiveTokens();
+			// Paint the current Dusky palette before exposing the widget. The native reveal failsafe
 			// remains authoritative if the local token invoke ever fails.
-			const teardownReady = acknowledgeFrontend('mini', ryokuTokens.ready);
-			return () => { teardownReady(); ryokuTokens.destroy(); teardownShortcuts(); teardownApp(); };
+			const teardownReady = acknowledgeFrontend('mini', duskyTokens.ready);
+			return () => { teardownReady(); duskyTokens.destroy(); teardownShortcuts(); teardownApp(); };
 		}
 		windowFocused = document.hasFocus();
 		const teardownWin = initWin();
 		const teardownApp = initApp();
 		const teardownZoom = initZoom();
 		const teardownShortcuts = initShortcuts();
-		const ryokuTokens = initRyokuLiveTokens();
+		const duskyTokens = initDuskyLiveTokens();
 		const teardownPrecisionScroll = initPrecisionScrollFallback();
 		// Cold start and tray reconstruction share one first-paint handshake. Geometry and the current
-		// Ryoku palette are applied while hidden; reveal cannot expose a stale/default colour frame.
-		const teardownReady = acknowledgeFrontend('main', ryokuTokens.ready);
+		// Dusky palette are applied while hidden; reveal cannot expose a stale/default colour frame.
+		const teardownReady = acknowledgeFrontend('main', duskyTokens.ready);
 		// Keep the native half of Low Resource mode in sync from the first window, not only after
 		// Settings has been opened. This is one local SQLite write and never blocks first paint.
 		void api.setSetting('low_resource_mode', appearance.lowResourceMode ? 'true' : 'false').catch(() => {});
@@ -158,7 +158,7 @@
 			teardownWin();
 			teardownZoom();
 			teardownShortcuts();
-			ryokuTokens.destroy();
+			duskyTokens.destroy();
 			teardownPrecisionScroll();
 			window.removeEventListener('online', setOnline);
 			window.removeEventListener('offline', setOffline);
@@ -191,7 +191,7 @@
 		
 		<div class="ryo-workspace relative flex min-h-0 flex-1 overflow-hidden" class:ryo-sidebar-collapsed={ui.sidebarCollapsed}>
 			<Sidebar />
-			<RyokuAtmosphere active={windowFocused && !np.open && !!playback.now && !playback.paused} />
+			<DuskyAtmosphere active={windowFocused && !np.open && !!playback.now && !playback.paused} />
 			{#if ui.offline}<div class="ryo-offline-strip" role="status">{t('OFFLINE · cached and local music remain available')}</div>{/if}
 			
 			<main bind:this={mainEl} class="ryo-main relative z-[1] min-w-0 flex-1 overflow-y-auto" data-ryo-own-scroll class:ryo-main-suppressed={np.open && !!playback.now} {@attach dragScroll}>

@@ -278,7 +278,7 @@ pub(crate) async fn destroy_and_wait(app: &AppHandle, label: &str) {
     tracing::warn!(label, "webview label still present after destroy — create may collide");
 }
 
-use ryotunes_core::host::{JsBridge, JsError, JsSession};
+use duskytunes_core::host::{JsBridge, JsError, JsSession};
 
 impl From<Error> for JsError {
     fn from(e: Error) -> Self {

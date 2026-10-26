@@ -5,7 +5,7 @@ pub use wire::{ErrorBody, Event, Incoming, Outgoing, Request, Response, PROTOCOL
 
 use std::path::PathBuf;
 
-/// `$XDG_RUNTIME_DIR/duskytunes/duskytunesd.sock`, with fallback to `ryotunesd.sock`.
+/// `$XDG_RUNTIME_DIR/duskytunes/duskytunesd.sock`, with fallback to `duskytunesd.sock`.
 pub fn socket_path() -> PathBuf {
     let dir = std::env::var_os("XDG_RUNTIME_DIR").map(PathBuf::from).unwrap_or_else(|| {
         std::env::temp_dir().join(format!("duskytunes-{}", unsafe { libc_uid() }))
@@ -14,7 +14,7 @@ pub fn socket_path() -> PathBuf {
     if dusky.exists() {
         return dusky;
     }
-    let ryo = dir.join("ryotunes").join("ryotunesd.sock");
+    let ryo = dir.join("duskytunes").join("duskytunesd.sock");
     if ryo.exists() {
         return ryo;
     }

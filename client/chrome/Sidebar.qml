@@ -1,18 +1,18 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
-import Ryoku.Ui as RU
-import Ryoku.Ui.Singletons
+import Dusky.Ui as DU
+import Dusky.Ui.Singletons
 import "../"
 import "../components"
 
-// The navigation rail (spec section 3, eye-candy pass): a bordered brand card (力 tile + RYOTUNES /
-// RYOKU // MUSIC eyebrow + a collapse button), the three route groups (Discover / Collection /
+// The navigation rail (spec section 3, eye-candy pass): a bordered brand card (力 tile + DUSKYTUNES /
+// DUSKY // MUSIC eyebrow + a collapse button), the three route groups (Discover / Collection /
 // System) as tracked mono micro eyebrows over hairlines, 40 px nav rows with an icon and a body
 // label whose active state is a paper-lift fill plus a 2 px accent left border (hover is a faint
 // tint), the Library group expanding to its five tabs while you are in it, a Playlists group with a
 // full-width outlined "New playlist" button over the user's library playlists (from get_library,
-// merged with any pinned playlists), and a RYOKU // MUSIC ··· LIVE register at the foot. The active
+// merged with any pinned playlists), and a DUSKY // MUSIC ··· LIVE register at the foot. The active
 // route is read from Router.current; a click routes there. `open` collapses the rail: the layout
 // slot animates to zero while a fixed-width glass body anchored to the right slides off to the left,
 // so the content never reflows mid-slide. The collapse button raises `collapseRequested` (App owns
@@ -49,7 +49,7 @@ Rectangle {
             .then((r) => { root.libPlaylists = (r || []).filter((i) => i && i.kind === "playlist"); })
             .catch(() => { root.libPlaylists = []; });
     }
-    // create_playlist exists in crates/ryotunesd/src/methods.rs (returns the new id); make one and
+    // create_playlist exists in crates/duskytunesd/src/methods.rs (returns the new id); make one and
     // open it so the user can name and fill it. No dialog lives in the rail.
     function newPlaylist() {
         Daemon.call("create_playlist", { title: "New playlist" })
@@ -311,7 +311,7 @@ Rectangle {
         width: Style.sidebarW
         // The registration sheet behind the rail, the way the Hub's NavRail sits on one: the print
         // texture rides the chrome, never the content.
-        RU.Reg { anchors.fill: parent; visible: Style.decorRich; opacity: 0.7 }
+        DU.Reg { anchors.fill: parent; visible: Style.decorRich; opacity: 0.7 }
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -361,7 +361,7 @@ Rectangle {
                         spacing: 1
                         Text {
                             Layout.fillWidth: true
-                            text: "RYOTUNES"
+                            text: "DUSKYTUNES"
                             color: Tokens.ink
                             font.family: Style.fontUi
                             font.pixelSize: Style.fs.md
@@ -371,7 +371,7 @@ Rectangle {
                         }
                         Text {
                             Layout.fillWidth: true
-                            text: "RYOKU // MUSIC"
+                            text: "DUSKY // MUSIC"
                             color: Tokens.inkFaint
                             font.family: Style.fontMono
                             font.pixelSize: Style.fs.micro
@@ -465,7 +465,7 @@ Rectangle {
                 Layout.topMargin: Style.sp(1)
                 spacing: Style.sp(2)
                 Text {
-                    text: "RYOKU // MUSIC"
+                    text: "DUSKY // MUSIC"
                     color: Tokens.inkFaint
                     font.family: Style.fontMono
                     font.pixelSize: Style.fs.micro

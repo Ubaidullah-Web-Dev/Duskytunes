@@ -3,10 +3,10 @@
   "format": 1,
   "id": "vapor",
   "name": "Vapor",
-  "author": "Ryoku",
+  "author": "Dusky",
   "version": "1.0.0",
   "license": "CC0-1.0",
-  "homepage": "https://github.com/ryoku-dev/ryotunes",
+  "homepage": "https://github.com/Ubaidullah-Web-Dev/Duskytunes",
   "description": "Vaporwave: violet paper, pink bone, a teal sun, Playfair titles and VT323 readouts, round corners, slow motion, the cover melting over everything.",
   "default": "dark",
   "modes": {
