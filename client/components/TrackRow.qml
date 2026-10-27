@@ -51,7 +51,7 @@ Rectangle {
 
     implicitHeight: Style.rowH
     radius: Style.radius
-    color: root.active ? Tokens.tint10 : rowHover.hovered ? Tokens.tint5 : "transparent"
+    color: root.active ? Style.accentSoft : rowHover.hovered ? Tokens.tint5 : "transparent"
 
     function toggleLike() {
         if (!root.canRate || !root.song)

@@ -87,13 +87,13 @@ Singleton {
     readonly property color keycapOnDark: "#ffffff"
     readonly property color keycapOnLight: "#0d0d0f"
 
-    // ── hairlines and tints (ink-derived, so they follow the resolved ink) ────
+    // ── hairlines and tints (ink-derived, lightly warmed by sun on hover/press) ─
     readonly property color line: Qt.rgba(t.ink.r, t.ink.g, t.ink.b, 0.26)
     readonly property color lineSoft: Qt.rgba(t.ink.r, t.ink.g, t.ink.b, 0.13)
     readonly property color lineStrong: Qt.rgba(t.ink.r, t.ink.g, t.ink.b, 0.42)
-    readonly property color tint5: Qt.rgba(t.ink.r, t.ink.g, t.ink.b, 0.05)   // surface hover
-    readonly property color tint10: Qt.rgba(t.ink.r, t.ink.g, t.ink.b, 0.10)  // control hover
-    readonly property color tint16: Qt.rgba(t.ink.r, t.ink.g, t.ink.b, 0.16)  // pressed
+    readonly property color tint5: Qt.rgba(0.7 * t.ink.r + 0.3 * t.sun.r, 0.7 * t.ink.g + 0.3 * t.sun.g, 0.7 * t.ink.b + 0.3 * t.sun.b, 0.07)   // surface hover
+    readonly property color tint10: Qt.rgba(0.6 * t.ink.r + 0.4 * t.sun.r, 0.6 * t.ink.g + 0.4 * t.sun.g, 0.6 * t.ink.b + 0.4 * t.sun.b, 0.12)  // control hover
+    readonly property color tint16: Qt.rgba(0.5 * t.ink.r + 0.5 * t.sun.r, 0.5 * t.ink.g + 0.5 * t.sun.g, 0.5 * t.ink.b + 0.5 * t.sun.b, 0.18)  // pressed
 
     // ── colour: sun is the live accent (the palette primary); alert stays a
     // fixed attention red so a badge always reads as an alert ─────────────────
@@ -258,6 +258,31 @@ Singleton {
         } catch (e) {
             next = {};
         }
+        if (!next || !next.surface) {
+            try {
+                const mtxt = matugenFile.text();
+                if (mtxt && mtxt.length) {
+                    var m = JSON.parse(mtxt);
+                    if (m && m.modes) {
+                        var isLight = (typeof Prefs !== "undefined" && Prefs && Prefs.themeMode === "light");
+                        var modeObj = isLight ? (m.modes.light || m.modes.dark) : (m.modes.dark || m.modes.light);
+                        if (modeObj) {
+                            next = {
+                                surface: modeObj.paper,
+                                surfaceContainerLow: modeObj.paperLift,
+                                onSurface: modeObj.ink,
+                                onSurfaceVariant: modeObj.inkDim,
+                                inverseSurface: modeObj.bone,
+                                inverseOnSurface: modeObj.inkOnBone,
+                                primary: modeObj.sun,
+                                error: modeObj.alert
+                            };
+                        }
+                    }
+                }
+            } catch (e2) {
+            }
+        }
         // the session's first palette has nothing to come from: land it solid
         const first = Object.keys(t.wall).length === 0;
         t.wallPrev = t.wall;
@@ -348,6 +373,15 @@ Singleton {
     FileView {
         id: paletteFile
         path: (Quickshell.env("XDG_CACHE_HOME") || (Quickshell.env("HOME") + "/.cache")) + "/dusky/colors.json"
+        blockLoading: true
+        watchChanges: true
+        printErrors: false
+        onFileChanged: reload()
+        onLoaded: t.refreshWall()
+    }
+    FileView {
+        id: matugenFile
+        path: (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/duskytunes/skins/matugen/skin.json"
         blockLoading: true
         watchChanges: true
         printErrors: false

@@ -14,8 +14,8 @@
       "paperLift": "{{colors.surface_container_low.dark.hex}}",
       "ink": "{{colors.on_surface.dark.hex}}",
       "inkDim": "{{colors.on_surface_variant.dark.hex}}",
-      "bone": "{{colors.inverse_surface.dark.hex}}",
-      "inkOnBone": "{{colors.inverse_on_surface.dark.hex}}",
+      "bone": "{{colors.primary.dark.hex}}",
+      "inkOnBone": "{{colors.on_primary.dark.hex}}",
       "sun": "{{colors.primary.dark.hex}}",
       "alert": "{{colors.error.dark.hex}}"
     },
@@ -24,14 +24,14 @@
       "paperLift": "{{colors.surface_container_low.light.hex}}",
       "ink": "{{colors.on_surface.light.hex}}",
       "inkDim": "{{colors.on_surface_variant.light.hex}}",
-      "bone": "{{colors.inverse_surface.light.hex}}",
-      "inkOnBone": "{{colors.inverse_on_surface.light.hex}}",
+      "bone": "{{colors.primary.light.hex}}",
+      "inkOnBone": "{{colors.on_primary.light.hex}}",
       "sun": "{{colors.primary.light.hex}}",
       "alert": "{{colors.error.light.hex}}"
     }
   },
   "type": { "display": "Fraunces", "ui": "Space Grotesk", "mono": "SpaceMono Nerd Font" },
   "shape": { "radius": 8, "radiusCard": 12 },
-  "accent": "artwork",
+  "accent": "sun",
   "wash": 1.0
 }

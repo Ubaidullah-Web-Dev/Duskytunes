@@ -99,7 +99,7 @@ Rectangle {
         Layout.fillWidth: true
         implicitHeight: Style.sp(10)
         radius: Style.radius
-        color: nr.current ? Tokens.paperLift : navHover.hovered ? Tokens.tint5 : "transparent"
+        color: nr.current ? Style.accentSoft : navHover.hovered ? Tokens.tint5 : "transparent"
         Behavior on color { ColorAnimation { duration: Style.motion.snap } }
 
         // The 2 px accent left border of the active row (state, per the eye-candy brief).
@@ -107,7 +107,7 @@ Rectangle {
             visible: nr.current
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            width: Style.sp(0.5)
+            width: Style.sp(0.75)
             height: parent.height - Style.sp(4)
             radius: width / 2
             color: Style.accent
@@ -121,16 +121,16 @@ Rectangle {
             Icon {
                 name: nr.icon
                 size: Style.fs.lg
-                color: nr.current ? Tokens.ink : Tokens.inkMuted
+                color: nr.current ? Style.accent : navHover.hovered ? Tokens.ink : Tokens.inkMuted
             }
             Text {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 0
                 text: nr.label
-                color: nr.current ? Tokens.ink : Tokens.inkDim
+                color: nr.current ? Tokens.ink : navHover.hovered ? Tokens.ink : Tokens.inkDim
                 font.family: Style.fontUi
                 font.pixelSize: Style.fs.md
-                font.weight: nr.current ? Font.Medium : Font.Normal
+                font.weight: nr.current ? Font.DemiBold : Font.Normal
                 elide: Text.ElideRight
             }
             Rectangle {
@@ -153,7 +153,7 @@ Rectangle {
             Text {
                 visible: Style.decorRich && nr.kana !== ""
                 text: nr.kana
-                color: nr.current ? Tokens.inkMuted : Tokens.inkFaint
+                color: nr.current ? Style.accent : Tokens.inkFaint
                 opacity: nr.current ? 0.9 : 0.6
                 font.family: Tokens.jp
                 font.pixelSize: Style.fs.sm
@@ -226,17 +226,17 @@ Rectangle {
                 Layout.preferredWidth: Style.sp(1)
                 Layout.preferredHeight: sr.current ? Style.sp(3.5) : Style.sp(1)
                 radius: Style.sp(0.5)
-                color: sr.current ? Tokens.ink : Tokens.lineStrong
+                color: sr.current ? Style.accent : subHover.hovered ? Tokens.ink : Tokens.lineStrong
                 Behavior on Layout.preferredHeight { NumberAnimation { duration: Style.motion.snap } }
             }
             Text {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 0
                 text: sr.label
-                color: sr.current ? Tokens.ink : Tokens.inkMuted
+                color: sr.current ? Style.accent : subHover.hovered ? Tokens.ink : Tokens.inkMuted
                 font.family: Style.fontUi
                 font.pixelSize: Style.fs.sm
-                font.weight: sr.current ? Font.Medium : Font.Normal
+                font.weight: sr.current ? Font.DemiBold : Font.Normal
                 elide: Text.ElideRight
             }
         }

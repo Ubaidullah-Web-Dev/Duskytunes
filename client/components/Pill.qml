@@ -22,12 +22,12 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: height / 2
-        color: root.primary ? Tokens.bone
+        color: root.primary ? (ma.pressed ? Qt.darker(Tokens.bone, 1.15) : hover.hovered ? Qt.lighter(Tokens.bone, 1.08) : Tokens.bone)
             : ma.pressed ? Tokens.tint16
             : hover.hovered ? Tokens.tint5
             : "transparent"
         border.width: root.primary ? 0 : 1
-        border.color: root.active ? Tokens.sun : Tokens.line
+        border.color: root.active ? Style.accent : hover.hovered ? Style.accent : Tokens.line
     }
 
     RowLayout {
@@ -38,11 +38,11 @@ Item {
             visible: root.icon !== ""
             name: root.icon
             size: Style.fs.md
-            color: root.primary ? Tokens.inkOnBone : root.active ? Tokens.sun : Tokens.ink
+            color: root.primary ? Tokens.inkOnBone : root.active ? Style.accent : hover.hovered ? Style.accent : Tokens.ink
         }
         Text {
             text: root.label
-            color: root.primary ? Tokens.inkOnBone : root.active ? Tokens.sun : Tokens.ink
+            color: root.primary ? Tokens.inkOnBone : root.active ? Style.accent : hover.hovered ? Style.accent : Tokens.ink
             font.family: Style.fontUi
             font.pixelSize: Style.fs.sm
             font.weight: Font.DemiBold

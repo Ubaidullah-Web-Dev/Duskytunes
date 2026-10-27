@@ -25,6 +25,7 @@ Item {
     property color iconColor: root.primary ? Tokens.inkOnBone
         : !root.enabled ? Tokens.inkFaint
         : root.active ? Style.accent
+        : hover.hovered ? Tokens.ink
         : Tokens.inkMuted
 
     readonly property alias hovered: hover.hovered
@@ -37,13 +38,14 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Style.radius
-        color: root.primary ? Tokens.bone
+        color: root.primary ? (ma.pressed ? Qt.darker(Tokens.bone, 1.15) : hover.hovered ? Qt.lighter(Tokens.bone, 1.08) : Tokens.bone)
             : ma.pressed ? Tokens.tint16
             : hover.hovered ? Tokens.tint10
             : "transparent"
         border.width: root.outlined ? 1 : 0
-        border.color: hover.hovered ? Tokens.lineStrong : Tokens.line
+        border.color: root.outlined && hover.hovered ? Style.accent : hover.hovered ? Tokens.lineStrong : Tokens.line
         Behavior on color { ColorAnimation { duration: Style.motion.snap } }
+        Behavior on border.color { ColorAnimation { duration: Style.motion.snap } }
     }
 
     Icon {

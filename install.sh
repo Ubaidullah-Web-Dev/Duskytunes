@@ -143,9 +143,73 @@ sudo install -dm755 "/usr/share/duskytunes/skins"
 sudo cp -r "$SRC_ROOT/skins/." "/usr/share/duskytunes/skins/"
 sudo install -Dm644 "$SRC_ROOT/matugen/duskytunes.json" "/usr/share/duskytunes/matugen/duskytunes.json"
 
+if [[ -d "$SRC_ROOT/runtime/qml" ]]; then
+  sudo install -dm755 "/usr/share/duskytunes/qml"
+  sudo cp -r "$SRC_ROOT/runtime/qml/." "/usr/share/duskytunes/qml/"
+  sudo install -dm755 "/usr/lib/qt6/qml/Dusky/Ui"
+  sudo cp -r "$SRC_ROOT/runtime/qml/Dusky/Ui/." "/usr/lib/qt6/qml/Dusky/Ui/" 2>/dev/null || true
+fi
+
 log_ok "Client UI installed to /usr/share/duskytunes."
 
-# Step 5: Install Desktop Entry and Icons (Only Duskytunes)
+# Step 5: Configure Matugen Dynamic Theming for Dusky / Arch Users
+log_info "Configuring Matugen dynamic theming..."
+MATUGEN_DIR="$HOME/.config/matugen"
+MATUGEN_CONF="$MATUGEN_DIR/config.toml"
+DUSKYTUNES_SKINS="$HOME/.config/duskytunes/skins/matugen"
+mkdir -p "$DUSKYTUNES_SKINS"
+
+if command -v matugen >/dev/null 2>&1; then
+  mkdir -p "$MATUGEN_DIR/templates"
+  install -Dm644 "$SRC_ROOT/matugen/duskytunes.json" "$MATUGEN_DIR/templates/duskytunes.json"
+
+  if [[ -f "$MATUGEN_CONF" ]]; then
+    if ! grep -q "templates.duskytunes" "$MATUGEN_CONF"; then
+      cat << 'MATUGEN_EOF' >> "$MATUGEN_CONF"
+
+[templates.duskytunes]
+input_path  = '/usr/share/duskytunes/matugen/duskytunes.json'
+output_path = '~/.config/duskytunes/skins/matugen/skin.json'
+MATUGEN_EOF
+      log_ok "Registered Duskytunes template in ~/.config/matugen/config.toml"
+    fi
+  else
+    mkdir -p "$MATUGEN_DIR"
+    cat << 'MATUGEN_EOF' > "$MATUGEN_CONF"
+[config]
+
+[templates.duskytunes]
+input_path  = '/usr/share/duskytunes/matugen/duskytunes.json'
+output_path = '~/.config/duskytunes/skins/matugen/skin.json'
+MATUGEN_EOF
+    log_ok "Created ~/.config/matugen/config.toml with Duskytunes template"
+  fi
+
+  # Attempt initial theme generation from current wallpaper
+  WALLPAPER=""
+  for w in \
+    "$(cat "$HOME/.config/dusky/settings/dusky_theme/dark_wal" 2>/dev/null)" \
+    "$(cat "$HOME/.config/dusky/settings/dusky_theme/current_fav" 2>/dev/null)" \
+    "$HOME/Pictures/Wallpapers"/* \
+    "$HOME/Pictures/wallpapers"/* \
+    "$HOME/Pictures"/*.{png,jpg,jpeg}; do
+    if [[ -f "$w" ]]; then
+      WALLPAPER="$w"
+      break
+    fi
+  done
+
+  if [[ -n "$WALLPAPER" && -f "$WALLPAPER" ]]; then
+    log_info "Generating initial Matugen skin from $WALLPAPER..."
+    matugen --source-color-index 0 image "$WALLPAPER" >/dev/null 2>&1 || \
+      matugen --prefer saturation image "$WALLPAPER" >/dev/null 2>&1 || true
+    if [[ -f "$DUSKYTUNES_SKINS/skin.json" ]]; then
+      log_ok "Generated ~/.config/duskytunes/skins/matugen/skin.json"
+    fi
+  fi
+fi
+
+# Step 6: Install Desktop Entry and Icons (Only Duskytunes)
 log_info "Installing desktop entry and icons..."
 sudo install -Dm644 "$SRC_ROOT/packaging/linux/duskytunes.desktop" "/usr/share/applications/duskytunes.desktop"
 mkdir -p "$HOME/.local/share/applications"
@@ -164,7 +228,7 @@ sudo update-desktop-database -q /usr/share/applications 2>/dev/null || true
 update-desktop-database -q "$HOME/.local/share/applications" 2>/dev/null || true
 log_ok "Desktop entry and icons registered."
 
-# Step 6: Configure and Start Systemd User Service
+# Step 7: Configure and Start Systemd User Service
 log_info "Configuring background daemon socket..."
 mkdir -p "$HOME/.config/systemd/user"
 cp -f "$SRC_ROOT/packaging/linux/duskytunesd.socket" "$HOME/.config/systemd/user/"

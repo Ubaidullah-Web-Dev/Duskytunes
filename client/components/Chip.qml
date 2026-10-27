@@ -17,17 +17,18 @@ Rectangle {
     radius: height / 2
     color: active ? Tokens.bone : chipHover.hovered ? Tokens.tint10 : "transparent"
     border.width: 1
-    border.color: active ? Tokens.bone : chipHover.hovered ? Tokens.lineStrong : Tokens.line
+    border.color: active ? Tokens.bone : chipHover.hovered ? Style.accent : Tokens.line
     Behavior on color { ColorAnimation { duration: Style.motion.snap } }
+    Behavior on border.color { ColorAnimation { duration: Style.motion.snap } }
 
     Text {
         id: label
         anchors.centerIn: parent
         text: root.text
-        color: root.active ? Tokens.inkOnBone : Tokens.inkMuted
+        color: root.active ? Tokens.inkOnBone : chipHover.hovered ? Tokens.ink : Tokens.inkMuted
         font.family: Style.fontUi
         font.pixelSize: Style.fs.md
-        font.weight: Font.Medium
+        font.weight: root.active ? Font.DemiBold : Font.Medium
     }
 
     HoverHandler { id: chipHover }

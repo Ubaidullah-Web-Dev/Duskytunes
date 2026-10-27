@@ -24,10 +24,13 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Style.radius
-        color: root.primary ? Tokens.bone : (press.pressed ? Tokens.tint16 : hover.hovered ? Tokens.tint10 : "transparent")
+        color: root.primary ? (press.pressed ? Qt.darker(Tokens.bone, 1.15) : hover.hovered ? Qt.lighter(Tokens.bone, 1.08) : Tokens.bone)
+            : (press.pressed ? Tokens.tint16 : hover.hovered ? Tokens.tint10 : "transparent")
         border.width: root.activeFocus ? 2 : root.primary ? 0 : 1
         border.color: root.primary && root.activeFocus ? Tokens.inkOnBone
-            : root.activeFocus || hover.hovered ? Tokens.lineStrong : Tokens.line
+            : root.activeFocus ? Tokens.lineStrong
+            : hover.hovered ? Style.accent
+            : Tokens.line
         scale: press.pressed ? 0.97 : 1
         Behavior on scale { NumberAnimation { duration: Style.motion.snap; easing.type: Easing.OutCubic } }
         Behavior on color { ColorAnimation { duration: Style.motion.snap } }

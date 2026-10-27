@@ -114,8 +114,8 @@ Item {
                 visible: cardHover.hovered
                 radius: root.round ? width / 2 : Style.radiusCard
                 color: "transparent"
-                border.width: 1
-                border.color: Tokens.lineStrong
+                border.width: 1.5
+                border.color: Style.accent
             }
 
             // hover play (everything but an artist)
@@ -127,14 +127,13 @@ Item {
                 width: Style.sp(9)
                 height: width
                 radius: Style.radius
-                color: Tokens.paper
-                border.width: 1
-                border.color: Tokens.line
+                color: Style.accent
+                border.width: 0
                 Icon {
                     anchors.centerIn: parent
                     name: "play"
                     size: Style.fs.md
-                    color: Tokens.ink
+                    color: Tokens.inkOnBone
                 }
                 MouseArea {
                     anchors.fill: parent

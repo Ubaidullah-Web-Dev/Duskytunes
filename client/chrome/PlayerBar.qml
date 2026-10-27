@@ -253,7 +253,7 @@ Rectangle {
                     id: volSlider
                     Layout.preferredWidth: Style.sp(24)
                     Layout.alignment: Qt.AlignVCenter
-                    fillColor: Tokens.ink
+                    fillColor: Style.accent
                     from: 0
                     to: 100
                     value: Playback.volume
@@ -341,7 +341,7 @@ Rectangle {
                 thickness: 2
                 handleSize: Style.sp(2.5)
                 trackColor: Tokens.lineStrong
-                fillColor: root.live ? Style.accent : Tokens.ink
+                fillColor: Style.accent
                 from: 0
                 to: Playback.duration > 0 ? Playback.duration : 1
                 value: Playback.shownPosition

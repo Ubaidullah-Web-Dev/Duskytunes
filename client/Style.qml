@@ -100,6 +100,8 @@ Singleton {
     // The skin's accent policy: "artwork" (the cover, provider colour when nothing plays),
     // "provider", "sun" (the skin's own primary) or a fixed "#rrggbb".
     readonly property color accent: {
+        if (Skin.followSystem || Skin.id === "matugen")
+            return Tokens.sun;
         var policy = Skin.accent;
         if (policy === "provider")
             return root.providerColor;

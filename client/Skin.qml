@@ -78,9 +78,11 @@ Singleton {
         decor: "rich", accent: "artwork", wash: 1.0, fonts: []
     })
     readonly property var paperManifest: (root.paper && root.paper.manifest) ? root.paper.manifest : root.fallback
-    // The active manifest: the chosen skin, or paper for "system" (its modes are what Light/Dark
+    readonly property var matugen: root.byId("matugen")
+    readonly property var systemManifest: (root.matugen && root.matugen.manifest) ? root.matugen.manifest : root.paperManifest
+    // The active manifest: the chosen skin, or systemManifest for "system" (its modes are what Light/Dark
     // pin to while following the desktop).
-    readonly property var manifest: (root.entry && root.entry.manifest) ? root.entry.manifest : root.paperManifest
+    readonly property var manifest: (root.entry && root.entry.manifest) ? root.entry.manifest : root.systemManifest
 
     // --- mode --------------------------------------------------------------------------------
     // Prefs.themeMode "light"/"dark" pins a mode; "system" means the skin's own default, or, for
@@ -258,6 +260,7 @@ Singleton {
     // one scan.
     FileView { path: root.storeDir; watchChanges: true; printErrors: false; onFileChanged: rescan.restart() }
     FileView { path: root.userDir; watchChanges: true; printErrors: false; onFileChanged: rescan.restart() }
+    FileView { path: root.userDir + "/matugen/skin.json"; watchChanges: true; printErrors: false; onFileChanged: rescan.restart() }
     Timer { id: rescan; interval: 400; onTriggered: root.reload() }
 
     // ~/.config/duskytunes/skins exists from the first run, so "Open skins folder" and a matugen
