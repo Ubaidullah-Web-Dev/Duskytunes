@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v1.1.0 - 2026-10-27
+
+- **Configurable Scroll Speed**: Added an interactive Scroll Factor slider in Settings ▸ General (ranging from `0.5x` to `5.0x`) with instant live readout and quick preset chips (Gentle 1.0x, Standard 1.8x, Fast 2.5x, Turbo 4.0x).
+- **Universal WheelScroller Wrapper**: Implemented custom scroll delta multiplier and animated smooth-scrolling wrapper across the client.
+- **Full Viewport & Origin Support**: Fixed scrolling across all `ListView` and `GridView` surfaces (Home Feed, Library Songs, Playlists, Albums, Search results, Radio, and Insights) ensuring proper scroll responsiveness with headers and negative origin bounds.
+- **Automated CI/CD Workflow**: Verified automated release and packaging workflows.
+
+
 ## v1.0.0 - 2026-10-27
 
 - Initial official release of Duskytunes (v1) — the modern desktop music client for Dusky OS and Arch Linux!
