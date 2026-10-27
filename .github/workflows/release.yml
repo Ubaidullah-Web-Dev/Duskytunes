@@ -1,38 +1,29 @@
 name: Release
 
-# Ryotunes releases itself on every push to the default branch. One pipeline:
-#   1. release:  work out the next v1 version from the published tags (the
-#      version ledger, scripts/next-version.sh), sync every manifest to it,
-#      verify the tree builds and the release invariants hold, then tag that
-#      exact pushed source. A later source push never invalidates an earlier
-#      run; manifests are fast-forwarded back to the default branch only when
-#      it has not moved in the meantime.
+# Duskytunes releases automatically on every push to the default branch (main).
+# Pipeline:
+#   1. release:  computes the next v1 version from the published tags (the
+#      version ledger, scripts/next-version.sh), syncs every manifest to it,
+#      verifies the tree builds and release invariants hold, then tags that
+#      exact pushed source.
 #   2. package:  an unprivileged makepkg in an Arch container builds the reserved
-#      tag's exact source into ryotunes-<version>-1-x86_64.pkg.tar.zst (+ .sha256).
+#      tag's exact source into duskytunes-<version>-1-x86_64.pkg.tar.zst (+ .sha256).
 #   3. publish:  a normal (latest, non-draft) GitHub release carrying the package,
-#      its sha256, a reproducible source tarball + sha256, and notes built from
-#      the changelog plus install instructions. Ryoku's update/doctor read this
-#      release directly; there is no downstream repository_dispatch.
-#
-# The version bump is pushed with GITHUB_TOKEN, and a GITHUB_TOKEN push never
-# retriggers a workflow, so there is no bot loop and nothing relies on a
-# token-pushed tag firing a second workflow (the historic tag-trigger trap).
-# A failed package/publish leaves a reserved tag. Re-run the failed workflow or
-# dispatch that tag to finish publishing without minting another version.
+#      its sha256, a reproducible source tarball + sha256, standalone install.sh,
+#      and release notes.
 on:
   push:
-    branches: ['**']
+    branches: [main]
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing tag to rebuild and re-publish, e.g. v1.0.2
+        description: Existing tag to rebuild and re-publish, e.g. v1.2.6
         required: true
 
 permissions:
   contents: write
 
-# Queue pushes instead of replacing the one pending run (GitHub's default).
-# queue:max retains up to GitHub's 100-run limit; never cancel an active release.
+# Queue pushes instead of replacing the one pending run.
 concurrency:
   group: release
   cancel-in-progress: false
@@ -41,7 +32,6 @@ concurrency:
 jobs:
   release:
     name: Verify and reserve the version
-    if: github.event_name == 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-24.04
     outputs:
       action: ${{ steps.plan.outputs.action }}
@@ -102,7 +92,7 @@ jobs:
           try:
               r = json.loads(os.environ["RELEASE_JSON"])
               v = os.environ["VERSION"]
-              package, source = f"ryotunes-{v}-1-x86_64.pkg.tar.zst", f"ryotunes-{v}.tar.gz"
+              package, source = f"duskytunes-{v}-1-x86_64.pkg.tar.zst", f"duskytunes-{v}.tar.gz"
               required = {package, package + ".sha256", source, source + ".sha256"}
               complete = not r["isDraft"] and not r["isPrerelease"] and required <= {a["name"] for a in r["assets"]}
           except (ValueError, KeyError):
@@ -173,16 +163,16 @@ jobs:
 
       - name: Build every binary
         if: steps.plan.outputs.action != 'skip'
-        run: cargo build --release --locked --package ryotunes --package ryotunesd --package ryotunes-cli
+        run: cargo build --release --locked --package duskytunes-cli --package duskytunesd --package sync-server
 
       - name: Skins validate
         if: steps.plan.outputs.action != 'skip'
         run: |
-          for d in skins/*/; do target/release/ryotunes-cli skin check "$d"; done
+          for d in skins/*/; do target/release/duskytunes-cli skin check "$d"; done
 
       - name: Unit tests
         if: steps.plan.outputs.action != 'skip'
-        run: cargo test --workspace --locked --exclude ryotunes
+        run: cargo test --workspace --locked --exclude duskytunes
 
       # Reserve the exact pushed source, even if a later push has moved the
       # default branch while this build ran. Never force-push a user's history.
@@ -196,9 +186,9 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Cargo.toml Cargo.lock src-tauri/tauri.conf.json ui/package.json client/version packaging/arch/PKGBUILD packaging/linux/dev.ryoku.ryotunes.metainfo.xml CHANGELOG.md
+          git add Cargo.toml Cargo.lock src-tauri/tauri.conf.json ui/package.json client/version packaging/arch/PKGBUILD packaging/linux/dev.dusky.duskytunes.metainfo.xml CHANGELOG.md
           git commit --allow-empty -m "release: $TAG"
-          git tag -a "$TAG" -m "Ryotunes $TAG" -m "Source-Commit: $SOURCE_SHA"
+          git tag -a "$TAG" -m "Duskytunes $TAG" -m "Source-Commit: $SOURCE_SHA"
           git push origin "refs/tags/$TAG"
           remote_head="$(git ls-remote origin "refs/heads/$DEFAULT_BRANCH" | cut -f1)"
           if [[ "$remote_head" == "$SOURCE_SHA" ]]; then
@@ -214,7 +204,6 @@ jobs:
     container:
       image: archlinux:base-devel
     steps:
-      # actions/checkout needs git present in the container before it can run.
       - name: Install git for checkout
         run: pacman -Syu --noconfirm --needed git
 
@@ -222,11 +211,6 @@ jobs:
         with:
           ref: ${{ needs.release.outputs.tag }}
 
-      # The shared script a maintainer runs locally too
-      # (docker run ... archlinux:latest scripts/build-arch-package.sh). It runs as
-      # root, sets up an unprivileged builder, re-execs itself, builds the reserved
-      # tag's exact source, and writes the epochless contract asset
-      # ryotunes-<version>-1-x86_64.pkg.tar.zst (+ .sha256) into dist/.
       - name: Build the package
         run: scripts/build-arch-package.sh "$GITHUB_WORKSPACE/dist"
 
@@ -234,7 +218,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: arch-package
-          path: dist/ryotunes-*-x86_64.pkg.tar.zst*
+          path: dist/duskytunes-*-x86_64.pkg.tar.zst*
           if-no-files-found: error
 
   publish:
@@ -261,10 +245,14 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p dist
-          name="ryotunes-$VERSION"
-          # git archive is reproducible for a tag: same tree, same bytes.
+          name="duskytunes-$VERSION"
           git archive --format=tar --prefix="$name/" "$TAG" | gzip -n > "dist/$name.tar.gz"
           ( cd dist && sha256sum "$name.tar.gz" > "$name.tar.gz.sha256" )
+
+      - name: Standalone installer
+        run: |
+          cp install.sh dist/install.sh
+          ( cd dist && sha256sum install.sh > install.sh.sha256 )
 
       - name: Release notes
         env:
@@ -279,10 +267,9 @@ jobs:
         run: |
           set -euo pipefail
           # A normal published (non-draft, non-prerelease, latest) release is what
-          # /repos/ryoku-dev/ryotunes/releases/latest returns to Ryoku's clients.
-          assets=(dist/*.tar.gz dist/*.pkg.tar.zst dist/*.sha256)
+          # /repos/Ubaidullah-Web-Dev/Duskytunes/releases/latest returns.
+          assets=(dist/*.tar.gz dist/*.pkg.tar.zst dist/*.sha256 dist/install.sh)
           latest="$(gh release list --limit 1000 --json isLatest,tagName --jq '.[] | select(.isLatest) | .tagName')"
-          # A manual repair of an older tag must not downgrade releases/latest.
           promote="$(python3 - "$TAG" "$latest" <<'PY'
           import re, sys
           def version(tag):
@@ -294,5 +281,5 @@ jobs:
             gh release upload "$TAG" "${assets[@]}" --clobber
             gh release edit "$TAG" --draft=false --prerelease=false --latest="$promote" --notes-file dist/NOTES.md
           else
-            gh release create "$TAG" "${assets[@]}" --latest="$promote" --title "Ryotunes $TAG" --notes-file dist/NOTES.md
+            gh release create "$TAG" "${assets[@]}" --latest="$promote" --title "Duskytunes $TAG" --notes-file dist/NOTES.md
           fi

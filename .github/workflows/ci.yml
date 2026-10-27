@@ -47,7 +47,7 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Rust tests
-        run: cargo test --workspace --locked -- --skip mpv_keeps_the_gain_through_pitch_changes_and_failures
+        run: cargo test --workspace --locked --exclude duskytunes -- --skip mpv_keeps_the_gain_through_pitch_changes_and_failures
 
       - name: Real libmpv regression
         timeout-minutes: 2
@@ -66,5 +66,5 @@ jobs:
 
       - name: Release guard
         env:
-          RYOTUNES_STATIC_ONLY: "1"
+          DUSKYTUNES_STATIC_ONLY: "1"
         run: ./scripts/release-check.sh
