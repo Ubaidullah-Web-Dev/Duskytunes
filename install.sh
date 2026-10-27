@@ -122,13 +122,9 @@ if [[ -f "$BIN_DIR/duskytunes" ]]; then
   if [[ -f "$BIN_DIR/duskytunes-sync" ]]; then
     sudo install -Dm755 "$BIN_DIR/duskytunes-sync" "/usr/bin/duskytunes-sync"
   fi
-elif [[ -f "$BIN_DIR/duskytunes" ]]; then
-  sudo install -Dm755 "$BIN_DIR/duskytunes" "/usr/bin/duskytunes"
-  sudo install -Dm755 "$BIN_DIR/duskytunesd" "/usr/bin/duskytunesd"
-  sudo install -Dm755 "$BIN_DIR/duskytunes-cli" "/usr/bin/duskytunes-cli"
-  if [[ -f "$BIN_DIR/duskytunes-sync" ]]; then
-    sudo install -Dm755 "$BIN_DIR/duskytunes-sync" "/usr/bin/duskytunes-sync"
-  fi
+else
+  log_err "Binaries not found in $BIN_DIR!"
+  exit 1
 fi
 
 # Launcher script and diagnostics
@@ -152,7 +148,10 @@ log_ok "Client UI installed to /usr/share/duskytunes."
 # Step 5: Install Desktop Entry and Icons (Only Duskytunes)
 log_info "Installing desktop entry and icons..."
 sudo install -Dm644 "$SRC_ROOT/packaging/linux/duskytunes.desktop" "/usr/share/applications/duskytunes.desktop"
-sudo rm -f "/usr/share/applications/duskytunes.desktop"
+mkdir -p "$HOME/.local/share/applications"
+install -Dm644 "$SRC_ROOT/packaging/linux/duskytunes.desktop" "$HOME/.local/share/applications/duskytunes.desktop"
+sudo rm -f "/usr/share/applications/ryotunes.desktop"
+rm -f "$HOME/.local/share/applications/ryotunes.desktop"
 
 for s in 32x32 64x64 128x128; do
   sudo install -Dm644 "$SRC_ROOT/src-tauri/icons/${s}.png" "/usr/share/icons/hicolor/${s}/apps/duskytunes.png"
@@ -162,6 +161,7 @@ sudo install -Dm644 "$SRC_ROOT/src-tauri/icons/icon.png" "/usr/share/icons/hicol
 
 sudo gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor 2>/dev/null || true
 sudo update-desktop-database -q /usr/share/applications 2>/dev/null || true
+update-desktop-database -q "$HOME/.local/share/applications" 2>/dev/null || true
 log_ok "Desktop entry and icons registered."
 
 # Step 6: Configure and Start Systemd User Service
