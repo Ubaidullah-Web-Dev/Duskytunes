@@ -62,21 +62,22 @@ struct Asset {
     size: u64,
 }
 
-// Canonical v1 versions only: no traversal, prereleases, leading zeroes or legacy v2 tags.
+// Canonical v1 versions only: no traversal, prereleases, or leading zeroes. Supports both 1.X.Y and 1.X.
 fn version(raw: &str) -> Option<(u64, u64, u64)> {
     let mut parts = raw.split('.');
-    let (major, minor, patch) = (parts.next()?, parts.next()?, parts.next()?);
+    let major = parts.next()?;
+    let minor = parts.next()?;
+    let patch = parts.next().unwrap_or("0");
     if parts.next().is_some() || major != "1" {
         return None;
     }
     if (minor.len() > 1 && minor.starts_with('0'))
         || !minor.bytes().all(|byte| byte.is_ascii_digit())
-        || patch.len() != 1
-        || !patch.as_bytes()[0].is_ascii_digit()
+        || !patch.bytes().all(|byte| byte.is_ascii_digit())
     {
         return None;
     }
-    Some((1, minor.parse::<u64>().ok()?, (patch.as_bytes()[0] - b'0') as u64))
+    Some((1, minor.parse::<u64>().ok()?, patch.parse::<u64>().ok()?))
 }
 
 fn package_name(version: &str) -> String {

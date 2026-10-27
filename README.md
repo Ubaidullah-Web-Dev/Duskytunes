@@ -6,6 +6,9 @@
 
 <br />
 
+[![CI](https://github.com/Ubaidullah-Web-Dev/Duskytunes/actions/workflows/ci.yml/badge.svg)](https://github.com/Ubaidullah-Web-Dev/Duskytunes/actions/workflows/ci.yml)
+[![Release](https://github.com/Ubaidullah-Web-Dev/Duskytunes/actions/workflows/release.yml/badge.svg)](https://github.com/Ubaidullah-Web-Dev/Duskytunes/actions/workflows/release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/Ubaidullah-Web-Dev/Duskytunes?style=flat-square&color=blue)](https://github.com/Ubaidullah-Web-Dev/Duskytunes/releases)
 <a href="https://github.com/Ubaidullah-Web-Dev/Duskytunes"><img alt="License" src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square"></a>
 <img alt="Linux x86_64" src="https://img.shields.io/badge/platform-Arch%20%7C%20Dusky%20Linux-8996a8?style=flat-square&logo=arch-linux&logoColor=white">
 <img alt="Rust" src="https://img.shields.io/badge/core-Rust-2d3136?style=flat-square&logo=rust&logoColor=white">

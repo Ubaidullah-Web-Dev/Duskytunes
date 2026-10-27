@@ -1,7 +1,8 @@
 # Maintainer: Ubaid <ubaidullah.web.dev@gmail.com>
 pkgname=duskytunes
-pkgver=1.2.3
+pkgver=1.0.0
 pkgrel=1
+epoch=1
 pkgdesc="Duskytunes — The modern desktop music player for Dusky and Linux"
 arch=('x86_64')
 url="https://github.com/Ubaidullah-Web-Dev/Duskytunes"

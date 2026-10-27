@@ -2,11 +2,20 @@
 
 ## Unreleased
 
-- TIDAL sign-in now opens its approval page in the browser while keeping the code visible (`client/lib/playback.js`, `client/tests/tst_playback.qml`).
-- Playlist and album Play actions now start in sequence, while clicking a track preserves the current shuffle mode. Active shuffle and repeat controls follow the live Dusky accent.
-- Icon buttons now show their labels on hover and expose the same labels to assistive technology.
-- Tracks and browse cards now open their actions on right-click. Context menus stay inside the window and close on outside clicks or scrolling.
-- Settings ▸ Downloads can now save tracks as FLAC, for players and libraries that expect FLAC files. It adds no further lossy compression but cannot make a YouTube or SoundCloud source better than it is, and files are several times larger. Cover art and lyrics are embedded as with the other formats. Tracks already saved in another format are not downloaded again. Saved formats from newer Duskytunes versions fall back to Original instead of preventing the daemon from starting.
+## v1.0.0 - 2026-10-27
+
+- Initial official release of Duskytunes (v1) — the modern desktop music client for Dusky OS and Arch Linux!
+- Native audio playback via libmpv and Rust daemon (`duskytunesd`), independent of client UI.
+- Native Quickshell / QML client with live dynamic wallpaper tinting and theme synchronization.
+- Multi-provider support: YouTube Music, Spotify, and SoundCloud.
+- Compact floating Mini-Player with Hyprland window rules.
+- Fast IPC CLI (`duskytunes-cli`) and native launcher (`duskytunes`).
+- Automatic background systemd socket activation.
+- One-line automated installer: `curl -sSL https://raw.githubusercontent.com/Ubaidullah-Web-Dev/Duskytunes/main/install.sh | bash`.
+- Direct GitHub Releases integration for in-app updates.
+- TIDAL sign-in opens in browser while keeping authorization code visible.
+- Interactive synced lyrics with click-to-seek support.
+- Offline downloads in FLAC, MP3, Opus, or Original format with embedded cover art and lyrics.
 
 ## v1.2.3 - 2026-10-19
 
