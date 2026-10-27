@@ -1,23 +1,13 @@
 import QtQuick
 
 // The wheel-to-scroller bridge. A plain Flickable does not answer the wheel on
-// this stack -- the shell adds a WheelHandler wherever it scrolls, so a Hub page
-// showed a ScrollRail and then ignored the wheel. Declare one of these INSIDE
-// the scroller: a pointer handler only sees events over its own parent, so a
-// handler buried in the rail would answer on the 4px strip alone.
-//
-// The wheel scrolls the scroller it sits in, clamped to its bounds, one notch
-// per 120 units of angleDelta (the step the shell's menus use). A control that
-// wants the wheel for itself keeps it: an inner handler accepts the event first.
+// this stack -- the shell adds a WheelHandler wherever it scrolls.
 WheelHandler {
     id: wheel
 
     acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+    property real multiplier: 2.5
 
-    // Qt reparents an item declared inside a Flickable (or ListView) to its
-    // contentItem, and the contentItem is not what scrolls: walk up to the item
-    // that owns contentHeight. Measured, not assumed -- the handler's own parent
-    // is the contentItem.
     readonly property var scroller: {
         var p = wheel.parent;
         while (p && p.contentHeight === undefined)
@@ -25,9 +15,22 @@ WheelHandler {
         return p || null;
     }
 
-    onWheel: (event) => wheel.scrollBy(wheel.scroller, event.angleDelta.y)
+    onWheel: (event) => {
+        var flick = wheel.scroller;
+        if (!flick || flick.contentHeight === undefined)
+            return;
 
-    // true when the scroller actually moved, so a test can assert the scroll.
+        var rawDy = event.pixelDelta.y !== 0 ? event.pixelDelta.y : (event.angleDelta.y / 120.0 * 75.0);
+        var factor = wheel.multiplier;
+        if (typeof Prefs !== "undefined" && Prefs && Prefs.scrollFactor > 0) {
+            factor = Prefs.scrollFactor;
+        }
+
+        if (wheel.scrollBy(flick, rawDy * factor)) {
+            event.accepted = true;
+        }
+    }
+
     function scrollBy(flick, dy) {
         if (!flick || flick.contentHeight === undefined)
             return false;

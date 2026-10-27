@@ -82,6 +82,7 @@ Item {
         cacheBuffer: Math.max(0, Math.round(height * 1.5))
         boundsBehavior: Flickable.StopAtBounds
         model: root.items
+        WheelScroller {}
         header: (root.showHeader || root.header) ? listHead : null
         footer: root.footer
         // A drag in progress must not also flick the list.

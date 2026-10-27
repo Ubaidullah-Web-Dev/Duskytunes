@@ -392,11 +392,13 @@ Rectangle {
 
             // --- scrolling nav body ---------------------------------------------------------
             Flickable {
+                id: navScroll
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 contentHeight: nav.implicitHeight
                 clip: true
                 boundsBehavior: Flickable.StopAtBounds
+                WheelScroller { target: navScroll }
 
                 ColumnLayout {
                     id: nav

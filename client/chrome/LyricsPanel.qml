@@ -238,6 +238,7 @@ Item {
             reuseItems: true
             cacheBuffer: Math.max(0, Math.round(height * 1.5))
             boundsBehavior: Flickable.StopAtBounds
+            WheelScroller { target: view }
             // Breathing room so the active cue can sit in the reading zone rather than the edge.
             header: Item { width: 1; height: view.height * 0.34 }
             footer: Item { width: 1; height: view.height * 0.34 }

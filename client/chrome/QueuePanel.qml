@@ -379,6 +379,7 @@ Item {
                 reuseItems: true
                 cacheBuffer: Math.max(0, Math.round(height * 1.5))
                 boundsBehavior: Flickable.StopAtBounds
+                WheelScroller { target: searchList }
                 spacing: Style.sp(1)
                 model: root.matchItems
                 delegate: QueueRow {
@@ -452,6 +453,7 @@ Item {
                     boundsBehavior: Flickable.StopAtBounds
                     spacing: Style.sp(1)
                     model: root.upcoming
+                    WheelScroller { target: upList }
                     // A drag in progress must not also flick the list.
                     interactive: root.dragFrom < 0
 

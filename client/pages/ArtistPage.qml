@@ -294,6 +294,7 @@ Item {
         contentWidth: width
         contentHeight: scCol.implicitHeight
         boundsBehavior: Flickable.StopAtBounds
+        WheelScroller { target: scView }
 
         ColumnLayout {
             id: scCol

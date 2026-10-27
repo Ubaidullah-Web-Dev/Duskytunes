@@ -30,6 +30,7 @@ Item {
         cellWidth: Math.floor(width / Math.max(1, root.columns))
         cellHeight: grid.cellWidth + Style.sp(16)
         model: root.loading ? [] : root.model
+        WheelScroller {}
 
         delegate: Item {
             required property var modelData

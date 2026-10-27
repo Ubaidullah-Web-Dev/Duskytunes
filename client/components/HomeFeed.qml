@@ -15,14 +15,5 @@ ListView {
         when: feed.stickTop
         restoreMode: Binding.RestoreNone
     }
-    WheelHandler {
-        target: null
-        blocking: false
-        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-        onWheel: event => {
-            if (event.angleDelta.y !== 0 || event.pixelDelta.y !== 0)
-                feed.stickTop = false;
-            event.accepted = false;
-        }
-    }
+    WheelScroller {}
 }

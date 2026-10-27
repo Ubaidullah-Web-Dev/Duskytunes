@@ -170,6 +170,7 @@ Item {
                 reuseItems: true
                 boundsBehavior: Flickable.StopAtBounds
                 model: root.items
+                WheelScroller { target: palList }
                 delegate: Rectangle {
                     id: pRow
                     required property var modelData

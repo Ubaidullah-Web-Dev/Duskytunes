@@ -583,6 +583,8 @@ Item {
                 clip: true
                 contentWidth: width
                 boundsBehavior: Flickable.StopAtBounds
+
+                WheelScroller { target: scroll }
                 contentHeight: {
                     var h = 0;
                     if (page.section === "general") h = generalCol.implicitHeight;
@@ -821,6 +823,97 @@ Item {
                                     text: modelData + "%"
                                     active: Number(page.settings.ui_scale || "110") === modelData
                                     onClicked: page.setSetting("ui_scale", String(modelData))
+                                }
+                            }
+                        }
+                    }
+
+                    // Scroll speed factor — slider with readout and presets
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Layout.topMargin: Style.sp(2)
+                        spacing: Style.sp(2)
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: Style.sp(2)
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 1
+                                Text {
+                                    text: "Scroll factor"
+                                    color: Tokens.ink
+                                    font.family: Style.fontUi
+                                    font.pixelSize: Style.fs.md
+                                    font.weight: Font.Medium
+                                }
+                                Text {
+                                    Layout.fillWidth: true
+                                    text: "Adjust scroll speed multiplier for mouse wheel and trackpad across all surfaces."
+                                    color: Tokens.inkMuted
+                                    font.family: Style.fontUi
+                                    font.pixelSize: Style.fs.sm
+                                    wrapMode: Text.WordWrap
+                                }
+                            }
+                            Text {
+                                text: (Math.round((Prefs.scrollFactor || 2.5) * 10) / 10).toFixed(1) + "x"
+                                color: Style.accent
+                                font.family: Style.fontMono
+                                font.pixelSize: Style.fs.md
+                                font.weight: Font.Bold
+                            }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: Style.sp(3)
+                            Text {
+                                text: "0.5x"
+                                color: Tokens.inkMuted
+                                font.family: Style.fontMono
+                                font.pixelSize: Style.fs.xs
+                            }
+                            Slider {
+                                id: scrollSlider
+                                Layout.fillWidth: true
+                                from: 0.5
+                                to: 5.0
+                                value: Prefs.scrollFactor || 2.5
+                                onMoved: (v) => {
+                                    Prefs.scrollFactor = Math.round(v * 10) / 10;
+                                }
+                                onCommitted: (v) => {
+                                    Prefs.scrollFactor = Math.round(v * 10) / 10;
+                                    Prefs.save();
+                                }
+                            }
+                            Text {
+                                text: "5.0x"
+                                color: Tokens.inkMuted
+                                font.family: Style.fontMono
+                                font.pixelSize: Style.fs.xs
+                            }
+                        }
+
+                        Flow {
+                            Layout.fillWidth: true
+                            spacing: Style.sp(2)
+                            Repeater {
+                                model: [
+                                    { l: "Gentle (1.0x)", v: 1.0 },
+                                    { l: "Standard (1.8x)", v: 1.8 },
+                                    { l: "Fast (2.5x)", v: 2.5 },
+                                    { l: "Turbo (4.0x)", v: 4.0 }
+                                ]
+                                delegate: Chip {
+                                    required property var modelData
+                                    text: modelData.l
+                                    active: Math.abs((Prefs.scrollFactor || 2.5) - modelData.v) < 0.15
+                                    onClicked: {
+                                        Prefs.scrollFactor = modelData.v;
+                                        Prefs.save();
+                                    }
                                 }
                             }
                         }

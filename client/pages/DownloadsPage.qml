@@ -490,6 +490,7 @@ Item {
         clip: true
         boundsBehavior: Flickable.StopAtBounds
         bottomMargin: Style.sp(20)
+        WheelScroller { target: scroll }
 
         ColumnLayout {
             id: content

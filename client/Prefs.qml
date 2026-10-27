@@ -15,6 +15,7 @@ Singleton {
     // The mini widget's offset from the screen's bottom-right corner, logical px.
     property alias miniRight: adapter.miniRight
     property alias miniBottom: adapter.miniBottom
+    property alias scrollFactor: adapter.scrollFactor
 
     function save() { file.writeAdapter(); }
 
@@ -33,6 +34,7 @@ Singleton {
             property string themeMode: "system"
             property int miniRight: 24
             property int miniBottom: 24
+            property real scrollFactor: 2.5
         }
     }
 }
