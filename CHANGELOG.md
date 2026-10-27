@@ -2,7 +2,15 @@
 
 ## Unreleased
 
-## v1.1.0 - 2026-10-27
+## v1.2.0 - 2026-10-27
+
+- **Vibrant Matugen Dynamic Theming**: Complete integration with Material You / Matugen colors derived dynamically from the active desktop wallpaper.
+- **Primary Play Buttons**: Primary transport play button and card hover play buttons now dynamically wear the Matugen primary theme color (`Tokens.bone`) with high-contrast text/icon (`Tokens.inkOnBone`) and interactive hover/press depth.
+- **Unified Sliders**: Volume slider, seek bar, and settings scroll factor slider are unified to use dynamic theme accent (`Style.accent` / `Tokens.sun`).
+- **Sidebar & Nav Enhancements**: Active navigation routes feature a soft accent background tint (`Style.accentSoft`), an active left indicator bar, and vibrant accent icons. Active library sub-navigation tabs display accent indicator pips and accent typography.
+- **Interactive Hover & Focus States**: Outline buttons, chips, and pills illuminate with `Style.accent` on hover. `Tokens.tint5`, `Tokens.tint10`, and `Tokens.tint16` are subtly blended with `sun` for a warm, lively feel across all surfaces without breaking contrast.
+- **Track Row Highlight**: Playing track rows are styled with a soft accent wash, accent title, and animated music note.
+- **Automated Matugen Setup**: `install.sh` automatically registers `[templates.duskytunes]` in `~/.config/matugen/config.toml` and generates the initial skin on install. Live file watching re-themes Duskytunes immediately upon wallpaper change without an app restart.
 
 - **Configurable Scroll Speed**: Added an interactive Scroll Factor slider in Settings ▸ General (ranging from `0.5x` to `5.0x`) with instant live readout and quick preset chips (Gentle 1.0x, Standard 1.8x, Fast 2.5x, Turbo 4.0x).
 - **Universal WheelScroller Wrapper**: Implemented custom scroll delta multiplier and animated smooth-scrolling wrapper across the client.
