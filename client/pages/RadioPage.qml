@@ -119,6 +119,7 @@ Item {
         // The full grid clears while a fresh query resolves, mirroring the Svelte loading branch;
         // paging keeps the current cards and only appends beneath them.
         model: page.loading ? [] : page.stations
+        WheelScroller {}
 
         // The same column maths CardGrid uses: fill the width in ~192 px columns.
         cellWidth: Math.floor((width - 1) / Math.max(1, Math.floor(width / Style.sp(48))))

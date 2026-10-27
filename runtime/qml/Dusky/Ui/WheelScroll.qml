@@ -34,10 +34,11 @@ WheelHandler {
     function scrollBy(flick, dy) {
         if (!flick || flick.contentHeight === undefined)
             return false;
-        var maxY = Math.max(0, flick.contentHeight - flick.height);
-        if (maxY <= 0)
+        var minY = (flick.originY !== undefined) ? flick.originY : 0;
+        var maxY = minY + Math.max(0, flick.contentHeight - flick.height);
+        if (flick.contentHeight <= flick.height)
             return false;
-        var next = Math.max(0, Math.min(maxY, flick.contentY - dy));
+        var next = Math.max(minY, Math.min(maxY, flick.contentY - dy));
         if (next === flick.contentY)
             return false;
         flick.contentY = next;

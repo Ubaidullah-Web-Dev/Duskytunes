@@ -60,6 +60,7 @@ Item {
         cellWidth: Math.floor(width / grid.cols)
         cellHeight: grid.cellWidth + Style.sp(16)
         model: page.loading || page.errorMsg ? [] : page.items
+        WheelScroller {}
 
         header: Item {
             width: grid.width

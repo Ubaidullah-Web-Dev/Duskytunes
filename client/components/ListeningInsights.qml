@@ -57,6 +57,7 @@ Item {
         contentWidth: width
         contentHeight: col.implicitHeight
         boundsBehavior: Flickable.StopAtBounds
+        WheelScroller {}
 
         ColumnLayout {
             id: col

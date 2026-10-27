@@ -1638,6 +1638,7 @@ Item {
                             clip: true
                             contentWidth: width
                             contentHeight: notesText.implicitHeight
+                            WheelScroller {}
                             Text {
                                 id: notesText
                                 width: parent.width
