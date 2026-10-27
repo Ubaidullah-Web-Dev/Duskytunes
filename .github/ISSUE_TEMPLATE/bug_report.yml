@@ -1,18 +1,18 @@
 name: Bug report
-description: Something in Ryotunes is broken or behaves unexpectedly
+description: Something in Duskytunes is broken or behaves unexpectedly
 title: "[Bug] "
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting it. A few environment details usually make Linux/WebKit issues much faster to reproduce.
+        Thanks for reporting it! A few environment details usually make Linux issues much faster to diagnose and fix.
   - type: textarea
     id: problem
     attributes:
       label: What happened?
       description: Describe what you did, what you expected and what happened instead.
-      placeholder: "After closing to tray and reopening…"
+      placeholder: "After opening Duskytunes…"
     validations:
       required: true
   - type: textarea
@@ -22,14 +22,14 @@ body:
       placeholder: |
         1. Open …
         2. Play …
-        3. Close …
+        3. …
     validations:
       required: true
   - type: input
     id: version
     attributes:
-      label: Ryotunes version
-      placeholder: "2.2.0"
+      label: Duskytunes version
+      placeholder: "1.2.6"
     validations:
       required: true
   - type: input
@@ -37,14 +37,14 @@ body:
     attributes:
       label: System
       description: Distro, desktop/shell, display server and GPU if relevant.
-      placeholder: "Ryoku on CachyOS, Hyprland/Wayland, AMD iGPU + NVIDIA dGPU"
+      placeholder: "Dusky OS / Arch Linux, Hyprland/Wayland"
     validations:
       required: true
   - type: textarea
     id: diagnostics
     attributes:
       label: Diagnostics / logs
-      description: Paste relevant output from ryotunes-diagnostics or attach a log. Remove anything private first.
+      description: Paste relevant output from duskytunes-diagnostics or attach a log.
       render: shell
   - type: textarea
     id: media

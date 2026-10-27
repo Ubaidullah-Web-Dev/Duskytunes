@@ -16,7 +16,7 @@
 - [ ] `cd ui && pnpm check && pnpm build`
 - [ ] `cargo fmt --all -- --check`
 - [ ] relevant Rust/frontend tests
-- [ ] affected Ryoku/Hyprland lifecycle tested when applicable
+- [ ] affected Dusky/Hyprland lifecycle tested when applicable
 
 ### Regression contracts
 
@@ -25,9 +25,9 @@ Check any that this PR touches:
 - [ ] background WebKit hibernation
 - [ ] MPRIS / tray / explicit Quit semantics
 - [ ] stable Home DOM / scrolling
-- [ ] live Ryoku theme bridge
+- [ ] live Dusky theme bridge
 - [ ] main vs mini-player window rules
-- [ ] replacement-package rollback / `ryoku-desktop` safety
+- [ ] replacement-package rollback / `dusky-desktop` safety
 - [ ] steady-state CPU / frontend timer behaviour
 
 ## Evidence
