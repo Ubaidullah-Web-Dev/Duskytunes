@@ -25,7 +25,7 @@ replaces=('duskytunes')
 install=duskytunes.install
 
 package() {
-  cd "$srcdir/.."
+  cd "$startdir/../.."
 
   # Check prebuilt binaries first, fallback to cargo target
   local binaries="bin/x86_64"
